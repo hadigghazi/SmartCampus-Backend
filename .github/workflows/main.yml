@@ -11,5 +11,5 @@ jobs:
       uses: peter-evans/repository-dispatch@v1
       with:
         token: ${{ secrets.PAT }}
-        repository: hadigghazi/SmartCampus.git
+        repository: hadigghazi/SmartCampus
         event-type: update-submodules-event
