@@ -1,2 +1,2 @@
 # SmartCampus-Backend
-The backend for the SmartCampus
+The backend for the SmartCampus.
