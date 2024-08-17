@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Faculty;
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreFacultyRequest;
+use App\Http\Requests\UpdateFacultyRequest;
 
 class FacultyController extends Controller
 {
@@ -13,14 +14,9 @@ class FacultyController extends Controller
         return response()->json($faculties);
     }
 
-    public function store(Request $request)
+    public function store(StoreFacultyRequest $request)
     {
-        $request->validate([
-            'name' => 'required|max:100',
-            'description' => 'nullable',
-        ]);
-
-        $faculty = Faculty::create($request->all());
+        $faculty = Faculty::create($request->validated());
 
         return response()->json($faculty, 201);
     }
@@ -30,14 +26,9 @@ class FacultyController extends Controller
         return response()->json($faculty);
     }
 
-    public function update(Request $request, Faculty $faculty)
+    public function update(UpdateFacultyRequest $request, Faculty $faculty)
     {
-        $request->validate([
-            'name' => 'required|max:100',
-            'description' => 'nullable',
-        ]);
-
-        $faculty->update($request->all());
+        $faculty->update($request->validated());
 
         return response()->json($faculty);
     }
