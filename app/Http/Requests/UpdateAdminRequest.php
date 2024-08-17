@@ -6,23 +6,17 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateAdminRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
+    public function authorize()
     {
-        return false;
+        return true; 
     }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
-    public function rules(): array
+    
+    public function rules()
     {
         return [
-            //
+            'user_id' => 'sometimes|exists:users,id',
+            'admin_type' => 'sometimes|in:Super Admin,Admin',
+            'department_id' => 'sometimes|exists:departments,id',
         ];
     }
 }
