@@ -26,4 +26,10 @@ class ContactController extends Controller
         return response()->json($contact);
     }
 
+    public function update(UpdateContactRequest $request, Contact $contact)
+    {
+        $contact->update($request->validated());
+        return response()->json($contact);
+    }
+
 }
