@@ -17,7 +17,9 @@ class DatabaseSeeder extends Seeder
         CenterSeeder::class, 
         MajorSeeder::class, 
         BlockSeeder::class, 
-        RoomSeeder::class
+        RoomSeeder::class,
+        CourseSeeder::class,
+        SemesterSeeder::class,
     ]);
     }
 }
