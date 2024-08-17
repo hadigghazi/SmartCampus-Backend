@@ -4,63 +4,50 @@ namespace App\Http\Controllers;
 
 use App\Models\Major;
 use App\Http\Requests\StoreMajorRequest;
-use App\Http\Requests\UpdateMajorRequest;
+use Illuminate\Http\Request;
 
 class MajorController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $majors = Major::withTrashed()->get();
+        return response()->json($majors);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreMajorRequest $request)
     {
-        //
+        $major = Major::create($request->validated());
+        return response()->json($major, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Major $major)
     {
-        //
+        return response()->json($major);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Major $major)
+    public function update(StoreMajorRequest $request, Major $major)
     {
-        //
+        $major->update($request->validated());
+        return response()->json($major);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateMajorRequest $request, Major $major)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Major $major)
     {
-        //
+        $major->delete();
+        return response()->json(null, 204);
+    }
+
+    public function restore($id)
+    {
+        $major = Major::withTrashed()->findOrFail($id);
+        $major->restore();
+        return response()->json($major);
+    }
+
+    public function forceDelete($id)
+    {
+        $major = Major::withTrashed()->findOrFail($id);
+        $major->forceDelete();
+        return response()->json(null, 204);
     }
 }
