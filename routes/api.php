@@ -8,6 +8,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\CenterController;
 use App\Http\Controllers\MajorController;
 use App\Http\Controllers\BlockController;
+use App\Http\Controllers\RoomController;
 
 
 Route::apiResource('faculties', FacultyController::class);
@@ -33,3 +34,7 @@ Route::delete('majors/{id}/force-delete', [MajorController::class, 'forceDelete'
 Route::apiResource('blocks', BlockController::class);
 Route::post('blocks/{id}/restore', [BlockController::class, 'restore']);
 Route::delete('blocks/{id}/force-delete', [BlockController::class, 'forceDelete']);
+
+Route::apiResource('rooms', RoomController::class);
+Route::post('rooms/{id}/restore', [RoomController::class, 'restore']);
+Route::delete('rooms/{id}/force-delete', [RoomController::class, 'forceDelete']);
