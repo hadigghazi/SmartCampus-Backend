@@ -14,7 +14,7 @@ class CreateContactsTable extends Migration
             $table->string('first_name', 50);
             $table->string('last_name', 50);
             $table->string('relationship', 50);
-            $table->string('phone_number', 20);
+            $table->string('phone_number', 25);
             $table->string('email', 100);
             $table->timestamps();
             $table->softDeletes();
