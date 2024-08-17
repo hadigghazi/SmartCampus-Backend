@@ -9,19 +9,13 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
-{
-    Schema::create('semesters', function (Blueprint $table) {
-        $table->id();
-        $table->string('name');
-        $table->date('start_date');
-        $table->date('end_date');
-        $table->boolean('is_current')->default(false);
-        $table->timestamps();
-        $table->softDeletes();
-    });
-}
-
+    public function up(): void
+    {
+        Schema::create('semesters', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+        });
+    }
 
     /**
      * Reverse the migrations.
