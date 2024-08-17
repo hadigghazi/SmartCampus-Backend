@@ -5,62 +5,54 @@ namespace App\Http\Controllers;
 use App\Models\Block;
 use App\Http\Requests\StoreBlockRequest;
 use App\Http\Requests\UpdateBlockRequest;
+use Illuminate\Http\Request;
 
 class BlockController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $blocks = Block::withTrashed()->get();
+        return response()->json($blocks);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreBlockRequest $request)
     {
-        //
+        $block = Block::create($request->validated());
+
+        return response()->json($block, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Block $block)
     {
-        //
+        return response()->json($block);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Block $block)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateBlockRequest $request, Block $block)
     {
-        //
+        $block->update($request->validated());
+
+        return response()->json($block);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Block $block)
     {
-        //
+        $block->delete();
+        return response()->json(null, 204);
+    }
+
+    public function restore($id)
+    {
+        $block = Block::withTrashed()->findOrFail($id);
+        $block->restore();
+
+        return response()->json($block);
+    }
+
+    public function forceDelete($id)
+    {
+        $block = Block::withTrashed()->findOrFail($id);
+        $block->forceDelete();
+
+        return response()->json(null, 204);
     }
 }
