@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Campus;
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreCampusRequest;
+use App\Http\Requests\UpdateCampusRequest;
 
 class CampusController extends Controller
 {
@@ -13,15 +14,9 @@ class CampusController extends Controller
         return response()->json($campuses);
     }
 
-    public function store(Request $request)
+    public function store(StoreCampusRequest $request)
     {
-        $request->validate([
-            'name' => 'required|max:100',
-            'location' => 'required|max:100',
-            'description' => 'nullable',
-        ]);
-
-        $campus = Campus::create($request->all());
+        $campus = Campus::create($request->validated());
 
         return response()->json($campus, 201);
     }
@@ -31,15 +26,9 @@ class CampusController extends Controller
         return response()->json($campus);
     }
 
-    public function update(Request $request, Campus $campus)
+    public function update(UpdateCampusRequest $request, Campus $campus)
     {
-        $request->validate([
-            'name' => 'required|max:100',
-            'location' => 'required|max:100',
-            'description' => 'nullable',
-        ]);
-
-        $campus->update($request->all());
+        $campus->update($request->validated());
 
         return response()->json($campus);
     }
