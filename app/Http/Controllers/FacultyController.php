@@ -9,7 +9,6 @@ class FacultyController extends Controller
 {
     public function index()
     {
-        // Fetch all faculties including those that are soft deleted
         $faculties = Faculty::withTrashed()->get();
         return response()->json($faculties);
     }
@@ -45,11 +44,10 @@ class FacultyController extends Controller
 
     public function destroy(Faculty $faculty)
     {
-        $faculty->delete();  // Soft delete the faculty
+        $faculty->delete();  
         return response()->json(null, 204);
     }
 
-    // Optional: Restore a soft-deleted faculty
     public function restore($id)
     {
         $faculty = Faculty::withTrashed()->findOrFail($id);
@@ -58,7 +56,6 @@ class FacultyController extends Controller
         return response()->json($faculty);
     }
 
-    // Optional: Permanently delete a faculty
     public function forceDelete($id)
     {
         $faculty = Faculty::withTrashed()->findOrFail($id);
