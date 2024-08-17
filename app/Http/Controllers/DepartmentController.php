@@ -3,64 +3,66 @@
 namespace App\Http\Controllers;
 
 use App\Models\Department;
-use App\Http\Requests\StoreDepartmentRequest;
-use App\Http\Requests\UpdateDepartmentRequest;
+use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $departments = Department::withTrashed()->get();
+        return response()->json($departments);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|max:100',
+            'description' => 'nullable',
+            'campus_id' => 'required|exists:campuses,id',
+        ]);
+
+        $department = Department::create($request->all());
+
+        return response()->json($department, 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreDepartmentRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
     public function show(Department $department)
     {
-        //
+        return response()->json($department);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Department $department)
+    public function update(Request $request, Department $department)
     {
-        //
+        $request->validate([
+            'name' => 'required|max:100',
+            'description' => 'nullable',
+            'campus_id' => 'required|exists:campuses,id',
+        ]);
+
+        $department->update($request->all());
+
+        return response()->json($department);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateDepartmentRequest $request, Department $department)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Department $department)
     {
-        //
+        $department->delete();
+        return response()->json(null, 204);
+    }
+
+    public function restore($id)
+    {
+        $department = Department::withTrashed()->findOrFail($id);
+        $department->restore();
+
+        return response()->json($department);
+    }
+
+    public function forceDelete($id)
+    {
+        $department = Department::withTrashed()->findOrFail($id);
+        $department->forceDelete();
+
+        return response()->json(null, 204);
     }
 }
