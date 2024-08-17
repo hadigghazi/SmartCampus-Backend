@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FacultyController;
 use App\Http\Controllers\CampusController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\CenterController;
 
 
 Route::apiResource('faculties', FacultyController::class);
@@ -18,3 +19,7 @@ Route::delete('campuses/{id}/force-delete', [CampusController::class, 'forceDele
 Route::apiResource('departments', DepartmentController::class);
 Route::post('departments/{id}/restore', [DepartmentController::class, 'restore']);
 Route::delete('departments/{id}/force-delete', [DepartmentController::class, 'forceDelete']);
+
+Route::apiResource('centers', CenterController::class);
+Route::post('centers/{id}/restore', [CenterController::class, 'restore']);
+Route::delete('centers/{id}/force-delete', [CenterController::class, 'forceDelete']);
