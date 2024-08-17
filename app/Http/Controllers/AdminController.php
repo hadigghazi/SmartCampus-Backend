@@ -31,4 +31,10 @@ class AdminController extends Controller
         return response()->json($admin);
     }
 
+    public function destroy(Admin $admin)
+    {
+        $admin->delete();
+        return response()->json(null, 204);
+    }
+
 }
