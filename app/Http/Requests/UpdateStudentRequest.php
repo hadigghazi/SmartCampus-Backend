@@ -6,23 +6,26 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateStudentRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return false;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
-    public function rules(): array
+    public function rules()
     {
         return [
-            //
+            'user_id' => 'sometimes|exists:users,id',
+            'government_id' => 'sometimes|string|max:20',
+            'civil_status_number' => 'sometimes|string|max:20',
+            'passport_number' => 'sometimes|string|max:20',
+            'visa_status' => 'sometimes|string|max:50',
+            'native_language' => 'sometimes|string|max:50',
+            'secondary_language' => 'sometimes|string|max:50',
+            'current_semester_id' => 'nullable|exists:semesters,id',
+            'additional_info' => 'sometimes|string',
+            'transportation' => 'sometimes|boolean',
+            'dorm_residency' => 'sometimes|boolean',
+            'emergency_contact_id' => 'nullable|exists:contacts,id',
         ];
+    }
+
+    public function authorize()
+    {
+        return true;
     }
 }
