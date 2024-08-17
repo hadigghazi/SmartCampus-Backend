@@ -38,4 +38,11 @@ class InstructorController extends Controller
         return response()->json(null, 204);
     }
 
+    public function restore($id)
+    {
+        $instructor = Instructor::withTrashed()->findOrFail($id);
+        $instructor->restore();
+        return response()->json($instructor);
+    }
+
 }
