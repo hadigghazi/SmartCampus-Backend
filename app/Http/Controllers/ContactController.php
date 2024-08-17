@@ -15,4 +15,10 @@ class ContactController extends Controller
         return response()->json($contacts);
     }
 
+    public function store(StoreContactRequest $request)
+    {
+        $contact = Contact::create($request->validated());
+        return response()->json($contact, 201);
+    }
+
 }
