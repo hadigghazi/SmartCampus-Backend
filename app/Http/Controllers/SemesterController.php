@@ -21,5 +21,10 @@ class SemesterController extends Controller
         return response()->json($semester, 201);
     }
 
+    public function show(Semester $semester)
+    {
+        return response()->json($semester);
+    }
+
   
 }
