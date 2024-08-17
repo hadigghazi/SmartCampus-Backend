@@ -26,4 +26,11 @@ class StudentController extends Controller
         return response()->json($student);
     }
 
+    public function update(UpdateStudentRequest $request, Student $student)
+    {
+        $student->update($request->validated());
+        return response()->json($student);
+    }
+
+ 
 }
