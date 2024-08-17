@@ -38,4 +38,11 @@ class StudentController extends Controller
         return response()->json(null, 204);
     }
 
+    public function restore($id)
+    {
+        $student = Student::withTrashed()->findOrFail($id);
+        $student->restore();
+        return response()->json($student);
+    }
+
 }
