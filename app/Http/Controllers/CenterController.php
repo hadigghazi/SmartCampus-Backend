@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Center;
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreCenterRequest;
+use App\Http\Requests\UpdateCenterRequest;
 
 class CenterController extends Controller
 {
@@ -13,16 +14,9 @@ class CenterController extends Controller
         return response()->json($centers);
     }
 
-    public function store(Request $request)
+    public function store(StoreCenterRequest $request)
     {
-        $request->validate([
-            'name' => 'required|max:100',
-            'vision' => 'nullable',
-            'mission' => 'nullable',
-            'overview' => 'nullable',
-        ]);
-
-        $center = Center::create($request->all());
+        $center = Center::create($request->validated());
 
         return response()->json($center, 201);
     }
@@ -32,16 +26,9 @@ class CenterController extends Controller
         return response()->json($center);
     }
 
-    public function update(Request $request, Center $center)
+    public function update(UpdateCenterRequest $request, Center $center)
     {
-        $request->validate([
-            'name' => 'required|max:100',
-            'vision' => 'nullable',
-            'mission' => 'nullable',
-            'overview' => 'nullable',
-        ]);
-
-        $center->update($request->all());
+        $center->update($request->validated());
 
         return response()->json($center);
     }
