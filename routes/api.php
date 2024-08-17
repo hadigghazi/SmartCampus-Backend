@@ -12,7 +12,7 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\SemesterController;
 use App\Http\Controllers\UserController;
-
+use App\Http\Controllers\StudentController;
 
 Route::apiResource('faculties', FacultyController::class);
 Route::post('faculties/{id}/restore', [FacultyController::class, 'restore']);
@@ -53,3 +53,7 @@ Route::delete('semesters/{id}/force-delete', [SemesterController::class, 'forceD
 Route::apiResource('users', UserController::class);
 Route::post('users/{id}/restore', [UserController::class, 'restore']);
 Route::delete('users/{id}/force-delete', [UserController::class, 'forceDelete']);
+
+Route::apiResource('students', StudentController::class)->except(['create', 'edit']);
+Route::post('students/{id}/restore', [StudentController::class, 'restore']);
+Route::delete('students/{id}/force-delete', [StudentController::class, 'forceDelete']);
