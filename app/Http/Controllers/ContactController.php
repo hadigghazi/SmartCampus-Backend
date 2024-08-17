@@ -45,5 +45,10 @@ class ContactController extends Controller
         return response()->json($contact);
     }
 
-   
+    public function forceDelete($id)
+    {
+        $contact = Contact::withTrashed()->findOrFail($id);
+        $contact->forceDelete();
+        return response()->json(null, 204);
+    }
 }
