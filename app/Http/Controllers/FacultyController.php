@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Semester;
-use App\Http\Requests\StoreSemesterRequest;
-use App\Http\Requests\UpdateSemesterRequest;
+use App\Models\Faculty;
+use App\Http\Requests\StoreFacultyRequest;
+use App\Http\Requests\UpdateFacultyRequest;
 
-class SemesterController extends Controller
+class FacultyController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -27,7 +27,7 @@ class SemesterController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreSemesterRequest $request)
+    public function store(StoreFacultyRequest $request)
     {
         //
     }
@@ -35,7 +35,7 @@ class SemesterController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Semester $semester)
+    public function show(Faculty $faculty)
     {
         //
     }
@@ -43,7 +43,7 @@ class SemesterController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Semester $semester)
+    public function edit(Faculty $faculty)
     {
         //
     }
@@ -51,7 +51,7 @@ class SemesterController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateSemesterRequest $request, Semester $semester)
+    public function update(UpdateFacultyRequest $request, Faculty $faculty)
     {
         //
     }
@@ -59,7 +59,7 @@ class SemesterController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Semester $semester)
+    public function destroy(Faculty $faculty)
     {
         //
     }

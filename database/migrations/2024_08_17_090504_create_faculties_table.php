@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up()
 {
-    Schema::create('semesters', function (Blueprint $table) {
+    Schema::create('faculties', function (Blueprint $table) {
         $table->id();
-        $table->string('name');
-        $table->date('start_date');
-        $table->date('end_date');
-        $table->boolean('is_current')->default(false);
+        $table->string('name', 100);
+        $table->text('description')->nullable();
         $table->timestamps();
         $table->softDeletes();
     });
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('semesters');
+        Schema::dropIfExists('faculties');
     }
 };
