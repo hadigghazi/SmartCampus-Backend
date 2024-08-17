@@ -26,4 +26,10 @@ class InstructorController extends Controller
         return response()->json($instructor);
     }
 
+    public function update(UpdateInstructorRequest $request, Instructor $instructor)
+    {
+        $instructor->update($request->validated());
+        return response()->json($instructor);
+    }
+
 }
