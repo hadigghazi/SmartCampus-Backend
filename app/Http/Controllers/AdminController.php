@@ -37,4 +37,11 @@ class AdminController extends Controller
         return response()->json(null, 204);
     }
 
+    public function restore($id)
+    {
+        $admin = Admin::withTrashed()->findOrFail($id);
+        $admin->restore();
+        return response()->json($admin);
+    }
+
 }
