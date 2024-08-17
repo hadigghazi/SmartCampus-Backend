@@ -21,4 +21,9 @@ class ContactController extends Controller
         return response()->json($contact, 201);
     }
 
+    public function show(Contact $contact)
+    {
+        return response()->json($contact);
+    }
+
 }
