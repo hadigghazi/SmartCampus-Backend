@@ -36,4 +36,9 @@ class Campus extends Model
     {
         return $this->hasMany(LibraryBook::class);
     }
+
+    public function blocks()
+    {
+        return $this->hasMany(Block::class);
+    }
 }
