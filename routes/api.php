@@ -7,6 +7,8 @@ use App\Http\Controllers\CampusController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\CenterController;
 use App\Http\Controllers\MajorController;
+use App\Http\Controllers\BlockController;
+
 
 Route::apiResource('faculties', FacultyController::class);
 Route::post('faculties/{id}/restore', [FacultyController::class, 'restore']);
@@ -27,3 +29,7 @@ Route::delete('centers/{id}/force-delete', [CenterController::class, 'forceDelet
 Route::apiResource('majors', MajorController::class);
 Route::post('majors/{id}/restore', [MajorController::class, 'restore']);
 Route::delete('majors/{id}/force-delete', [MajorController::class, 'forceDelete']);
+
+Route::apiResource('blocks', BlockController::class);
+Route::post('blocks/{id}/restore', [BlockController::class, 'restore']);
+Route::delete('blocks/{id}/force-delete', [BlockController::class, 'forceDelete']);
