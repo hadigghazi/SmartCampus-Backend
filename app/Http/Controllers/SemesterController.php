@@ -15,5 +15,11 @@ class SemesterController extends Controller
         return response()->json($semesters);
     }
 
-   
+    public function store(StoreSemesterRequest $request)
+    {
+        $semester = Semester::create($request->validated());
+        return response()->json($semester, 201);
+    }
+
+  
 }
