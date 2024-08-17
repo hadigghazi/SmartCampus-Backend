@@ -14,4 +14,11 @@ class StudentController extends Controller
         $students = Student::withTrashed()->get();
         return response()->json($students);
     }
+
+    public function store(StoreStudentRequest $request)
+    {
+        $student = Student::create($request->validated());
+        return response()->json($student, 201);
+    }
+
 }
