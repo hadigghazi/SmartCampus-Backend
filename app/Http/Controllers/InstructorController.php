@@ -21,4 +21,9 @@ class InstructorController extends Controller
         return response()->json($instructor, 201);
     }
 
+    public function show(Instructor $instructor)
+    {
+        return response()->json($instructor);
+    }
+
 }
