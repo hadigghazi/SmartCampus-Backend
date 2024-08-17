@@ -45,5 +45,10 @@ class SemesterController extends Controller
         return response()->json($semester);
     }
 
-   
+    public function forceDelete($id)
+    {
+        $semester = Semester::withTrashed()->findOrFail($id);
+        $semester->forceDelete();
+        return response()->json(null, 204);
+    }
 }
