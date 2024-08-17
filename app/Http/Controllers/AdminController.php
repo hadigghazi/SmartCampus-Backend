@@ -44,4 +44,10 @@ class AdminController extends Controller
         return response()->json($admin);
     }
 
+    public function forceDelete($id)
+    {
+        $admin = Admin::withTrashed()->findOrFail($id);
+        $admin->forceDelete();
+        return response()->json(null, 204);
+    }
 }
