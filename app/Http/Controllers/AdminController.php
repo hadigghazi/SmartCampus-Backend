@@ -20,4 +20,9 @@ class AdminController extends Controller
         return response()->json($admin, 201);
     }
 
+    public function show(Admin $admin)
+    {
+        return response()->json($admin);
+    }
+
 }
