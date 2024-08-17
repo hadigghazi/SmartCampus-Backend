@@ -38,5 +38,12 @@ class SemesterController extends Controller
         return response()->json(null, 204);
     }
 
+    public function restore($id)
+    {
+        $semester = Semester::withTrashed()->findOrFail($id);
+        $semester->restore();
+        return response()->json($semester);
+    }
+
    
 }
