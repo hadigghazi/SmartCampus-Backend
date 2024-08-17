@@ -25,4 +25,10 @@ class AdminController extends Controller
         return response()->json($admin);
     }
 
+    public function update(UpdateAdminRequest $request, Admin $admin)
+    {
+        $admin->update($request->validated());
+        return response()->json($admin);
+    }
+
 }
