@@ -1,68 +1,24 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Models;
 
-use App\Models\Block;
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class BlockController extends Controller
+class Block extends Model
 {
-    public function index()
+    use HasFactory, SoftDeletes;
+
+    protected $fillable = ['name', 'campus_id', 'description'];
+
+    public function campus()
     {
-        $blocks = Block::withTrashed()->get();
-        return response()->json($blocks);
+        return $this->belongsTo(Campus::class);
     }
 
-    public function store(Request $request)
+    public function rooms()
     {
-        $request->validate([
-            'name' => 'required|max:100',
-            'campus_id' => 'required|exists:campuses,id',
-            'description' => 'nullable',
-        ]);
-
-        $block = Block::create($request->all());
-
-        return response()->json($block, 201);
-    }
-
-    public function show(Block $block)
-    {
-        return response()->json($block);
-    }
-
-    public function update(Request $request, Block $block)
-    {
-        $request->validate([
-            'name' => 'required|max:100',
-            'campus_id' => 'required|exists:campuses,id',
-            'description' => 'nullable',
-        ]);
-
-        $block->update($request->all());
-
-        return response()->json($block);
-    }
-
-    public function destroy(Block $block)
-    {
-        $block->delete();
-        return response()->json(null, 204);
-    }
-
-    public function restore($id)
-    {
-        $block = Block::withTrashed()->findOrFail($id);
-        $block->restore();
-
-        return response()->json($block);
-    }
-
-    public function forceDelete($id)
-    {
-        $block = Block::withTrashed()->findOrFail($id);
-        $block->forceDelete();
-
-        return response()->json(null, 204);
+        return $this->hasMany(Room::class);
     }
 }
