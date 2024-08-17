@@ -15,4 +15,10 @@ class InstructorController extends Controller
         return response()->json($instructors);
     }
 
+    public function store(StoreInstructorRequest $request)
+    {
+        $instructor = Instructor::create($request->validated());
+        return response()->json($instructor, 201);
+    }
+
 }
