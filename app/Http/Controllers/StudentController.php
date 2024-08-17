@@ -21,4 +21,9 @@ class StudentController extends Controller
         return response()->json($student, 201);
     }
 
+    public function show(Student $student)
+    {
+        return response()->json($student);
+    }
+
 }
