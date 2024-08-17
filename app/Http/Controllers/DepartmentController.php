@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Department;
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreDepartmentRequest;
+use App\Http\Requests\UpdateDepartmentRequest;
 
 class DepartmentController extends Controller
 {
@@ -13,15 +14,9 @@ class DepartmentController extends Controller
         return response()->json($departments);
     }
 
-    public function store(Request $request)
+    public function store(StoreDepartmentRequest $request)
     {
-        $request->validate([
-            'name' => 'required|max:100',
-            'description' => 'nullable',
-            'campus_id' => 'required|exists:campuses,id',
-        ]);
-
-        $department = Department::create($request->all());
+        $department = Department::create($request->validated());
 
         return response()->json($department, 201);
     }
@@ -31,15 +26,9 @@ class DepartmentController extends Controller
         return response()->json($department);
     }
 
-    public function update(Request $request, Department $department)
+    public function update(UpdateDepartmentRequest $request, Department $department)
     {
-        $request->validate([
-            'name' => 'required|max:100',
-            'description' => 'nullable',
-            'campus_id' => 'required|exists:campuses,id',
-        ]);
-
-        $department->update($request->all());
+        $department->update($request->validated());
 
         return response()->json($department);
     }
