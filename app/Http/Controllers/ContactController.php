@@ -38,4 +38,12 @@ class ContactController extends Controller
         return response()->json(null, 204);
     }
 
+    public function restore($id)
+    {
+        $contact = Contact::withTrashed()->findOrFail($id);
+        $contact->restore();
+        return response()->json($contact);
+    }
+
+   
 }
