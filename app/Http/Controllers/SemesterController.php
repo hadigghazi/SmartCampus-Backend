@@ -32,4 +32,11 @@ class SemesterController extends Controller
         return response()->json($semester);
     }
 
+    public function destroy(Semester $semester)
+    {
+        $semester->delete();
+        return response()->json(null, 204);
+    }
+
+   
 }
