@@ -26,5 +26,10 @@ class SemesterController extends Controller
         return response()->json($semester);
     }
 
-  
+    public function update(UpdateSemesterRequest $request, Semester $semester)
+    {
+        $semester->update($request->validated());
+        return response()->json($semester);
+    }
+
 }
