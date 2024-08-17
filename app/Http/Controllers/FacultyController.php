@@ -3,64 +3,67 @@
 namespace App\Http\Controllers;
 
 use App\Models\Faculty;
-use App\Http\Requests\StoreFacultyRequest;
-use App\Http\Requests\UpdateFacultyRequest;
+use Illuminate\Http\Request;
 
 class FacultyController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        // Fetch all faculties including those that are soft deleted
+        $faculties = Faculty::withTrashed()->get();
+        return response()->json($faculties);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|max:100',
+            'description' => 'nullable',
+        ]);
+
+        $faculty = Faculty::create($request->all());
+
+        return response()->json($faculty, 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreFacultyRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
     public function show(Faculty $faculty)
     {
-        //
+        return response()->json($faculty);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Faculty $faculty)
+    public function update(Request $request, Faculty $faculty)
     {
-        //
+        $request->validate([
+            'name' => 'required|max:100',
+            'description' => 'nullable',
+        ]);
+
+        $faculty->update($request->all());
+
+        return response()->json($faculty);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateFacultyRequest $request, Faculty $faculty)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Faculty $faculty)
     {
-        //
+        $faculty->delete();  // Soft delete the faculty
+        return response()->json(null, 204);
+    }
+
+    // Optional: Restore a soft-deleted faculty
+    public function restore($id)
+    {
+        $faculty = Faculty::withTrashed()->findOrFail($id);
+        $faculty->restore();
+
+        return response()->json($faculty);
+    }
+
+    // Optional: Permanently delete a faculty
+    public function forceDelete($id)
+    {
+        $faculty = Faculty::withTrashed()->findOrFail($id);
+        $faculty->forceDelete();
+
+        return response()->json(null, 204);
     }
 }
