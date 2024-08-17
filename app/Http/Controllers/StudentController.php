@@ -45,4 +45,10 @@ class StudentController extends Controller
         return response()->json($student);
     }
 
+    public function forceDelete($id)
+    {
+        $student = Student::withTrashed()->findOrFail($id);
+        $student->forceDelete();
+        return response()->json(null, 204);
+    }
 }
