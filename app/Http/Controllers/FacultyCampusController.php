@@ -50,4 +50,12 @@ class FacultyCampusController extends Controller
         $facultyCampus->update($request->all());
         return response()->json($facultyCampus);
     }
+
+    public function destroy($id)
+    {
+        $facultyCampus = FacultyCampus::findOrFail($id);
+        $facultyCampus->delete();
+        return response()->json(null, 204);
+    }
+
 }
