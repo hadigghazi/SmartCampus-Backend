@@ -14,4 +14,10 @@ class CoursePrerequisiteController extends Controller
         return response()->json($coursePrerequisites);
     }
 
+    public function store(StoreCoursePrerequisiteRequest $request)
+    {
+        $coursePrerequisite = CoursePrerequisite::create($request->validated());
+        return response()->json($coursePrerequisite, 201);
+    }
+
 }
