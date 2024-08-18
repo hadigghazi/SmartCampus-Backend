@@ -75,4 +75,13 @@ class FacultyCampusController extends Controller
         return response()->json($facultyCampus, 201);
     }
 
+    public function detachFacultyFromCampus($campusId, $facultyId)
+    {
+        FacultyCampus::where('campus_id', $campusId)
+            ->where('faculty_id', $facultyId)
+            ->delete();
+    
+        return response()->json(null, 204);
+    }
+
 }
