@@ -184,3 +184,6 @@ Route::delete('announcements/{id}/force-delete', [AnnouncementController::class,
 Route::apiResource('deans', DeanController::class);
 Route::post('deans/{id}/restore', [DeanController::class, 'restore']);
 Route::delete('deans/{id}/force-delete', [DeanController::class, 'forceDelete']);
+Route::apiResource('course_materials', CourseMaterialController::class);
+Route::post('course_materials/{id}/restore', [CourseMaterialController::class, 'restore']);
+Route::delete('course_materials/{id}/force-delete', [CourseMaterialController::class, 'forceDelete']);
