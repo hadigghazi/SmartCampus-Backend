@@ -32,7 +32,9 @@ class DatabaseSeeder extends Seeder
         DormRoomSeeder::class,
         BusRouteSeeder::class,
         ExamSeeder::class,
-        RegistrationSeeder::class
+        RegistrationSeeder::class,
+        AssignmentSeeder::class,
+        GradeSeeder::class
     ]);
     }
 }

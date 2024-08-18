@@ -1,14 +1,13 @@
 #!/bin/bash
 
 # Define your table and model names
-TABLE_NAME="assignments"
-MODEL_NAME="Assignment"
+TABLE_NAME="submissions"
+MODEL_NAME="Submission"
 FACTORY_NAME="${MODEL_NAME}Factory"
 SEEDER_NAME="${MODEL_NAME}Seeder"
 CONTROLLER_NAME="${MODEL_NAME}Controller"
 REQUEST_STORE="Store${MODEL_NAME}"
 REQUEST_UPDATE="Update${MODEL_NAME}"
-
 
 # Function to commit changes with a message
 commit_changes() {
@@ -44,18 +43,24 @@ class $MODEL_NAME extends Model
     use HasFactory, SoftDeletes;
 
     protected \$fillable = [
-        'course_id',
-        'title',
-        'description',
-        'due_date',
+        'assignment_id',
+        'student_id',
+        'file_path',
+        'submission_date',
+        'grade',
     ];
 
     protected \$dates = ['deleted_at'];
 
     // Relationships
-    public function course()
+    public function assignment()
     {
-        return \$this->belongsTo(Course::class);
+        return \$this->belongsTo(Assignment::class);
+    }
+
+    public function student()
+    {
+        return \$this->belongsTo(Student::class);
     }
 }
 EOL
@@ -75,10 +80,11 @@ class Create${TABLE_NAME}Table extends Migration
     {
         Schema::create('$TABLE_NAME', function (Blueprint \$table) {
             \$table->id();
-            \$table->unsignedBigInteger('course_id');
-            \$table->string('title', 100);
-            \$table->text('description');
-            \$table->date('due_date');
+            \$table->unsignedBigInteger('assignment_id');
+            \$table->unsignedBigInteger('student_id');
+            \$table->string('file_path', 255);
+            \$table->date('submission_date');
+            \$table->decimal('grade', 5, 2);
             \$table->timestamps();
             \$table->softDeletes();
         });
@@ -172,10 +178,11 @@ class $FACTORY_NAME extends Factory
     public function definition()
     {
         return [
-            'course_id' => \App\Models\Course::inRandomOrder()->first()->id,
-            'title' => \$this->faker->sentence(3),
-            'description' => \$this->faker->paragraph(),
-            'due_date' => \$this->faker->date(),
+            'assignment_id' => \App\Models\Assignment::inRandomOrder()->first()->id,
+            'student_id' => \App\Models\Student::inRandomOrder()->first()->id,
+            'file_path' => \$this->faker->filePath(),
+            'submission_date' => \$this->faker->date(),
+            'grade' => \$this->faker->randomFloat(2, 0, 100),
         ];
     }
 }
@@ -214,10 +221,11 @@ class Store$MODEL_NAME extends FormRequest
     public function rules()
     {
         return [
-            'course_id' => 'required|integer|exists:courses,id',
-            'title' => 'required|string|max:100',
-            'description' => 'required|string',
-            'due_date' => 'required|date',
+            'assignment_id' => 'required|integer|exists:assignments,id',
+            'student_id' => 'required|integer|exists:students,id',
+            'file_path' => 'required|string|max:255',
+            'submission_date' => 'required|date',
+            'grade' => 'required|numeric|min:0|max:100',
         ];
     }
 }
@@ -237,10 +245,11 @@ class Update$MODEL_NAME extends FormRequest
     public function rules()
     {
         return [
-            'course_id' => 'sometimes|integer|exists:courses,id',
-            'title' => 'sometimes|string|max:100',
-            'description' => 'sometimes|string',
-            'due_date' => 'sometimes|date',
+            'assignment_id' => 'sometimes|integer|exists:assignments,id',
+            'student_id' => 'sometimes|integer|exists:students,id',
+            'file_path' => 'sometimes|string|max:255',
+            'submission_date' => 'sometimes|date',
+            'grade' => 'sometimes|numeric|min:0|max:100',
         ];
     }
 }

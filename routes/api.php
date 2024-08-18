@@ -25,6 +25,8 @@ use App\Http\Controllers\DormRoomController;
 use App\Http\Controllers\BusRouteController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\ExamController;
+use App\Http\Controllers\GradeController;
+use App\Http\Controllers\AssignmentController;
 
 
 Route::apiResource('faculties', FacultyController::class);
@@ -124,9 +126,11 @@ Route::delete('registrations/{id}/force-delete', [RegistrationController::class,
 Route::apiResource('exams', ExamController::class);
 Route::post('exams/{id}/restore', [ExamController::class, 'restore']);
 Route::delete('exams/{id}/force-delete', [ExamController::class, 'forceDelete']);
+
 Route::apiResource('grades', GradeController::class);
 Route::post('grades/{id}/restore', [GradeController::class, 'restore']);
 Route::delete('grades/{id}/force-delete', [GradeController::class, 'forceDelete']);
+
 Route::apiResource('assignments', AssignmentController::class);
 Route::post('assignments/{id}/restore', [AssignmentController::class, 'restore']);
 Route::delete('assignments/{id}/force-delete', [AssignmentController::class, 'forceDelete']);
