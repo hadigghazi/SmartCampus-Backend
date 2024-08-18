@@ -2,63 +2,52 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Registration;
+use App\Http\Requests\StoreRegistration;
+use App\Http\Requests\UpdateRegistration;
 
 class RegistrationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $items = Registration::withTrashed()->get();
+        return response()->json($items);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(StoreRegistration $request)
     {
-        //
+        $item = Registration::create($request->validated());
+        return response()->json($item, 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function show(Registration $item)
     {
-        //
+        return response()->json($item);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function update(UpdateRegistration $request, Registration $item)
     {
-        //
+        $item->update($request->validated());
+        return response()->json($item);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function destroy(Registration $item)
     {
-        //
+        $item->delete();
+        return response()->json(null, 204);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function restore($id)
     {
-        //
+        $item = Registration::withTrashed()->findOrFail($id);
+        $item->restore();
+        return response()->json($item);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function forceDelete($id)
     {
-        //
+        $item = Registration::withTrashed()->findOrFail($id);
+        $item->forceDelete();
+        return response()->json(null, 204);
     }
 }
