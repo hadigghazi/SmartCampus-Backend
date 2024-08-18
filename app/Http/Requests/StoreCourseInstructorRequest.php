@@ -6,23 +6,24 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreCourseInstructorRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
+
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
-    public function rules(): array
+
+    public function rules()
     {
         return [
-            //
+            'course_id' => 'required|exists:courses,id',
+            'instructor_id' => 'required|exists:instructors,id',
+            'semester_id' => 'required|exists:semesters,id',
+            'capacity' => 'required|integer',
+            'campus_id' => 'required|exists:campuses,id',
+            'room_id' => 'required|exists:rooms,id',
+            'schedule' => 'required|string|max:100',
         ];
     }
+    
 }
