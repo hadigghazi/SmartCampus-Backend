@@ -23,17 +23,23 @@ class FacultyCampusController extends Controller
 
     public function show($id)
     {
+        $facultyCampus = FacultyCampus::withTrashed()->findOrFail($id);
+        if ($facultyCampus->trashed()) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
         return response()->json($facultyCampus);
     }
 
     public function update(UpdateFacultyCampusRequest $request, $id)
     {
+        $facultyCampus = FacultyCampus::withTrashed()->findOrFail($id);
         $facultyCampus->update($request->validated());
         return response()->json($facultyCampus);
     }
 
     public function destroy($id)
     {
+        $facultyCampus = FacultyCampus::findOrFail($id);
         $facultyCampus->delete();
         return response()->json(null, 204);
     }
