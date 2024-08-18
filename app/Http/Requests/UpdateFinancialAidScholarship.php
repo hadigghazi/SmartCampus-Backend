@@ -6,23 +6,14 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateFinancialAidScholarship extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return false;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
-    public function rules(): array
+    public function rules()
     {
         return [
-            //
+            'student_id' => 'sometimes|integer|exists:students,id',
+            'type' => 'sometimes|string|max:100',
+            'amount_usd' => 'sometimes|numeric|min:0',
+            'amount_lbp' => 'sometimes|numeric|min:0',
+            'description' => 'sometimes|string',
         ];
     }
 }
