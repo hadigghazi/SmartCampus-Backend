@@ -14,7 +14,7 @@ class BookBorrowFactory extends Factory
     public function definition()
     {
         return [
-            'student_id' => Student::factory(),
+            'student_id' => 1,
             'book_id' => LibraryBook::factory(),
             'due_date' => $this->faker->date(),
             'return_date' => $this->faker->optional()->date(),
