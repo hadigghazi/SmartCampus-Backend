@@ -10,6 +10,8 @@ class FacultyCampus extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'faculties_campuses';
+    
     protected $fillable = [
         'faculty_id',
         'campus_id',
