@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Define your table and model names
-TABLE_NAME="course_drop_requests"
-MODEL_NAME="CourseDropRequest"
+TABLE_NAME="ai_instructor_interactions"
+MODEL_NAME="AIInstructorInteraction"
 FACTORY_NAME="${MODEL_NAME}Factory"
 SEEDER_NAME="${MODEL_NAME}Seeder"
 CONTROLLER_NAME="${MODEL_NAME}Controller"
@@ -43,10 +43,9 @@ class $MODEL_NAME extends Model
     use HasFactory, SoftDeletes;
 
     protected \$fillable = [
-        'student_id',
-        'course_id',
-        'reason',
-        'status',
+        'user_id',
+        'question',
+        'answer',
     ];
 
     protected \$dates = ['deleted_at'];
@@ -68,10 +67,9 @@ class Create${MODEL_NAME}Table extends Migration
     {
         Schema::create('$TABLE_NAME', function (Blueprint \$table) {
             \$table->id();
-            \$table->foreignId('student_id')->constrained('students')->onDelete('cascade');
-            \$table->foreignId('course_id')->constrained('courses')->onDelete('cascade');
-            \$table->text('reason');
-            \$table->enum('status', ['Pending', 'Approved', 'Rejected'])->default('Pending');
+            \$table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            \$table->text('question');
+            \$table->text('answer');
             \$table->timestamps();
             \$table->softDeletes();
         });
@@ -156,8 +154,7 @@ cat > database/factories/$FACTORY_NAME.php <<EOL
 namespace Database\Factories;
 
 use App\Models\\$MODEL_NAME;
-use App\Models\Student; // Reference to Student factory
-use App\Models\Course; // Reference to Course factory
+use App\Models\User; // Reference to User factory
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class $FACTORY_NAME extends Factory
@@ -167,10 +164,9 @@ class $FACTORY_NAME extends Factory
     public function definition()
     {
         return [
-            'student_id' => Student::factory(),
-            'course_id' => Course::factory(),
-            'reason' => \$this->faker->paragraph(),
-            'status' => \$this->faker->randomElement(['Pending', 'Approved', 'Rejected']),
+            'user_id' => User::factory(),
+            'question' => \$this->faker->sentence(),
+            'answer' => \$this->faker->paragraph(),
         ];
     }
 }
@@ -209,10 +205,9 @@ class Store$MODEL_NAME extends FormRequest
     public function rules()
     {
         return [
-            'student_id' => 'required|exists:students,id',
-            'course_id' => 'required|exists:courses,id',
-            'reason' => 'required|string',
-            'status' => 'required|in:Pending,Approved,Rejected',
+            'user_id' => 'required|exists:users,id',
+            'question' => 'required|string',
+            'answer' => 'required|string',
         ];
     }
 }
@@ -232,10 +227,9 @@ class Update$MODEL_NAME extends FormRequest
     public function rules()
     {
         return [
-            'student_id' => 'sometimes|exists:students,id',
-            'course_id' => 'sometimes|exists:courses,id',
-            'reason' => 'sometimes|string',
-            'status' => 'sometimes|in:Pending,Approved,Rejected',
+            'user_id' => 'sometimes|exists:users,id',
+            'question' => 'sometimes|string',
+            'answer' => 'sometimes|string',
         ];
     }
 }
