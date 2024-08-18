@@ -32,6 +32,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\FeeController;
 use App\Http\Controllers\FinancialAidScholarshipController;
 use App\Http\Controllers\ImportantDateController;
+use App\Http\Controllers\DormRegistrationController;
 
 
 Route::apiResource('faculties', FacultyController::class);
@@ -159,6 +160,7 @@ Route::delete('financial_aid_scholarships/{id}/force-delete', [FinancialAidSchol
 Route::apiResource('important_dates', ImportantDateController::class);
 Route::post('important_dates/{id}/restore', [ImportantDateController::class, 'restore']);
 Route::delete('important_dates/{id}/force-delete', [ImportantDateController::class, 'forceDelete']);
+
 Route::apiResource('dorm_registrations', DormRegistrationController::class);
 Route::post('dorm_registrations/{id}/restore', [DormRegistrationController::class, 'restore']);
 Route::delete('dorm_registrations/{id}/force-delete', [DormRegistrationController::class, 'forceDelete']);
