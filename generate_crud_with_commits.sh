@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Define your table and model names
-TABLE_NAME="announcements"
-MODEL_NAME="Announcement"
+TABLE_NAME="deans"
+MODEL_NAME="Dean"
 FACTORY_NAME="${MODEL_NAME}Factory"
 SEEDER_NAME="${MODEL_NAME}Seeder"
 CONTROLLER_NAME="${MODEL_NAME}Controller"
@@ -43,15 +43,12 @@ class $MODEL_NAME extends Model
     use HasFactory, SoftDeletes;
 
     protected \$fillable = [
-        'title',
-        'content',
-        'published_date',
-        'author_id',
-        'visibility',
-        'category',
+        'faculty_id',
+        'campus_id',
+        'role_description',
     ];
 
-    protected \$dates = ['published_date', 'deleted_at'];
+    protected \$dates = ['deleted_at'];
 }
 EOL
 commit_changes "Adding content to $MODEL_NAME model"
@@ -70,12 +67,9 @@ class Create${MODEL_NAME}Table extends Migration
     {
         Schema::create('$TABLE_NAME', function (Blueprint \$table) {
             \$table->id();
-            \$table->string('title', 100);
-            \$table->text('content');
-            \$table->date('published_date');
-            \$table->foreignId('author_id')->constrained('users')->onDelete('cascade');
-            \$table->string('visibility', 50);
-            \$table->string('category', 50);
+            \$table->foreignId('faculty_id')->constrained('faculties')->onDelete('cascade');
+            \$table->foreignId('campus_id')->constrained('campuses')->onDelete('cascade');
+            \$table->text('role_description');
             \$table->timestamps();
             \$table->softDeletes();
         });
@@ -169,12 +163,9 @@ class $FACTORY_NAME extends Factory
     public function definition()
     {
         return [
-            'title' => \$this->faker->sentence(),
-            'content' => \$this->faker->paragraph(),
-            'published_date' => \$this->faker->date(),
-            'author_id' => \$this->faker->numberBetween(1, 100),
-            'visibility' => \$this->faker->word(),
-            'category' => \$this->faker->word(),
+            'faculty_id' => \$this->faker->numberBetween(1, 100),
+            'campus_id' => \$this->faker->numberBetween(1, 100),
+            'role_description' => \$this->faker->paragraph(),
         ];
     }
 }
@@ -213,12 +204,9 @@ class Store$MODEL_NAME extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|string|max:100',
-            'content' => 'required|string',
-            'published_date' => 'required|date',
-            'author_id' => 'required|exists:users,id',
-            'visibility' => 'required|string|max:50',
-            'category' => 'required|string|max:50',
+            'faculty_id' => 'required|exists:faculties,id',
+            'campus_id' => 'required|exists:campuses,id',
+            'role_description' => 'required|string',
         ];
     }
 }
@@ -238,12 +226,9 @@ class Update$MODEL_NAME extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'sometimes|string|max:100',
-            'content' => 'sometimes|string',
-            'published_date' => 'sometimes|date',
-            'author_id' => 'sometimes|exists:users,id',
-            'visibility' => 'sometimes|string|max:50',
-            'category' => 'sometimes|string|max:50',
+            'faculty_id' => 'sometimes|exists:faculties,id',
+            'campus_id' => 'sometimes|exists:campuses,id',
+            'role_description' => 'sometimes|string',
         ];
     }
 }
