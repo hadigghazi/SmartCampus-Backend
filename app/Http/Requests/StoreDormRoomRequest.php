@@ -6,23 +6,15 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreDormRoomRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return false;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
-    public function rules(): array
+    public function rules()
     {
         return [
-            //
+            'dorm_id' => 'required|exists:dorms,id',
+            'room_number' => 'required|string|max:20',
+            'capacity' => 'required|integer',
+            'available_beds' => 'required|integer',
+            'floor' => 'required|integer',
+            'description' => 'nullable|string',
         ];
     }
 }
