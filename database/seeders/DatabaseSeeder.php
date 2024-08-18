@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
         CourseInstructorSeeder::class,
         DormSeeder::class,
         DormRoomSeeder::class,
+        BusRouteSeeder::class
     ]);
     }
 }
