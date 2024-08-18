@@ -20,4 +20,9 @@ class CourseInstructorController extends Controller
         return response()->json($courseInstructor, 201);
     }
 
+    public function show(CourseInstructor $courseInstructor)
+    {
+        return response()->json($courseInstructor);
+    }
+
 }
