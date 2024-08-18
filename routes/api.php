@@ -155,3 +155,6 @@ Route::delete('fees/{id}/force-delete', [FeeController::class, 'forceDelete']);
 Route::apiResource('financial_aid_scholarships', FinancialAidScholarshipController::class);
 Route::post('financial_aid_scholarships/{id}/restore', [FinancialAidScholarshipController::class, 'restore']);
 Route::delete('financial_aid_scholarships/{id}/force-delete', [FinancialAidScholarshipController::class, 'forceDelete']);
+Route::apiResource('important_dates', ImportantDateController::class);
+Route::post('important_dates/{id}/restore', [ImportantDateController::class, 'restore']);
+Route::delete('important_dates/{id}/force-delete', [ImportantDateController::class, 'forceDelete']);
