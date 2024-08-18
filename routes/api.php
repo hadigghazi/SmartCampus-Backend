@@ -22,6 +22,7 @@ use App\Http\Controllers\CoursePrerequisiteController;
 use App\Http\Controllers\CourseInstructorController;
 use App\Http\Controllers\DormController;
 use App\Http\Controllers\DormRoomController;
+use App\Http\Controllers\BusRouteController;
 
 
 Route::apiResource('faculties', FacultyController::class);
@@ -108,3 +109,7 @@ Route::apiResource('dorm-rooms', DormRoomController::class);
 Route::get('dorms/{dormId}/rooms', [DormRoomController::class, 'roomsByDorm']);
 Route::post('dorm-rooms/{id}/restore', [DormRoomController::class, 'restore']);
 Route::delete('dorm-rooms/{id}/force-delete', [DormRoomController::class, 'forceDelete']);
+
+Route::apiResource('bus-routes', BusRouteController::class);
+Route::post('bus-routes/{id}/restore', [BusRouteController::class, 'restore']);
+Route::delete('bus-routes/{id}/force-delete', [BusRouteController::class, 'forceDelete']);
