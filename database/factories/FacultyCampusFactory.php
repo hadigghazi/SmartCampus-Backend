@@ -2,22 +2,18 @@
 
 namespace Database\Factories;
 
+use App\Models\FacultyCampus;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\FacultyCampus>
- */
 class FacultyCampusFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array
+    protected $model = FacultyCampus::class;
+
+    public function definition()
     {
         return [
-            //
+            'faculty_id' => \App\Models\Faculty::inRandomOrder()->first()->id,
+            'campus_id' => \App\Models\Campus::inRandomOrder()->first()->id,
         ];
     }
 }
