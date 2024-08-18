@@ -10,6 +10,8 @@ class AIInstructorInteraction extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'ai_instructor_interactions';
+
     protected $fillable = [
         'user_id',
         'question',

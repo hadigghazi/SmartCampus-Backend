@@ -14,7 +14,7 @@ class CourseDropRequestFactory extends Factory
     public function definition()
     {
         return [
-            'student_id' => Student::factory(),
+            'student_id' => 1,
             'course_id' => Course::factory(),
             'reason' => $this->faker->paragraph(),
             'status' => $this->faker->randomElement(['Pending', 'Approved', 'Rejected']),

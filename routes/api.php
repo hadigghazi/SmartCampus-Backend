@@ -40,6 +40,8 @@ use App\Http\Controllers\DeanController;
 use App\Http\Controllers\CourseMaterialController;
 use App\Http\Controllers\LibraryBookController;
 use App\Http\Controllers\BookBorrowController;
+use App\Http\Controllers\CourseDropRequestController;
+use App\Http\Controllers\AIInstructorInteractionController;
 
 
 Route::apiResource('faculties', FacultyController::class);
@@ -199,9 +201,11 @@ Route::delete('library_books/{id}/force-delete', [LibraryBookController::class, 
 Route::apiResource('book_borrows', BookBorrowController::class);
 Route::post('book_borrows/{id}/restore', [BookBorrowController::class, 'restore']);
 Route::delete('book_borrows/{id}/force-delete', [BookBorrowController::class, 'forceDelete']);
+
 Route::apiResource('course_drop_requests', CourseDropRequestController::class);
 Route::post('course_drop_requests/{id}/restore', [CourseDropRequestController::class, 'restore']);
 Route::delete('course_drop_requests/{id}/force-delete', [CourseDropRequestController::class, 'forceDelete']);
+
 Route::apiResource('ai_instructor_interactions', AIInstructorInteractionController::class);
 Route::post('ai_instructor_interactions/{id}/restore', [AIInstructorInteractionController::class, 'restore']);
 Route::delete('ai_instructor_interactions/{id}/force-delete', [AIInstructorInteractionController::class, 'forceDelete']);
