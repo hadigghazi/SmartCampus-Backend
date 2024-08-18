@@ -6,23 +6,21 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateAddressRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
+    public function authorize()
     {
-        return false;
+        return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
-    public function rules(): array
+    public function rules()
     {
         return [
-            //
+            'user_id' => 'required|exists:users,id',
+            'country' => 'sometimes|required|string|max:50',
+            'area' => 'sometimes|required|string|max:100',
+            'city' => 'sometimes|required|string|max:100',
+            'street' => 'sometimes|required|string|max:100',
+            'building_floor' => 'sometimes|required|string|max:100',
+            'special_instruction' => 'nullable|string',
         ];
     }
 }
