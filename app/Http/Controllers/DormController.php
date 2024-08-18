@@ -37,4 +37,12 @@ class DormController extends Controller
         return response()->json(null, 204);
     }
 
+    public function restore($id)
+    {
+        $dorm = Dorm::withTrashed()->findOrFail($id);
+        $dorm->restore();
+        return response()->json($dorm);
+    }
+
+  
 }
