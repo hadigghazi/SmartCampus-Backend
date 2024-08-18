@@ -2,63 +2,58 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Announcement;
+use App\Http\Requests\StoreAnnouncement;
+use App\Http\Requests\UpdateAnnouncement;
 
 class AnnouncementController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $items = Announcement::withTrashed()->get();
+        return response()->json($items);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(StoreAnnouncement $request)
     {
-        //
+        $item = Announcement::create($request->validated());
+        return response()->json($item, 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function show($id)
     {
-        //
+        $item = Announcement::withTrashed()->findOrFail($id);
+        if ($item->trashed()) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
+        return response()->json($item);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function update(UpdateAnnouncement $request, $id)
     {
-        //
+        $item = Announcement::withTrashed()->findOrFail($id);
+        $item->update($request->validated());
+        return response()->json($item);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function destroy($id)
     {
-        //
+        $item = Announcement::withTrashed()->findOrFail($id);
+        $item->delete();
+        return response()->json(null, 204);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function restore($id)
     {
-        //
+        $item = Announcement::withTrashed()->findOrFail($id);
+        $item->restore();
+        return response()->json($item);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function forceDelete($id)
     {
-        //
+        $item = Announcement::withTrashed()->findOrFail($id);
+        $item->forceDelete();
+        return response()->json(null, 204);
     }
 }
