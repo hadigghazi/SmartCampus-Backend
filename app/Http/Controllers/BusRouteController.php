@@ -52,5 +52,9 @@ class BusRouteController extends Controller
         return response()->json(null, 204);
     }
 
-  
+    public function routesByCampus($campusId)
+    {
+        $busRoutes = BusRoute::where('campus_id', $campusId)->get();
+        return response()->json($busRoutes);
+    }
 }
