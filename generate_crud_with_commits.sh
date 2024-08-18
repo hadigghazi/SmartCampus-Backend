@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# Define your table and model names
+TABLE_NAME="grades"
+MODEL_NAME="Grade"
+FACTORY_NAME="${MODEL_NAME}Factory"
+SEEDER_NAME="${MODEL_NAME}Seeder"
+CONTROLLER_NAME="${MODEL_NAME}Controller"
+REQUEST_STORE="Store${MODEL_NAME}"
+REQUEST_UPDATE="Update${MODEL_NAME}"
+
 # Function to commit changes with a message
 commit_changes() {
     local message=$1
@@ -7,24 +16,20 @@ commit_changes() {
     git commit -m "$message"
 }
 
-# Function to parse the table definition and extract relevant data
-parse_table_definition() {
-    local table_definition=$1
+# Generate Model and Migration
+php artisan make:model $MODEL_NAME -m
+commit_changes "Adding $MODEL_NAME model and migration"
 
-    # Extract table name
-    TABLE_NAME=$(echo "$table_definition" | grep -oP '^Table \K\w+')
-    MODEL_NAME=$(echo "$TABLE_NAME" | sed -r 's/(^|_)([a-z])/\U\2/g')
+# Generate Controller, Factory, Seeder, and Requests
+php artisan make:controller $CONTROLLER_NAME --resource
+php artisan make:factory $FACTORY_NAME --model=$MODEL_NAME
+php artisan make:seeder $SEEDER_NAME
+php artisan make:request Store$MODEL_NAME
+php artisan make:request Update$MODEL_NAME
+commit_changes "Generating $CONTROLLER_NAME, $FACTORY_NAME, $SEEDER_NAME, and request classes"
 
-    # Extract column definitions
-    COLUMNS=$(echo "$table_definition" | grep -oP '^\s+\K\w+ \w+.*(?=\s|\[)')
-
-    # Extract foreign key relationships
-    RELATIONS=$(echo "$table_definition" | grep -oP '\[ref: > \K\w+\.\w+')
-}
-
-# Function to generate model content
-generate_model() {
-    cat > app/Models/$MODEL_NAME.php <<EOL
+# Write content to Model
+cat > app/Models/$MODEL_NAME.php <<EOL
 <?php
 
 namespace App\Models;
@@ -38,57 +43,45 @@ class $MODEL_NAME extends Model
     use HasFactory, SoftDeletes;
 
     protected \$fillable = [
-$(echo "$COLUMNS" | grep -oP '^\w+' | sed "s/^/        '/" | sed "s/$/',/" | sed '$s/,$//')
+        'registration_id',
+        'grade',
+        'letter_grade',
+        'gpa',
     ];
 
     protected \$dates = ['deleted_at'];
 
     // Relationships
-$(for relation in $RELATIONS; do
-    RELATED_MODEL=$(echo "$relation" | cut -d. -f1 | sed -r 's/(^|_)([a-z])/\U\2/g')
-    RELATED_COLUMN=$(echo "$relation" | cut -d. -f2)
-    echo "    public function ${RELATED_MODEL,,}()"
-    echo "    {"
-    echo "        return \$this->belongsTo($RELATED_MODEL::class, '$RELATED_COLUMN');"
-    echo "    }"
-    echo ""
-done)
+    public function registration()
+    {
+        return \$this->belongsTo(Registration::class);
+    }
 }
 EOL
-    commit_changes "Added content to $MODEL_NAME model"
-}
+commit_changes "Adding content to $MODEL_NAME model with relationships"
 
-# Function to generate migration content
-generate_migration() {
-    TIMESTAMP=$(date +"%Y_%m_%d_%H%M%S")
-    cat > database/migrations/${TIMESTAMP}_create_${TABLE_NAME}_table.php <<EOL
+# Write content to Migration
+cat > database/migrations/*_create_${TABLE_NAME}_table.php <<EOL
 <?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Create${MODEL_NAME}Table extends Migration
+class Create${TABLE_NAME}Table extends Migration
 {
     public function up()
     {
         Schema::create('$TABLE_NAME', function (Blueprint \$table) {
             \$table->id();
-$(echo "$COLUMNS" | while read -r column; do
-    COLUMN_NAME=$(echo "$column" | awk '{print $1}')
-    COLUMN_TYPE=$(echo "$column" | awk '{print $2}')
-    if [[ $column == *"[ref:"* ]]; then
-        echo "            \$table->unsignedBigInteger('$COLUMN_NAME');"
-    else
-        echo "            \$table->$COLUMN_TYPE('$COLUMN_NAME');"
-    fi
-done)
+            \$table->unsignedBigInteger('registration_id');
+            \$table->decimal('grade', 5, 2);
+            \$table->char('letter_grade', 2);
+            \$table->decimal('gpa', 3, 2);
             \$table->timestamps();
             \$table->softDeletes();
-$(for relation in $RELATIONS; do
-    RELATED_COLUMN=$(echo "$relation" | cut -d. -f2)
-    echo "            \$table->foreign('$RELATED_COLUMN')->references('id')->on('$(echo $relation | cut -d. -f1)');"
-done)
+            
+            \$table->foreign('registration_id')->references('id')->on('registrations');
         });
     }
 
@@ -98,12 +91,10 @@ done)
     }
 }
 EOL
-    commit_changes "Added migration for $TABLE_NAME"
-}
+commit_changes "Adding migration for $TABLE_NAME"
 
-# Function to generate controller content
-generate_controller() {
-    cat > app/Http/Controllers/$MODEL_NAME"Controller".php <<EOL
+# Write content to Controller
+cat > app/Http/Controllers/$CONTROLLER_NAME.php <<EOL
 <?php
 
 namespace App\Http\Controllers;
@@ -112,7 +103,7 @@ use App\Models\\$MODEL_NAME;
 use App\Http\Requests\Store$MODEL_NAME;
 use App\Http\Requests\Update$MODEL_NAME;
 
-class ${MODEL_NAME}Controller extends Controller
+class $CONTROLLER_NAME extends Controller
 {
     public function index()
     {
@@ -120,25 +111,31 @@ class ${MODEL_NAME}Controller extends Controller
         return response()->json(\$items);
     }
 
-    public function store(Store${MODEL_NAME} \$request)
+    public function store(Store$MODEL_NAME \$request)
     {
         \$item = $MODEL_NAME::create(\$request->validated());
         return response()->json(\$item, 201);
     }
 
-    public function show(${MODEL_NAME} \$item)
+    public function show(\$id)
     {
+        \$item = $MODEL_NAME::withTrashed()->findOrFail(\$id);
+        if (\$item->trashed()) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
         return response()->json(\$item);
     }
 
-    public function update(Update${MODEL_NAME} \$request, ${MODEL_NAME} \$item)
+    public function update(Update$MODEL_NAME \$request, \$id)
     {
+        \$item = $MODEL_NAME::withTrashed()->findOrFail(\$id);
         \$item->update(\$request->validated());
         return response()->json(\$item);
     }
 
-    public function destroy(${MODEL_NAME} \$item)
+    public function destroy(\$id)
     {
+        \$item = $MODEL_NAME::withTrashed()->findOrFail(\$id);
         \$item->delete();
         return response()->json(null, 204);
     }
@@ -158,12 +155,10 @@ class ${MODEL_NAME}Controller extends Controller
     }
 }
 EOL
-    commit_changes "Added CRUD methods to ${MODEL_NAME}Controller"
-}
+commit_changes "Adding CRUD methods to $CONTROLLER_NAME"
 
-# Function to generate factory content
-generate_factory() {
-    cat > database/factories/$MODEL_NAME"Factory".php <<EOL
+# Write content to Factory
+cat > database/factories/$FACTORY_NAME.php <<EOL
 <?php
 
 namespace Database\Factories;
@@ -171,36 +166,25 @@ namespace Database\Factories;
 use App\Models\\$MODEL_NAME;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class ${MODEL_NAME}Factory extends Factory
+class $FACTORY_NAME extends Factory
 {
     protected \$model = $MODEL_NAME::class;
 
     public function definition()
     {
         return [
-$(echo "$COLUMNS" | while read -r column; do
-    COLUMN_NAME=$(echo "$column" | awk '{print $1}')
-    COLUMN_TYPE=$(echo "$column" | awk '{print $2}')
-    if [[ $COLUMN_TYPE == "integer" || $COLUMN_TYPE == "unsignedBigInteger" ]]; then
-        echo "            '$COLUMN_NAME' => \App\Models\$(echo "$RELATIONS" | grep "$COLUMN_NAME" | cut -d. -f1)::inRandomOrder()->first()->id,"
-    elif [[ $COLUMN_TYPE == "decimal" ]]; then
-        echo "            '$COLUMN_NAME' => \$this->faker->randomFloat(2, 0, 100),"
-    elif [[ $COLUMN_TYPE == "char" ]]; then
-        echo "            '$COLUMN_NAME' => \$this->faker->randomElement(['A', 'B', 'C', 'D', 'F']),"
-    else
-        echo "            '$COLUMN_NAME' => \$this->faker->$COLUMN_TYPE,"
-    fi
-done)
+            'registration_id' => \App\Models\Registration::inRandomOrder()->first()->id,
+            'grade' => \$this->faker->randomFloat(2, 0, 100),
+            'letter_grade' => \$this->faker->randomElement(['A', 'B', 'C', 'D', 'F']),
+            'gpa' => \$this->faker->randomFloat(2, 0, 4),
         ];
     }
 }
 EOL
-    commit_changes "Added factory for $MODEL_NAME"
-}
+commit_changes "Adding factory for $MODEL_NAME"
 
-# Function to generate seeder content
-generate_seeder() {
-    cat > database/seeders/$MODEL_NAME"Seeder".php <<EOL
+# Write content to Seeder
+cat > database/seeders/$SEEDER_NAME.php <<EOL
 <?php
 
 namespace Database\Seeders;
@@ -208,93 +192,68 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\\$MODEL_NAME;
 
-class ${MODEL_NAME}Seeder extends Seeder
+class $SEEDER_NAME extends Seeder
 {
     public function run()
     {
-        ${MODEL_NAME}::factory()->count(10)->create();
+        $MODEL_NAME::factory()->count(10)->create();
     }
 }
 EOL
-    commit_changes "Added seeder for $MODEL_NAME"
-}
+commit_changes "Adding seeder for $MODEL_NAME"
 
-# Function to generate request content
-generate_request() {
-    local request_type=$1
-    cat > app/Http/Requests/${request_type}${MODEL_NAME}.php <<EOL
+# Write content to Store Request
+cat > app/Http/Requests/Store$MODEL_NAME.php <<EOL
 <?php
 
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ${request_type}${MODEL_NAME} extends FormRequest
+class Store$MODEL_NAME extends FormRequest
 {
     public function rules()
     {
         return [
-$(echo "$COLUMNS" | while read -r column; do
-    COLUMN_NAME=$(echo "$column" | awk '{print $1}')
-    COLUMN_TYPE=$(echo "$column" | awk '{print $2}')
-    RULE=""
-    if [[ $COLUMN_TYPE == "integer" || $COLUMN_TYPE == "unsignedBigInteger" ]]; then
-        RULE="required|integer"
-    elif [[ $COLUMN_TYPE == "decimal" ]]; then
-        RULE="required|numeric"
-    elif [[ $COLUMN_TYPE == "char" ]]; then
-        RULE="required|string|max:2"
-    elif [[ $COLUMN_TYPE == "enum" ]]; then
-        RULE="required|in:$(echo $column | grep -oP '\(\K[^\)]+')"
-    else
-        RULE="required|string"
-    fi
-    echo "            '$COLUMN_NAME' => '$RULE',"
-done)
+            'registration_id' => 'required|integer|exists:registrations,id',
+            'grade' => 'required|numeric|min:0|max:100',
+            'letter_grade' => 'required|in:A,B,C,D,F',
+            'gpa' => 'required|numeric|min:0|max:4',
         ];
     }
 }
 EOL
-    commit_changes "Added $request_type request for $MODEL_NAME"
-}
+commit_changes "Adding store request for $MODEL_NAME"
 
-# Function to add routes to api.php
-add_routes() {
-    cat >> routes/api.php <<EOL
-Route::apiResource('$TABLE_NAME', ${MODEL_NAME}Controller::class);
-Route::post('$TABLE_NAME/{id}/restore', [${MODEL_NAME}Controller::class, 'restore']);
-Route::delete('$TABLE_NAME/{id}/force-delete', [${MODEL_NAME}Controller::class, 'forceDelete']);
+# Write content to Update Request
+cat > app/Http/Requests/Update$MODEL_NAME.php <<EOL
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class Update$MODEL_NAME extends FormRequest
+{
+    public function rules()
+    {
+        return [
+            'registration_id' => 'sometimes|integer|exists:registrations,id',
+            'grade' => 'sometimes|numeric|min:0|max:100',
+            'letter_grade' => 'sometimes|in:A,B,C,D,F',
+            'gpa' => 'sometimes|numeric|min:0|max:4',
+        ];
+    }
+}
 EOL
-    commit_changes "Added API routes for $TABLE_NAME"
-}
+commit_changes "Adding update request for $MODEL_NAME"
 
-# Main function
-main() {
-    # Accept table definition as input
-    TABLE_DEFINITION=$1
+# Add API resource routes to routes/api.php
+cat >> routes/api.php <<EOL
+Route::apiResource('$TABLE_NAME', $CONTROLLER_NAME::class);
+Route::post('$TABLE_NAME/{id}/restore', [$CONTROLLER_NAME::class, 'restore']);
+Route::delete('$TABLE_NAME/{id}/force-delete', [$CONTROLLER_NAME::class, 'forceDelete']);
+EOL
+commit_changes "Adding routes for $MODEL_NAME to routes/api.php"
 
-    # Parse the table definition
-    parse_table_definition "$TABLE_DEFINITION"
-
-    # Create necessary directories
-    mkdir -p app/Models app/Http/Controllers app/Http/Requests database/migrations database/factories database/seeders
-
-    # Initialize Git
-    initialize_git
-
-    # Generate files
-    generate_model
-    generate_migration
-    generate_controller
-    generate_factory
-    generate_seeder
-    generate_request "Store"
-    generate_request "Update"
-    add_routes
-
-    # Run migration
-    php artisan migrate
-}
-
-# Run the main function with the table definition passed as an argument
-main "$1"
+echo "CRUD operations for $MODEL_NAME have been created and committed."
