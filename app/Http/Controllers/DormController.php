@@ -44,5 +44,10 @@ class DormController extends Controller
         return response()->json($dorm);
     }
 
-  
+    public function forceDelete($id)
+    {
+        $dorm = Dorm::withTrashed()->findOrFail($id);
+        $dorm->forceDelete();
+        return response()->json(null, 204);
+    }
 }
