@@ -15,4 +15,10 @@ class BusRouteController extends Controller
         return response()->json($busRoutes);
     }
 
+    public function store(StoreBusRouteRequest $request)
+    {
+        $busRoute = BusRoute::create($request->validated());
+        return response()->json($busRoute, 201);
+    }
+
 }
