@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Define your table and model names
-TABLE_NAME="book_borrows"
-MODEL_NAME="BookBorrow"
+TABLE_NAME="course_drop_requests"
+MODEL_NAME="CourseDropRequest"
 FACTORY_NAME="${MODEL_NAME}Factory"
 SEEDER_NAME="${MODEL_NAME}Seeder"
 CONTROLLER_NAME="${MODEL_NAME}Controller"
@@ -44,14 +44,12 @@ class $MODEL_NAME extends Model
 
     protected \$fillable = [
         'student_id',
-        'book_id',
-        'due_date',
-        'return_date',
+        'course_id',
+        'reason',
         'status',
-        'notes',
     ];
 
-    protected \$dates = ['due_date', 'return_date', 'deleted_at'];
+    protected \$dates = ['deleted_at'];
 }
 EOL
 commit_changes "Adding content to $MODEL_NAME model"
@@ -71,11 +69,9 @@ class Create${MODEL_NAME}Table extends Migration
         Schema::create('$TABLE_NAME', function (Blueprint \$table) {
             \$table->id();
             \$table->foreignId('student_id')->constrained('students')->onDelete('cascade');
-            \$table->foreignId('book_id')->constrained('library_books')->onDelete('cascade');
-            \$table->date('due_date');
-            \$table->date('return_date')->nullable();
-            \$table->enum('status', ['Borrowed', 'Returned', 'Overdue'])->default('Borrowed');
-            \$table->text('notes')->nullable();
+            \$table->foreignId('course_id')->constrained('courses')->onDelete('cascade');
+            \$table->text('reason');
+            \$table->enum('status', ['Pending', 'Approved', 'Rejected'])->default('Pending');
             \$table->timestamps();
             \$table->softDeletes();
         });
@@ -161,7 +157,7 @@ namespace Database\Factories;
 
 use App\Models\\$MODEL_NAME;
 use App\Models\Student; // Reference to Student factory
-use App\Models\LibraryBook; // Reference to LibraryBook factory
+use App\Models\Course; // Reference to Course factory
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class $FACTORY_NAME extends Factory
@@ -172,11 +168,9 @@ class $FACTORY_NAME extends Factory
     {
         return [
             'student_id' => Student::factory(),
-            'book_id' => LibraryBook::factory(),
-            'due_date' => \$this->faker->date(),
-            'return_date' => \$this->faker->optional()->date(),
-            'status' => \$this->faker->randomElement(['Borrowed', 'Returned', 'Overdue']),
-            'notes' => \$this->faker->optional()->paragraph(),
+            'course_id' => Course::factory(),
+            'reason' => \$this->faker->paragraph(),
+            'status' => \$this->faker->randomElement(['Pending', 'Approved', 'Rejected']),
         ];
     }
 }
@@ -216,11 +210,9 @@ class Store$MODEL_NAME extends FormRequest
     {
         return [
             'student_id' => 'required|exists:students,id',
-            'book_id' => 'required|exists:library_books,id',
-            'due_date' => 'required|date',
-            'return_date' => 'nullable|date',
-            'status' => 'required|in:Borrowed,Returned,Overdue',
-            'notes' => 'nullable|string',
+            'course_id' => 'required|exists:courses,id',
+            'reason' => 'required|string',
+            'status' => 'required|in:Pending,Approved,Rejected',
         ];
     }
 }
@@ -241,11 +233,9 @@ class Update$MODEL_NAME extends FormRequest
     {
         return [
             'student_id' => 'sometimes|exists:students,id',
-            'book_id' => 'sometimes|exists:library_books,id',
-            'due_date' => 'sometimes|date',
-            'return_date' => 'nullable|date',
-            'status' => 'sometimes|in:Borrowed,Returned,Overdue',
-            'notes' => 'nullable|string',
+            'course_id' => 'sometimes|exists:courses,id',
+            'reason' => 'sometimes|string',
+            'status' => 'sometimes|in:Pending,Approved,Rejected',
         ];
     }
 }
