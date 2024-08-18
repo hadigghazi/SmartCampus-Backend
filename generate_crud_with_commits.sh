@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Define your table and model names
-TABLE_NAME="submissions"
-MODEL_NAME="Submission"
+TABLE_NAME="payments"
+MODEL_NAME="Payment"
 FACTORY_NAME="${MODEL_NAME}Factory"
 SEEDER_NAME="${MODEL_NAME}Seeder"
 CONTROLLER_NAME="${MODEL_NAME}Controller"
@@ -24,8 +24,8 @@ commit_changes "Adding $MODEL_NAME model and migration"
 php artisan make:controller $CONTROLLER_NAME --resource
 php artisan make:factory $FACTORY_NAME --model=$MODEL_NAME
 php artisan make:seeder $SEEDER_NAME
-php artisan make:request Store$MODEL_NAME
-php artisan make:request Update$MODEL_NAME
+php artisan make:request $REQUEST_STORE
+php artisan make:request $REQUEST_UPDATE
 commit_changes "Generating $CONTROLLER_NAME, $FACTORY_NAME, $SEEDER_NAME, and request classes"
 
 # Write content to Model
@@ -43,21 +43,17 @@ class $MODEL_NAME extends Model
     use HasFactory, SoftDeletes;
 
     protected \$fillable = [
-        'assignment_id',
         'student_id',
-        'file_path',
-        'submission_date',
-        'grade',
+        'description',
+        'amount_usd',
+        'amount_lbp',
+        'exchange_rate',
+        'payment_date',
     ];
 
     protected \$dates = ['deleted_at'];
 
     // Relationships
-    public function assignment()
-    {
-        return \$this->belongsTo(Assignment::class);
-    }
-
     public function student()
     {
         return \$this->belongsTo(Student::class);
@@ -80,11 +76,12 @@ class Create${TABLE_NAME}Table extends Migration
     {
         Schema::create('$TABLE_NAME', function (Blueprint \$table) {
             \$table->id();
-            \$table->unsignedBigInteger('assignment_id');
             \$table->unsignedBigInteger('student_id');
-            \$table->string('file_path', 255);
-            \$table->date('submission_date');
-            \$table->decimal('grade', 5, 2);
+            \$table->text('description');
+            \$table->decimal('amount_usd', 10, 2);
+            \$table->decimal('amount_lbp', 10, 2);
+            \$table->decimal('exchange_rate', 10, 4);
+            \$table->date('payment_date');
             \$table->timestamps();
             \$table->softDeletes();
         });
@@ -178,11 +175,12 @@ class $FACTORY_NAME extends Factory
     public function definition()
     {
         return [
-            'assignment_id' => \App\Models\Assignment::inRandomOrder()->first()->id,
             'student_id' => \App\Models\Student::inRandomOrder()->first()->id,
-            'file_path' => \$this->faker->filePath(),
-            'submission_date' => \$this->faker->date(),
-            'grade' => \$this->faker->randomFloat(2, 0, 100),
+            'description' => \$this->faker->text(),
+            'amount_usd' => \$this->faker->randomFloat(2, 0, 1000),
+            'amount_lbp' => \$this->faker->randomFloat(2, 0, 1000),
+            'exchange_rate' => \$this->faker->randomFloat(4, 1, 100),
+            'payment_date' => \$this->faker->date(),
         ];
     }
 }
@@ -221,11 +219,12 @@ class Store$MODEL_NAME extends FormRequest
     public function rules()
     {
         return [
-            'assignment_id' => 'required|integer|exists:assignments,id',
             'student_id' => 'required|integer|exists:students,id',
-            'file_path' => 'required|string|max:255',
-            'submission_date' => 'required|date',
-            'grade' => 'required|numeric|min:0|max:100',
+            'description' => 'required|string',
+            'amount_usd' => 'required|numeric|min:0',
+            'amount_lbp' => 'required|numeric|min:0',
+            'exchange_rate' => 'required|numeric|min:0',
+            'payment_date' => 'required|date',
         ];
     }
 }
@@ -245,11 +244,12 @@ class Update$MODEL_NAME extends FormRequest
     public function rules()
     {
         return [
-            'assignment_id' => 'sometimes|integer|exists:assignments,id',
             'student_id' => 'sometimes|integer|exists:students,id',
-            'file_path' => 'sometimes|string|max:255',
-            'submission_date' => 'sometimes|date',
-            'grade' => 'sometimes|numeric|min:0|max:100',
+            'description' => 'sometimes|string',
+            'amount_usd' => 'sometimes|numeric|min:0',
+            'amount_lbp' => 'sometimes|numeric|min:0',
+            'exchange_rate' => 'sometimes|numeric|min:0',
+            'payment_date' => 'sometimes|date',
         ];
     }
 }

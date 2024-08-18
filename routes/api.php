@@ -27,6 +27,7 @@ use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\AssignmentController;
+use App\Http\Controllers\SubmissionController;
 
 
 Route::apiResource('faculties', FacultyController::class);
@@ -134,6 +135,7 @@ Route::delete('grades/{id}/force-delete', [GradeController::class, 'forceDelete'
 Route::apiResource('assignments', AssignmentController::class);
 Route::post('assignments/{id}/restore', [AssignmentController::class, 'restore']);
 Route::delete('assignments/{id}/force-delete', [AssignmentController::class, 'forceDelete']);
+
 Route::apiResource('submissions', SubmissionController::class);
 Route::post('submissions/{id}/restore', [SubmissionController::class, 'restore']);
 Route::delete('submissions/{id}/force-delete', [SubmissionController::class, 'forceDelete']);
