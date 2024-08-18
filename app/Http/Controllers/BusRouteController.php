@@ -32,4 +32,10 @@ class BusRouteController extends Controller
         return response()->json($busRoute);
     }
 
+    public function destroy(BusRoute $busRoute)
+    {
+        $busRoute->delete();
+        return response()->json(null, 204);
+    }
+
 }
