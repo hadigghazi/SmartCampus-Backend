@@ -20,4 +20,9 @@ class DormController extends Controller
         return response()->json($dorm, 201);
     }
 
+    public function show(Dorm $dorm)
+    {
+        return response()->json($dorm);
+    }
+
 }
