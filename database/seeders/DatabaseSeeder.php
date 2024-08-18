@@ -43,7 +43,8 @@ class DatabaseSeeder extends Seeder
         BusRegistrationSeeder::class,
         NewsSeeder::class,
         AnnouncementSeeder::class,
-        DeanSeeder::class
+        DeanSeeder::class,
+        CourseMaterialSeeder::class
     ]);
     }
 }

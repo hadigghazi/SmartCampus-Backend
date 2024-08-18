@@ -37,6 +37,8 @@ use App\Http\Controllers\BusRegistrationController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\DeanController;
+use App\Http\Controllers\CourseMaterialController;
+
 
 
 Route::apiResource('faculties', FacultyController::class);
@@ -184,6 +186,7 @@ Route::delete('announcements/{id}/force-delete', [AnnouncementController::class,
 Route::apiResource('deans', DeanController::class);
 Route::post('deans/{id}/restore', [DeanController::class, 'restore']);
 Route::delete('deans/{id}/force-delete', [DeanController::class, 'forceDelete']);
+
 Route::apiResource('course_materials', CourseMaterialController::class);
 Route::post('course_materials/{id}/restore', [CourseMaterialController::class, 'restore']);
 Route::delete('course_materials/{id}/force-delete', [CourseMaterialController::class, 'forceDelete']);
