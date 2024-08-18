@@ -6,23 +6,15 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreAnnouncement extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return false;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
-    public function rules(): array
+    public function rules()
     {
         return [
-            //
+            'title' => 'required|string|max:100',
+            'content' => 'required|string',
+            'published_date' => 'required|date',
+            'author_id' => 'required|exists:users,id',
+            'visibility' => 'required|string|max:50',
+            'category' => 'required|string|max:50',
         ];
     }
 }
