@@ -34,7 +34,8 @@ class DatabaseSeeder extends Seeder
         ExamSeeder::class,
         RegistrationSeeder::class,
         AssignmentSeeder::class,
-        GradeSeeder::class
+        GradeSeeder::class,
+        PaymentSeeder::class
     ]);
     }
 }
