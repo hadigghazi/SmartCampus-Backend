@@ -3,57 +3,37 @@
 namespace App\Http\Controllers;
 
 use App\Models\FacultyCampus;
+use App\Http\Requests\StoreFacultyCampusRequest;
+use App\Http\Requests\UpdateFacultyCampusRequest;
 use Illuminate\Http\Request;
 
 class FacultyCampusController extends Controller
 {
     public function index()
     {
-        $facultiesCampuses = FacultyCampus::withTrashed()->get();
-        return response()->json($facultiesCampuses);
+        $facultyCampuses = FacultyCampus::withTrashed()->get();
+        return response()->json($facultyCampuses);
     }
 
-    public function facultiesByCampus($campusId)
+    public function store(StoreFacultyCampusRequest $request)
     {
-        $faculties = FacultyCampus::where('campus_id', $campusId)
-            ->with('faculty')
-            ->get()
-            ->pluck('faculty');
-        return response()->json($faculties);
-    }
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            'faculty_id' => 'required|exists:faculties,id',
-            'campus_id' => 'required|exists:campuses,id',
-        ]);
-
-        $facultyCampus = FacultyCampus::create($request->all());
+        $facultyCampus = FacultyCampus::create($request->validated());
         return response()->json($facultyCampus, 201);
     }
 
     public function show($id)
     {
-        $facultyCampus = FacultyCampus::withTrashed()->findOrFail($id);
         return response()->json($facultyCampus);
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateFacultyCampusRequest $request, $id)
     {
-        $request->validate([
-            'faculty_id' => 'sometimes|required|exists:faculties,id',
-            'campus_id' => 'sometimes|required|exists:campuses,id',
-        ]);
-
-        $facultyCampus = FacultyCampus::findOrFail($id);
-        $facultyCampus->update($request->all());
+        $facultyCampus->update($request->validated());
         return response()->json($facultyCampus);
     }
 
     public function destroy($id)
     {
-        $facultyCampus = FacultyCampus::findOrFail($id);
         $facultyCampus->delete();
         return response()->json(null, 204);
     }
@@ -70,5 +50,17 @@ class FacultyCampusController extends Controller
         $facultyCampus = FacultyCampus::withTrashed()->findOrFail($id);
         $facultyCampus->forceDelete();
         return response()->json(null, 204);
+    }
+
+    public function facultiesByCampus($campusId)
+    {
+        $facultyCampuses = FacultyCampus::where('campus_id', $campusId)->with('faculty')->get();
+        return response()->json($facultyCampuses->pluck('faculty'));
+    }
+
+    public function campusesByFaculty($facultyId)
+    {
+        $facultyCampuses = FacultyCampus::where('faculty_id', $facultyId)->with('campus')->get();
+        return response()->json($facultyCampuses->pluck('campus'));
     }
 }
