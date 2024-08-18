@@ -2,22 +2,19 @@
 
 namespace Database\Factories;
 
+use App\Models\Dean;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Dean>
- */
 class DeanFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array
+    protected $model = Dean::class;
+
+    public function definition()
     {
         return [
-            //
+            'faculty_id' => $this->faker->numberBetween(1, 100),
+            'campus_id' => $this->faker->numberBetween(1, 100),
+            'role_description' => $this->faker->paragraph(),
         ];
     }
 }
