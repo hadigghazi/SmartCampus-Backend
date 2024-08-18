@@ -31,4 +31,10 @@ class CoursePrerequisiteController extends Controller
         return response()->json($coursePrerequisite);
     }
 
+    public function destroy(CoursePrerequisite $coursePrerequisite)
+    {
+        $coursePrerequisite->delete();
+        return response()->json(null, 204);
+    }
+
 }
