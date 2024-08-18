@@ -20,7 +20,7 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\FacultyCampusController;
 use App\Http\Controllers\CoursePrerequisiteController;
 use App\Http\Controllers\CourseInstructorController;
-
+use App\Http\Controllers\DormController;
 
 
 Route::apiResource('faculties', FacultyController::class);
@@ -98,3 +98,7 @@ Route::delete('course-prerequisites/{id}/force-delete', [CoursePrerequisiteContr
 Route::apiResource('course-instructors', CourseInstructorController::class);
 Route::post('course-instructors/{id}/restore', [CourseInstructorController::class, 'restore']);
 Route::delete('course-instructors/{id}/force-delete', [CourseInstructorController::class, 'forceDelete']);
+
+Route::apiResource('dorms', DormController::class);
+Route::post('dorms/{id}/restore', [DormController::class, 'restore']);
+Route::delete('dorms/{id}/force-delete', [DormController::class, 'forceDelete']);
