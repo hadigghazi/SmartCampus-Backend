@@ -6,23 +6,15 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateBookBorrow extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return false;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
-    public function rules(): array
+    public function rules()
     {
         return [
-            //
+            'student_id' => 'sometimes|exists:students,id',
+            'book_id' => 'sometimes|exists:library_books,id',
+            'due_date' => 'sometimes|date',
+            'return_date' => 'nullable|date',
+            'status' => 'sometimes|in:Borrowed,Returned,Overdue',
+            'notes' => 'nullable|string',
         ];
     }
 }
