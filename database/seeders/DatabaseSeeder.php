@@ -26,8 +26,9 @@ class DatabaseSeeder extends Seeder
         AdminSeeder::class,
         InstructorSeeder::class,
         AddressSeeder::class,
-        FacultyCampus::class,
-        CourseInstructor::class
+        FacultyCampusSeeder::class,
+        CourseInstructorSeeder::class,
+        DormSeeder::class
     ]);
     }
 }
