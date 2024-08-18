@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Define your table and model names
-TABLE_NAME="news"
-MODEL_NAME="News"
+TABLE_NAME="announcements"
+MODEL_NAME="Announcement"
 FACTORY_NAME="${MODEL_NAME}Factory"
 SEEDER_NAME="${MODEL_NAME}Seeder"
 CONTROLLER_NAME="${MODEL_NAME}Controller"
@@ -47,6 +47,7 @@ class $MODEL_NAME extends Model
         'content',
         'published_date',
         'author_id',
+        'visibility',
         'category',
     ];
 
@@ -73,6 +74,7 @@ class Create${MODEL_NAME}Table extends Migration
             \$table->text('content');
             \$table->date('published_date');
             \$table->foreignId('author_id')->constrained('users')->onDelete('cascade');
+            \$table->string('visibility', 50);
             \$table->string('category', 50);
             \$table->timestamps();
             \$table->softDeletes();
@@ -167,11 +169,12 @@ class $FACTORY_NAME extends Factory
     public function definition()
     {
         return [
-            'title' => \$this->faker->sentence,
-            'content' => \$this->faker->paragraph,
+            'title' => \$this->faker->sentence(),
+            'content' => \$this->faker->paragraph(),
             'published_date' => \$this->faker->date(),
             'author_id' => \$this->faker->numberBetween(1, 100),
-            'category' => \$this->faker->word,
+            'visibility' => \$this->faker->word(),
+            'category' => \$this->faker->word(),
         ];
     }
 }
@@ -214,6 +217,7 @@ class Store$MODEL_NAME extends FormRequest
             'content' => 'required|string',
             'published_date' => 'required|date',
             'author_id' => 'required|exists:users,id',
+            'visibility' => 'required|string|max:50',
             'category' => 'required|string|max:50',
         ];
     }
@@ -238,6 +242,7 @@ class Update$MODEL_NAME extends FormRequest
             'content' => 'sometimes|string',
             'published_date' => 'sometimes|date',
             'author_id' => 'sometimes|exists:users,id',
+            'visibility' => 'sometimes|string|max:50',
             'category' => 'sometimes|string|max:50',
         ];
     }
