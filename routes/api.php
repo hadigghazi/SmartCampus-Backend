@@ -113,3 +113,4 @@ Route::delete('dorm-rooms/{id}/force-delete', [DormRoomController::class, 'force
 Route::apiResource('bus-routes', BusRouteController::class);
 Route::post('bus-routes/{id}/restore', [BusRouteController::class, 'restore']);
 Route::delete('bus-routes/{id}/force-delete', [BusRouteController::class, 'forceDelete']);
+Route::get('campuses/{campusId}/bus-routes', [BusRouteController::class, 'routesByCampus']); // New route
