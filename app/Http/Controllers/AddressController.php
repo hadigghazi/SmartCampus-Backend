@@ -19,4 +19,10 @@ class AddressController extends Controller
         return response()->json($address, 201);
     }
 
+    public function show($id)
+    {
+        $address = Address::withTrashed()->findOrFail($id);
+        return response()->json($address);
+    }
+
 }
