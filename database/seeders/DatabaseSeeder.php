@@ -36,7 +36,8 @@ class DatabaseSeeder extends Seeder
         AssignmentSeeder::class,
         GradeSeeder::class,
         PaymentSeeder::class,
-        FeeSeeder::class
+        FeeSeeder::class,
+        FinancialAidScholarshipSeeder::class
     ]);
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Createfinancial_aid_scholarshipsTable extends Migration
+class CreateFinancialAidScholarshipsTable extends Migration
 {
     public function up()
     {
