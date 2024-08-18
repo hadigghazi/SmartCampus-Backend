@@ -25,4 +25,10 @@ class CoursePrerequisiteController extends Controller
         return response()->json($coursePrerequisite);
     }
 
+    public function update(UpdateCoursePrerequisiteRequest $request, CoursePrerequisite $coursePrerequisite)
+    {
+        $coursePrerequisite->update($request->validated());
+        return response()->json($coursePrerequisite);
+    }
+
 }
