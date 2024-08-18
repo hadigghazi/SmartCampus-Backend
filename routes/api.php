@@ -17,6 +17,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\FacultyCampusController;
 
 
 Route::apiResource('faculties', FacultyController::class);
@@ -78,3 +79,9 @@ Route::delete('instructors/{id}/force-delete', [InstructorController::class, 'fo
 Route::apiResource('addresses', AddressController::class);
 Route::post('addresses/{id}/restore', [AddressController::class, 'restore']);
 Route::delete('addresses/{id}/force-delete', [AddressController::class, 'forceDelete']);
+
+Route::apiResource('faculties-campuses', FacultyCampusController::class);
+Route::get('campuses/{campusId}/faculties', [FacultyCampusController::class, 'facultiesByCampus']);
+Route::get('faculties/{facultyId}/campuses', [FacultyCampusController::class, 'campusesByFaculty']);
+Route::post('faculties-campuses/{id}/restore', [AddressController::class, 'restore']);
+Route::delete('faculties-campuses/{id}/force-delete', [AddressController::class, 'forceDelete']);

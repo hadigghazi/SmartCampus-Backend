@@ -63,4 +63,16 @@ class FacultyCampusController extends Controller
         $facultyCampuses = FacultyCampus::where('faculty_id', $facultyId)->with('campus')->get();
         return response()->json($facultyCampuses->pluck('campus'));
     }
+
+    public function attachFacultyToCampus(Request $request, $campusId)
+    {
+        $facultyId = $request->input('faculty_id');
+    
+        $facultyCampus = FacultyCampus::updateOrCreate(
+            ['faculty_id' => $facultyId, 'campus_id' => $campusId]
+        );
+    
+        return response()->json($facultyCampus, 201);
+    }
+
 }
