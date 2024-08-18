@@ -22,4 +22,15 @@ class FacultyCampusController extends Controller
         return response()->json($faculties);
     }
 
+    public function store(Request $request)
+    {
+        $request->validate([
+            'faculty_id' => 'required|exists:faculties,id',
+            'campus_id' => 'required|exists:campuses,id',
+        ]);
+
+        $facultyCampus = FacultyCampus::create($request->all());
+        return response()->json($facultyCampus, 201);
+    }
+
 }
