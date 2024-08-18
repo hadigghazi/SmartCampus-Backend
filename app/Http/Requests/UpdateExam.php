@@ -6,23 +6,16 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateExam extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return false;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
-    public function rules(): array
+    public function rules()
     {
         return [
-            //
+            'course_id' => 'sometimes|integer|exists:courses,id',
+            'instructor_id' => 'sometimes|integer|exists:instructors,id',
+            'date' => 'sometimes|date',
+            'time' => 'sometimes|date_format:H:i:s',
+            'duration' => 'sometimes|integer',
+            'campus_id' => 'sometimes|integer|exists:campuses,id',
+            'room_id' => 'sometimes|integer|exists:rooms,id',
         ];
     }
 }
