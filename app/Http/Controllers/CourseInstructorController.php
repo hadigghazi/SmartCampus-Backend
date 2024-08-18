@@ -37,5 +37,11 @@ class CourseInstructorController extends Controller
         return response()->json(null, 204);
     }
 
-  
+    public function restore($id)
+    {
+        $courseInstructor = CourseInstructor::withTrashed()->findOrFail($id);
+        $courseInstructor->restore();
+        return response()->json($courseInstructor);
+    }
+
 }
