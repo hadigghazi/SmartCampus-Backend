@@ -13,7 +13,7 @@ class BusRegistrationFactory extends Factory
     {
         return [
             'student_id' => $this->faker->numberBetween(1, 100),
-            'bus_route_id' => $this->faker->numberBetween(1, 100),
+            'bus_route_id' => $this->faker->numberBetween(1, 2),
             'registration_date' => $this->faker->date(),
             'status' => $this->faker->randomElement(['Pending', 'Confirmed', 'Canceled']),
         ];

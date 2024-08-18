@@ -9,6 +9,14 @@ class BusRegistrationSeeder extends Seeder
 {
     public function run()
     {
-        BusRegistration::factory()->count(10)->create();
+        $studentId = 1; 
+        $busRouteId = 1; 
+
+        BusRegistration::create([
+            'student_id' => $studentId,
+            'bus_route_id' => $busRouteId,
+            'registration_date' => '2024-08-18',
+            'status' => 'Confirmed',
+        ]);
     }
 }

@@ -33,6 +33,7 @@ use App\Http\Controllers\FeeController;
 use App\Http\Controllers\FinancialAidScholarshipController;
 use App\Http\Controllers\ImportantDateController;
 use App\Http\Controllers\DormRegistrationController;
+use App\Http\Controllers\BusRegistrationController;
 
 
 Route::apiResource('faculties', FacultyController::class);
@@ -164,6 +165,7 @@ Route::delete('important_dates/{id}/force-delete', [ImportantDateController::cla
 Route::apiResource('dorm_registrations', DormRegistrationController::class);
 Route::post('dorm_registrations/{id}/restore', [DormRegistrationController::class, 'restore']);
 Route::delete('dorm_registrations/{id}/force-delete', [DormRegistrationController::class, 'forceDelete']);
+
 Route::apiResource('bus_registrations', BusRegistrationController::class);
 Route::post('bus_registrations/{id}/restore', [BusRegistrationController::class, 'restore']);
 Route::delete('bus_registrations/{id}/force-delete', [BusRegistrationController::class, 'forceDelete']);
