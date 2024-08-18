@@ -31,4 +31,10 @@ class DormRoomController extends Controller
         return response()->json($dormRoom);
     }
 
+    public function destroy(DormRoom $dormRoom)
+    {
+        $dormRoom->delete();
+        return response()->json(null, 204);
+    }
+
 }
