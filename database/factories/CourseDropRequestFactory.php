@@ -2,22 +2,22 @@
 
 namespace Database\Factories;
 
+use App\Models\CourseDropRequest;
+use App\Models\Student; // Reference to Student factory
+use App\Models\Course; // Reference to Course factory
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\CourseDropRequest>
- */
 class CourseDropRequestFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array
+    protected $model = CourseDropRequest::class;
+
+    public function definition()
     {
         return [
-            //
+            'student_id' => Student::factory(),
+            'course_id' => Course::factory(),
+            'reason' => $this->faker->paragraph(),
+            'status' => $this->faker->randomElement(['Pending', 'Approved', 'Rejected']),
         ];
     }
 }
