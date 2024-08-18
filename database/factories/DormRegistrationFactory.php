@@ -2,22 +2,21 @@
 
 namespace Database\Factories;
 
+use App\Models\DormRegistration;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\DormRegistration>
- */
 class DormRegistrationFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array
+    protected $model = DormRegistration::class;
+
+    public function definition()
     {
         return [
-            //
+            'student_id' => \App\Models\Student::factory(),
+            'dorm_room_id' => \App\Models\DormRoom::factory(),
+            'start_date' => $this->faker->date(),
+            'end_date' => $this->faker->optional()->date(),
+            'status' => $this->faker->randomElement(['Pending', 'Confirmed', 'Canceled']),
         ];
     }
 }
