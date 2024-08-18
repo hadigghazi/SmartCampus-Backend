@@ -38,6 +38,7 @@ class DatabaseSeeder extends Seeder
         PaymentSeeder::class,
         FeeSeeder::class,
         FinancialAidScholarshipSeeder::class,
+        ImportantDateSeeder::class
     ]);
     }
 }
