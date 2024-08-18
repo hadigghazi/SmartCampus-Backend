@@ -35,6 +35,7 @@ use App\Http\Controllers\ImportantDateController;
 use App\Http\Controllers\DormRegistrationController;
 use App\Http\Controllers\BusRegistrationController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\AnnouncementController;
 
 
 Route::apiResource('faculties', FacultyController::class);
@@ -174,6 +175,7 @@ Route::delete('bus_registrations/{id}/force-delete', [BusRegistrationController:
 Route::apiResource('news', NewsController::class);
 Route::post('news/{id}/restore', [NewsController::class, 'restore']);
 Route::delete('news/{id}/force-delete', [NewsController::class, 'forceDelete']);
+
 Route::apiResource('announcements', AnnouncementController::class);
 Route::post('announcements/{id}/restore', [AnnouncementController::class, 'restore']);
 Route::delete('announcements/{id}/force-delete', [AnnouncementController::class, 'forceDelete']);

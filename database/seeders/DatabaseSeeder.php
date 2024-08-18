@@ -41,7 +41,8 @@ class DatabaseSeeder extends Seeder
         ImportantDateSeeder::class,
         DormRegistrationSeeder::class,
         BusRegistrationSeeder::class,
-        NewsSeeder::class
+        NewsSeeder::class,
+        AnnouncementSeeder::class
     ]);
     }
 }
