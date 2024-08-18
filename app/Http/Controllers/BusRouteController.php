@@ -26,4 +26,10 @@ class BusRouteController extends Controller
         return response()->json($busRoute);
     }
 
+    public function update(UpdateBusRouteRequest $request, BusRoute $busRoute)
+    {
+        $busRoute->update($request->validated());
+        return response()->json($busRoute);
+    }
+
 }
