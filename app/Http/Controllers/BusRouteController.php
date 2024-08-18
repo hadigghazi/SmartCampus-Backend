@@ -45,4 +45,12 @@ class BusRouteController extends Controller
         return response()->json($busRoute);
     }
 
+    public function forceDelete($id)
+    {
+        $busRoute = BusRoute::withTrashed()->findOrFail($id);
+        $busRoute->forceDelete();
+        return response()->json(null, 204);
+    }
+
+  
 }
