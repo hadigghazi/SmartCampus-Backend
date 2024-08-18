@@ -18,6 +18,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\FacultyCampusController;
+use App\Http\Controllers\CoursePrerequisiteController;
 
 
 Route::apiResource('faculties', FacultyController::class);
@@ -87,3 +88,7 @@ Route::post('faculties-campuses/{id}/restore', [FacultyCampusController::class, 
 Route::delete('faculties-campuses/{id}/force-delete', [FacultyCampusController::class, 'forceDelete']);
 Route::post('campuses/{campusId}/faculties/attach', [FacultyCampusController::class, 'attachFacultyToCampus']);
 Route::delete('campuses/{campusId}/faculties/{facultyId}', [FacultyCampusController::class, 'detachFacultyFromCampus']);
+
+Route::apiResource('course-prerequisites', CoursePrerequisiteController::class);
+Route::post('course-prerequisites/{id}/restore', [CoursePrerequisiteController::class, 'restore']);
+Route::delete('course-prerequisites/{id}/force-delete', [CoursePrerequisiteController::class, 'forceDelete']);
