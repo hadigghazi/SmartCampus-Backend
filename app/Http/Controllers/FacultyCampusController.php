@@ -33,4 +33,10 @@ class FacultyCampusController extends Controller
         return response()->json($facultyCampus, 201);
     }
 
+    public function show($id)
+    {
+        $facultyCampus = FacultyCampus::withTrashed()->findOrFail($id);
+        return response()->json($facultyCampus);
+    }
+
 }
