@@ -19,11 +19,15 @@ class AddressController extends Controller
         return response()->json($address, 201);
     }
 
-    public function show($id)
-    {
-        $address = Address::withTrashed()->findOrFail($id);
-        return response()->json($address);
+    public function show(Address $address)
+{
+    if ($address->trashed()) {
+        return response()->json(['error' => 'Address not found'], 404);
     }
+
+    return response()->json($address);
+}
+
 
     public function update(UpdateAddressRequest $request, $id)
     {
@@ -32,9 +36,8 @@ class AddressController extends Controller
         return response()->json($address);
     }
 
-    public function destroy($id)
+    public function destroy(Address $address)
     {
-        $address = Address::findOrFail($id);
         $address->delete();
         return response()->json(null, 204);
     }
