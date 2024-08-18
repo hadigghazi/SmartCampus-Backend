@@ -14,6 +14,7 @@ class DeanFactory extends Factory
     public function definition()
     {
         return [
+            'name' => $this->faker->name, 
             'faculty_id' => Faculty::inRandomOrder()->first()->id,
             'campus_id' => Campus::inRandomOrder()->first()->id,
             'role_description' => $this->faker->paragraph(),

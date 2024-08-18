@@ -11,6 +11,7 @@ class Dean extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'name',
         'faculty_id',
         'campus_id',
         'role_description',
