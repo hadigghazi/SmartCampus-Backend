@@ -14,4 +14,10 @@ class CourseInstructorController extends Controller
         return response()->json($courseInstructors);
     }
 
+    public function store(StoreCourseInstructorRequest $request)
+    {
+        $courseInstructor = CourseInstructor::create($request->validated());
+        return response()->json($courseInstructor, 201);
+    }
+
 }
