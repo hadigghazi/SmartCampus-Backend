@@ -1,7 +1,8 @@
 #!/bin/bash
 
-TABLE_NAME="course_materials"
-MODEL_NAME="CourseMaterial"
+# Define your table and model names
+TABLE_NAME="library_books"
+MODEL_NAME="LibraryBook"
 FACTORY_NAME="${MODEL_NAME}Factory"
 SEEDER_NAME="${MODEL_NAME}Seeder"
 CONTROLLER_NAME="${MODEL_NAME}Controller"
@@ -42,11 +43,12 @@ class $MODEL_NAME extends Model
     use HasFactory, SoftDeletes;
 
     protected \$fillable = [
-        'course_id',
         'title',
-        'description',
-        'file_path',
-        'uploaded_by',
+        'author',
+        'isbn',
+        'copies',
+        'publication_year',
+        'campus_id',
     ];
 
     protected \$dates = ['deleted_at'];
@@ -68,11 +70,12 @@ class Create${MODEL_NAME}Table extends Migration
     {
         Schema::create('$TABLE_NAME', function (Blueprint \$table) {
             \$table->id();
-            \$table->foreignId('course_id')->constrained('courses')->onDelete('cascade');
             \$table->string('title', 100);
-            \$table->text('description');
-            \$table->string('file_path', 255);
-            \$table->foreignId('uploaded_by')->constrained('users')->onDelete('cascade');
+            \$table->string('author', 100);
+            \$table->string('isbn', 20);
+            \$table->integer('copies');
+            \$table->integer('publication_year');
+            \$table->foreignId('campus_id')->constrained('campuses')->onDelete('cascade');
             \$table->timestamps();
             \$table->softDeletes();
         });
@@ -157,6 +160,7 @@ cat > database/factories/$FACTORY_NAME.php <<EOL
 namespace Database\Factories;
 
 use App\Models\\$MODEL_NAME;
+use App\Models\Campus; // Reference to Campus factory
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class $FACTORY_NAME extends Factory
@@ -166,11 +170,12 @@ class $FACTORY_NAME extends Factory
     public function definition()
     {
         return [
-            'course_id' => \$this->faker->numberBetween(1, 100),
             'title' => \$this->faker->sentence(),
-            'description' => \$this->faker->paragraph(),
-            'file_path' => \$this->faker->filePath(),
-            'uploaded_by' => \$this->faker->numberBetween(1, 100),
+            'author' => \$this->faker->name(),
+            'isbn' => \$this->faker->isbn13(),
+            'copies' => \$this->faker->numberBetween(1, 100),
+            'publication_year' => \$this->faker->year(),
+            'campus_id' => Campus::factory(), // Reference the Campus factory
         ];
     }
 }
@@ -209,11 +214,12 @@ class Store$MODEL_NAME extends FormRequest
     public function rules()
     {
         return [
-            'course_id' => 'required|exists:courses,id',
             'title' => 'required|string|max:100',
-            'description' => 'required|string',
-            'file_path' => 'required|string|max:255',
-            'uploaded_by' => 'required|exists:users,id',
+            'author' => 'required|string|max:100',
+            'isbn' => 'required|string|max:20',
+            'copies' => 'required|integer',
+            'publication_year' => 'required|integer',
+            'campus_id' => 'required|exists:campuses,id',
         ];
     }
 }
@@ -233,11 +239,12 @@ class Update$MODEL_NAME extends FormRequest
     public function rules()
     {
         return [
-            'course_id' => 'sometimes|exists:courses,id',
             'title' => 'sometimes|string|max:100',
-            'description' => 'sometimes|string',
-            'file_path' => 'sometimes|string|max:255',
-            'uploaded_by' => 'sometimes|exists:users,id',
+            'author' => 'sometimes|string|max:100',
+            'isbn' => 'sometimes|string|max:20',
+            'copies' => 'sometimes|integer',
+            'publication_year' => 'sometimes|integer',
+            'campus_id' => 'sometimes|exists:campuses,id',
         ];
     }
 }
