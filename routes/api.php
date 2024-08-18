@@ -114,3 +114,6 @@ Route::apiResource('bus-routes', BusRouteController::class);
 Route::post('bus-routes/{id}/restore', [BusRouteController::class, 'restore']);
 Route::delete('bus-routes/{id}/force-delete', [BusRouteController::class, 'forceDelete']);
 Route::get('campuses/{campusId}/bus-routes', [BusRouteController::class, 'routesByCampus']); // New route
+Route::apiResource('registrations', RegistrationController::class);
+Route::post('registrations/{id}/restore', [RegistrationController::class, 'restore']);
+Route::delete('registrations/{id}/force-delete', [RegistrationController::class, 'forceDelete']);
