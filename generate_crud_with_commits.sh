@@ -1,8 +1,7 @@
 #!/bin/bash
 
-# Define your table and model names
-TABLE_NAME="deans"
-MODEL_NAME="Dean"
+TABLE_NAME="course_materials"
+MODEL_NAME="CourseMaterial"
 FACTORY_NAME="${MODEL_NAME}Factory"
 SEEDER_NAME="${MODEL_NAME}Seeder"
 CONTROLLER_NAME="${MODEL_NAME}Controller"
@@ -43,9 +42,11 @@ class $MODEL_NAME extends Model
     use HasFactory, SoftDeletes;
 
     protected \$fillable = [
-        'faculty_id',
-        'campus_id',
-        'role_description',
+        'course_id',
+        'title',
+        'description',
+        'file_path',
+        'uploaded_by',
     ];
 
     protected \$dates = ['deleted_at'];
@@ -67,9 +68,11 @@ class Create${MODEL_NAME}Table extends Migration
     {
         Schema::create('$TABLE_NAME', function (Blueprint \$table) {
             \$table->id();
-            \$table->foreignId('faculty_id')->constrained('faculties')->onDelete('cascade');
-            \$table->foreignId('campus_id')->constrained('campuses')->onDelete('cascade');
-            \$table->text('role_description');
+            \$table->foreignId('course_id')->constrained('courses')->onDelete('cascade');
+            \$table->string('title', 100);
+            \$table->text('description');
+            \$table->string('file_path', 255);
+            \$table->foreignId('uploaded_by')->constrained('users')->onDelete('cascade');
             \$table->timestamps();
             \$table->softDeletes();
         });
@@ -163,9 +166,11 @@ class $FACTORY_NAME extends Factory
     public function definition()
     {
         return [
-            'faculty_id' => \$this->faker->numberBetween(1, 100),
-            'campus_id' => \$this->faker->numberBetween(1, 100),
-            'role_description' => \$this->faker->paragraph(),
+            'course_id' => \$this->faker->numberBetween(1, 100),
+            'title' => \$this->faker->sentence(),
+            'description' => \$this->faker->paragraph(),
+            'file_path' => \$this->faker->filePath(),
+            'uploaded_by' => \$this->faker->numberBetween(1, 100),
         ];
     }
 }
@@ -204,9 +209,11 @@ class Store$MODEL_NAME extends FormRequest
     public function rules()
     {
         return [
-            'faculty_id' => 'required|exists:faculties,id',
-            'campus_id' => 'required|exists:campuses,id',
-            'role_description' => 'required|string',
+            'course_id' => 'required|exists:courses,id',
+            'title' => 'required|string|max:100',
+            'description' => 'required|string',
+            'file_path' => 'required|string|max:255',
+            'uploaded_by' => 'required|exists:users,id',
         ];
     }
 }
@@ -226,9 +233,11 @@ class Update$MODEL_NAME extends FormRequest
     public function rules()
     {
         return [
-            'faculty_id' => 'sometimes|exists:faculties,id',
-            'campus_id' => 'sometimes|exists:campuses,id',
-            'role_description' => 'sometimes|string',
+            'course_id' => 'sometimes|exists:courses,id',
+            'title' => 'sometimes|string|max:100',
+            'description' => 'sometimes|string',
+            'file_path' => 'sometimes|string|max:255',
+            'uploaded_by' => 'sometimes|exists:users,id',
         ];
     }
 }
