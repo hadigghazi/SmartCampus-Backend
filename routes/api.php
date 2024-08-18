@@ -139,3 +139,6 @@ Route::delete('assignments/{id}/force-delete', [AssignmentController::class, 'fo
 Route::apiResource('submissions', SubmissionController::class);
 Route::post('submissions/{id}/restore', [SubmissionController::class, 'restore']);
 Route::delete('submissions/{id}/force-delete', [SubmissionController::class, 'forceDelete']);
+Route::apiResource('payments', PaymentController::class);
+Route::post('payments/{id}/restore', [PaymentController::class, 'restore']);
+Route::delete('payments/{id}/force-delete', [PaymentController::class, 'forceDelete']);
