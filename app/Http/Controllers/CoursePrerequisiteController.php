@@ -44,4 +44,10 @@ class CoursePrerequisiteController extends Controller
         return response()->json($coursePrerequisite);
     }
 
+    public function forceDelete($id)
+    {
+        $coursePrerequisite = CoursePrerequisite::withTrashed()->findOrFail($id);
+        $coursePrerequisite->forceDelete();
+        return response()->json(null, 204);
+    }
 }
