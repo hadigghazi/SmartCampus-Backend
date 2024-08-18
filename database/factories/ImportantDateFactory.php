@@ -2,22 +2,21 @@
 
 namespace Database\Factories;
 
+use App\Models\ImportantDate;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ImportantDate>
- */
 class ImportantDateFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array
+    protected $model = ImportantDate::class;
+
+    public function definition()
     {
         return [
-            //
+            'title' => $this->faker->sentence,
+            'description' => $this->faker->text,
+            'date' => $this->faker->date(),
+            'end_date' => $this->faker->optional()->date(),
+            'type' => $this->faker->randomElement(['Deadline', 'Event', 'Holiday', 'Other']),
         ];
     }
 }
