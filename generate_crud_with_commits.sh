@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Define your table and model names
-TABLE_NAME="financial_aid_scholarships"
-MODEL_NAME="FinancialAidScholarship"
+TABLE_NAME="academic_calendar"
+MODEL_NAME="AcademicCalendar"
 FACTORY_NAME="${MODEL_NAME}Factory"
 SEEDER_NAME="${MODEL_NAME}Seeder"
 CONTROLLER_NAME="${MODEL_NAME}Controller"
@@ -24,8 +24,8 @@ commit_changes "Adding $MODEL_NAME model and migration"
 php artisan make:controller $CONTROLLER_NAME --resource
 php artisan make:factory $FACTORY_NAME --model=$MODEL_NAME
 php artisan make:seeder $SEEDER_NAME
-php artisan make:request $REQUEST_STORE
-php artisan make:request $REQUEST_UPDATE
+php artisan make:request Store$MODEL_NAME
+php artisan make:request Update$MODEL_NAME
 commit_changes "Generating $CONTROLLER_NAME, $FACTORY_NAME, $SEEDER_NAME, and request classes"
 
 # Write content to Model
@@ -43,23 +43,17 @@ class $MODEL_NAME extends Model
     use HasFactory, SoftDeletes;
 
     protected \$fillable = [
-        'student_id',
-        'type',
-        'amount_usd',
-        'amount_lbp',
+        'title',
         'description',
+        'date',
+        'end_date',
+        'type',
     ];
 
     protected \$dates = ['deleted_at'];
-
-    // Relationships
-    public function student()
-    {
-        return \$this->belongsTo(Student::class);
-    }
 }
 EOL
-commit_changes "Adding content to $MODEL_NAME model with relationships"
+commit_changes "Adding content to $MODEL_NAME model"
 
 # Write content to Migration
 cat > database/migrations/*_create_${TABLE_NAME}_table.php <<EOL
@@ -69,17 +63,17 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Create${TABLE_NAME}Table extends Migration
+class Create${MODEL_NAME}Table extends Migration
 {
     public function up()
     {
         Schema::create('$TABLE_NAME', function (Blueprint \$table) {
             \$table->id();
-            \$table->unsignedBigInteger('student_id');
-            \$table->string('type', 100);
-            \$table->decimal('amount_usd', 10, 2);
-            \$table->decimal('amount_lbp', 10, 2);
-            \$table->text('description');
+            \$table->string('title', 100);
+            \$table->text('description')->nullable();
+            \$table->date('date');
+            \$table->date('end_date')->nullable();
+            \$table->enum('type', ['Deadline', 'Event', 'Holiday', 'Other']);
             \$table->timestamps();
             \$table->softDeletes();
         });
@@ -173,11 +167,11 @@ class $FACTORY_NAME extends Factory
     public function definition()
     {
         return [
-            'student_id' => \App\Models\Student::inRandomOrder()->first()->id,
-            'type' => \$this->faker->word(),
-            'amount_usd' => \$this->faker->randomFloat(2, 0, 1000),
-            'amount_lbp' => \$this->faker->randomFloat(2, 0, 1000),
-            'description' => \$this->faker->text(),
+            'title' => \$this->faker->sentence,
+            'description' => \$this->faker->text,
+            'date' => \$this->faker->date(),
+            'end_date' => \$this->faker->optional()->date(),
+            'type' => \$this->faker->randomElement(['Deadline', 'Event', 'Holiday', 'Other']),
         ];
     }
 }
@@ -216,11 +210,11 @@ class Store$MODEL_NAME extends FormRequest
     public function rules()
     {
         return [
-            'student_id' => 'required|integer|exists:students,id',
-            'type' => 'required|string|max:100',
-            'amount_usd' => 'required|numeric|min:0',
-            'amount_lbp' => 'required|numeric|min:0',
-            'description' => 'required|string',
+            'title' => 'required|string|max:100',
+            'description' => 'nullable|string',
+            'date' => 'required|date',
+            'end_date' => 'nullable|date',
+            'type' => 'required|in:Deadline,Event,Holiday,Other',
         ];
     }
 }
@@ -240,11 +234,11 @@ class Update$MODEL_NAME extends FormRequest
     public function rules()
     {
         return [
-            'student_id' => 'sometimes|integer|exists:students,id',
-            'type' => 'sometimes|string|max:100',
-            'amount_usd' => 'sometimes|numeric|min:0',
-            'amount_lbp' => 'sometimes|numeric|min:0',
+            'title' => 'sometimes|string|max:100',
             'description' => 'sometimes|string',
+            'date' => 'sometimes|date',
+            'end_date' => 'sometimes|date',
+            'type' => 'sometimes|in:Deadline,Event,Holiday,Other',
         ];
     }
 }
