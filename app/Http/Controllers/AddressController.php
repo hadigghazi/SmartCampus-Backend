@@ -39,4 +39,10 @@ class AddressController extends Controller
         return response()->json(null, 204);
     }
 
+    public function restore($id)
+    {
+        $address = Address::withTrashed()->findOrFail($id);
+        $address->restore();
+        return response()->json($address);
+    }
 }
