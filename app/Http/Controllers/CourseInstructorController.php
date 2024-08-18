@@ -31,4 +31,11 @@ class CourseInstructorController extends Controller
         return response()->json($courseInstructor);
     }
 
+    public function destroy(CourseInstructor $courseInstructor)
+    {
+        $courseInstructor->delete();
+        return response()->json(null, 204);
+    }
+
+  
 }
