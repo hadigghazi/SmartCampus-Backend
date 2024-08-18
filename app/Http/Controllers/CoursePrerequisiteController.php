@@ -20,4 +20,9 @@ class CoursePrerequisiteController extends Controller
         return response()->json($coursePrerequisite, 201);
     }
 
+    public function show(CoursePrerequisite $coursePrerequisite)
+    {
+        return response()->json($coursePrerequisite);
+    }
+
 }
