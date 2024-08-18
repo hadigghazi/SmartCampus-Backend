@@ -105,5 +105,6 @@ Route::post('dorms/{id}/restore', [DormController::class, 'restore']);
 Route::delete('dorms/{id}/force-delete', [DormController::class, 'forceDelete']);
 
 Route::apiResource('dorm-rooms', DormRoomController::class);
+Route::get('dorms/{dormId}/rooms', [DormRoomController::class, 'roomsByDorm']);
 Route::post('dorm-rooms/{id}/restore', [DormRoomController::class, 'restore']);
 Route::delete('dorm-rooms/{id}/force-delete', [DormRoomController::class, 'forceDelete']);
