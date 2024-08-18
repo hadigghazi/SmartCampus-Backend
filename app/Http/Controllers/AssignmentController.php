@@ -2,63 +2,58 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Assignment;
+use App\Http\Requests\StoreAssignment;
+use App\Http\Requests\UpdateAssignment;
 
 class AssignmentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $items = Assignment::withTrashed()->get();
+        return response()->json($items);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(StoreAssignment $request)
     {
-        //
+        $item = Assignment::create($request->validated());
+        return response()->json($item, 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function show($id)
     {
-        //
+        $item = Assignment::withTrashed()->findOrFail($id);
+        if ($item->trashed()) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
+        return response()->json($item);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function update(UpdateAssignment $request, $id)
     {
-        //
+        $item = Assignment::withTrashed()->findOrFail($id);
+        $item->update($request->validated());
+        return response()->json($item);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function destroy($id)
     {
-        //
+        $item = Assignment::withTrashed()->findOrFail($id);
+        $item->delete();
+        return response()->json(null, 204);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function restore($id)
     {
-        //
+        $item = Assignment::withTrashed()->findOrFail($id);
+        $item->restore();
+        return response()->json($item);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function forceDelete($id)
     {
-        //
+        $item = Assignment::withTrashed()->findOrFail($id);
+        $item->forceDelete();
+        return response()->json(null, 204);
     }
 }
