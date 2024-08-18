@@ -124,3 +124,6 @@ Route::delete('registrations/{id}/force-delete', [RegistrationController::class,
 Route::apiResource('exams', ExamController::class);
 Route::post('exams/{id}/restore', [ExamController::class, 'restore']);
 Route::delete('exams/{id}/force-delete', [ExamController::class, 'forceDelete']);
+Route::apiResource('grades', GradesController::class);
+Route::post('grades/{id}/restore', [GradesController::class, 'restore']);
+Route::delete('grades/{id}/force-delete', [GradesController::class, 'forceDelete']);
