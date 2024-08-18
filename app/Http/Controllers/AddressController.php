@@ -25,4 +25,11 @@ class AddressController extends Controller
         return response()->json($address);
     }
 
+    public function update(UpdateAddressRequest $request, $id)
+    {
+        $address = Address::withTrashed()->findOrFail($id);
+        $address->update($request->validated());
+        return response()->json($address);
+    }
+
 }
