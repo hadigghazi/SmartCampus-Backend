@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Define your table and model names
-TABLE_NAME="bus_registrations"
-MODEL_NAME="BusRegistration"
+TABLE_NAME="news"
+MODEL_NAME="News"
 FACTORY_NAME="${MODEL_NAME}Factory"
 SEEDER_NAME="${MODEL_NAME}Seeder"
 CONTROLLER_NAME="${MODEL_NAME}Controller"
@@ -43,13 +43,14 @@ class $MODEL_NAME extends Model
     use HasFactory, SoftDeletes;
 
     protected \$fillable = [
-        'student_id',
-        'bus_route_id',
-        'registration_date',
-        'status',
+        'title',
+        'content',
+        'published_date',
+        'author_id',
+        'category',
     ];
 
-    protected \$dates = ['deleted_at'];
+    protected \$dates = ['published_date', 'deleted_at'];
 }
 EOL
 commit_changes "Adding content to $MODEL_NAME model"
@@ -68,10 +69,11 @@ class Create${MODEL_NAME}Table extends Migration
     {
         Schema::create('$TABLE_NAME', function (Blueprint \$table) {
             \$table->id();
-            \$table->foreignId('student_id')->constrained()->onDelete('cascade');
-            \$table->foreignId('bus_route_id')->constrained()->onDelete('cascade');
-            \$table->date('registration_date');
-            \$table->enum('status', ['Pending', 'Confirmed', 'Canceled'])->default('Pending');
+            \$table->string('title', 100);
+            \$table->text('content');
+            \$table->date('published_date');
+            \$table->foreignId('author_id')->constrained('users')->onDelete('cascade');
+            \$table->string('category', 50);
             \$table->timestamps();
             \$table->softDeletes();
         });
@@ -165,10 +167,11 @@ class $FACTORY_NAME extends Factory
     public function definition()
     {
         return [
-            'student_id' => \$this->faker->numberBetween(1, 100),
-            'bus_route_id' => \$this->faker->numberBetween(1, 100),
-            'registration_date' => \$this->faker->date(),
-            'status' => \$this->faker->randomElement(['Pending', 'Confirmed', 'Canceled']),
+            'title' => \$this->faker->sentence,
+            'content' => \$this->faker->paragraph,
+            'published_date' => \$this->faker->date(),
+            'author_id' => \$this->faker->numberBetween(1, 100),
+            'category' => \$this->faker->word,
         ];
     }
 }
@@ -207,10 +210,11 @@ class Store$MODEL_NAME extends FormRequest
     public function rules()
     {
         return [
-            'student_id' => 'required|exists:students,id',
-            'bus_route_id' => 'required|exists:bus_routes,id',
-            'registration_date' => 'required|date',
-            'status' => 'required|in:Pending,Confirmed,Canceled',
+            'title' => 'required|string|max:100',
+            'content' => 'required|string',
+            'published_date' => 'required|date',
+            'author_id' => 'required|exists:users,id',
+            'category' => 'required|string|max:50',
         ];
     }
 }
@@ -230,10 +234,11 @@ class Update$MODEL_NAME extends FormRequest
     public function rules()
     {
         return [
-            'student_id' => 'sometimes|exists:students,id',
-            'bus_route_id' => 'sometimes|exists:bus_routes,id',
-            'registration_date' => 'sometimes|date',
-            'status' => 'sometimes|in:Pending,Confirmed,Canceled',
+            'title' => 'sometimes|string|max:100',
+            'content' => 'sometimes|string',
+            'published_date' => 'sometimes|date',
+            'author_id' => 'sometimes|exists:users,id',
+            'category' => 'sometimes|string|max:50',
         ];
     }
 }
