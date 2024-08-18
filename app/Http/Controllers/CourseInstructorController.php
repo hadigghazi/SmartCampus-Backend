@@ -44,4 +44,10 @@ class CourseInstructorController extends Controller
         return response()->json($courseInstructor);
     }
 
+    public function forceDelete($id)
+    {
+        $courseInstructor = CourseInstructor::withTrashed()->findOrFail($id);
+        $courseInstructor->forceDelete();
+        return response()->json(null, 204);
+    }
 }
