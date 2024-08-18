@@ -14,4 +14,10 @@ class DormRoomController extends Controller
         return response()->json($dormRooms);
     }
 
+    public function store(StoreDormRoomRequest $request)
+    {
+        $dormRoom = DormRoom::create($request->validated());
+        return response()->json($dormRoom, 201);
+    }
+
 }
