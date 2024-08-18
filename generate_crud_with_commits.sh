@@ -1,13 +1,14 @@
 #!/bin/bash
 
 # Define your table and model names
-TABLE_NAME="grades"
-MODEL_NAME="Grade"
+TABLE_NAME="assignments"
+MODEL_NAME="Assignment"
 FACTORY_NAME="${MODEL_NAME}Factory"
 SEEDER_NAME="${MODEL_NAME}Seeder"
 CONTROLLER_NAME="${MODEL_NAME}Controller"
 REQUEST_STORE="Store${MODEL_NAME}"
 REQUEST_UPDATE="Update${MODEL_NAME}"
+
 
 # Function to commit changes with a message
 commit_changes() {
@@ -43,18 +44,18 @@ class $MODEL_NAME extends Model
     use HasFactory, SoftDeletes;
 
     protected \$fillable = [
-        'registration_id',
-        'grade',
-        'letter_grade',
-        'gpa',
+        'course_id',
+        'title',
+        'description',
+        'due_date',
     ];
 
     protected \$dates = ['deleted_at'];
 
     // Relationships
-    public function registration()
+    public function course()
     {
-        return \$this->belongsTo(Registration::class);
+        return \$this->belongsTo(Course::class);
     }
 }
 EOL
@@ -74,14 +75,12 @@ class Create${TABLE_NAME}Table extends Migration
     {
         Schema::create('$TABLE_NAME', function (Blueprint \$table) {
             \$table->id();
-            \$table->unsignedBigInteger('registration_id');
-            \$table->decimal('grade', 5, 2);
-            \$table->char('letter_grade', 2);
-            \$table->decimal('gpa', 3, 2);
+            \$table->unsignedBigInteger('course_id');
+            \$table->string('title', 100);
+            \$table->text('description');
+            \$table->date('due_date');
             \$table->timestamps();
             \$table->softDeletes();
-            
-            \$table->foreign('registration_id')->references('id')->on('registrations');
         });
     }
 
@@ -173,10 +172,10 @@ class $FACTORY_NAME extends Factory
     public function definition()
     {
         return [
-            'registration_id' => \App\Models\Registration::inRandomOrder()->first()->id,
-            'grade' => \$this->faker->randomFloat(2, 0, 100),
-            'letter_grade' => \$this->faker->randomElement(['A', 'B', 'C', 'D', 'F']),
-            'gpa' => \$this->faker->randomFloat(2, 0, 4),
+            'course_id' => \App\Models\Course::inRandomOrder()->first()->id,
+            'title' => \$this->faker->sentence(3),
+            'description' => \$this->faker->paragraph(),
+            'due_date' => \$this->faker->date(),
         ];
     }
 }
@@ -215,10 +214,10 @@ class Store$MODEL_NAME extends FormRequest
     public function rules()
     {
         return [
-            'registration_id' => 'required|integer|exists:registrations,id',
-            'grade' => 'required|numeric|min:0|max:100',
-            'letter_grade' => 'required|in:A,B,C,D,F',
-            'gpa' => 'required|numeric|min:0|max:4',
+            'course_id' => 'required|integer|exists:courses,id',
+            'title' => 'required|string|max:100',
+            'description' => 'required|string',
+            'due_date' => 'required|date',
         ];
     }
 }
@@ -238,10 +237,10 @@ class Update$MODEL_NAME extends FormRequest
     public function rules()
     {
         return [
-            'registration_id' => 'sometimes|integer|exists:registrations,id',
-            'grade' => 'sometimes|numeric|min:0|max:100',
-            'letter_grade' => 'sometimes|in:A,B,C,D,F',
-            'gpa' => 'sometimes|numeric|min:0|max:4',
+            'course_id' => 'sometimes|integer|exists:courses,id',
+            'title' => 'sometimes|string|max:100',
+            'description' => 'sometimes|string',
+            'due_date' => 'sometimes|date',
         ];
     }
 }
