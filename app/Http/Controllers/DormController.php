@@ -25,4 +25,10 @@ class DormController extends Controller
         return response()->json($dorm);
     }
 
+    public function update(UpdateDormRequest $request, Dorm $dorm)
+    {
+        $dorm->update($request->validated());
+        return response()->json($dorm);
+    }
+
 }
