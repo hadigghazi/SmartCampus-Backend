@@ -2,22 +2,21 @@
 
 namespace Database\Factories;
 
+use App\Models\FinancialAidScholarship;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\FinancialAidScholarship>
- */
 class FinancialAidScholarshipFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array
+    protected $model = FinancialAidScholarship::class;
+
+    public function definition()
     {
         return [
-            //
+            'student_id' => \App\Models\Student::inRandomOrder()->first()->id,
+            'type' => $this->faker->word(),
+            'amount_usd' => $this->faker->randomFloat(2, 0, 1000),
+            'amount_lbp' => $this->faker->randomFloat(2, 0, 1000),
+            'description' => $this->faker->text(),
         ];
     }
 }
