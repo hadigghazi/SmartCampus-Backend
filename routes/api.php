@@ -134,3 +134,6 @@ Route::delete('grades/{id}/force-delete', [GradeController::class, 'forceDelete'
 Route::apiResource('assignments', AssignmentController::class);
 Route::post('assignments/{id}/restore', [AssignmentController::class, 'restore']);
 Route::delete('assignments/{id}/force-delete', [AssignmentController::class, 'forceDelete']);
+Route::apiResource('submissions', SubmissionController::class);
+Route::post('submissions/{id}/restore', [SubmissionController::class, 'restore']);
+Route::delete('submissions/{id}/force-delete', [SubmissionController::class, 'forceDelete']);
