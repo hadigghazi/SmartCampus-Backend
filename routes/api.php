@@ -194,3 +194,6 @@ Route::delete('course_materials/{id}/force-delete', [CourseMaterialController::c
 Route::apiResource('library_books', LibraryBookController::class);
 Route::post('library_books/{id}/restore', [LibraryBookController::class, 'restore']);
 Route::delete('library_books/{id}/force-delete', [LibraryBookController::class, 'forceDelete']);
+Route::apiResource('book_borrows', BookBorrowController::class);
+Route::post('book_borrows/{id}/restore', [BookBorrowController::class, 'restore']);
+Route::delete('book_borrows/{id}/force-delete', [BookBorrowController::class, 'forceDelete']);
