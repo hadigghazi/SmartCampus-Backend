@@ -40,7 +40,8 @@ class DatabaseSeeder extends Seeder
         FinancialAidScholarshipSeeder::class,
         ImportantDateSeeder::class,
         DormRegistrationSeeder::class,
-        BusRegistrationSeeder::class
+        BusRegistrationSeeder::class,
+        NewsSeeder::class
     ]);
     }
 }
