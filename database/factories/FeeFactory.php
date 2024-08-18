@@ -2,22 +2,23 @@
 
 namespace Database\Factories;
 
+use App\Models\Fee;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Fee>
- */
 class FeeFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array
+    protected $model = Fee::class;
+
+    public function definition()
     {
         return [
-            //
+            'description' => $this->faker->text(),
+            'amount_usd' => $this->faker->randomFloat(2, 0, 1000),
+            'amount_lbp' => $this->faker->randomFloat(2, 0, 1000),
+            'exchange_rate' => $this->faker->randomFloat(4, 1, 100),
+            'faculty_id' => \App\Models\Faculty::inRandomOrder()->first()->id,
+            'credit_price_usd' => $this->faker->randomFloat(2, 0, 1000),
+            'credit_price_lbp' => $this->faker->randomFloat(2, 0, 1000),
         ];
     }
 }
