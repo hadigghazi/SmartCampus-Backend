@@ -51,4 +51,9 @@ class DormRoomController extends Controller
         return response()->json(null, 204);
     }
 
+    public function roomsByDorm($dormId)
+    {
+        $dormRooms = DormRoom::where('dorm_id', $dormId)->get();
+        return response()->json($dormRooms);
+    }
 }
