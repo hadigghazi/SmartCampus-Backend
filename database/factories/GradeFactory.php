@@ -2,22 +2,20 @@
 
 namespace Database\Factories;
 
+use App\Models\Grade;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Grade>
- */
 class GradeFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array
+    protected $model = Grade::class;
+
+    public function definition()
     {
         return [
-            //
+            'registration_id' => \App\Models\Registration::inRandomOrder()->first()->id,
+            'grade' => $this->faker->randomFloat(2, 0, 100),
+            'letter_grade' => $this->faker->randomElement(['A', 'B', 'C', 'D', 'F']),
+            'gpa' => $this->faker->randomFloat(2, 0, 4),
         ];
     }
 }
