@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Define your table and model names
-TABLE_NAME="fees"
-MODEL_NAME="Fee"
+TABLE_NAME="financial_aid_scholarships"
+MODEL_NAME="FinancialAidScholarship"
 FACTORY_NAME="${MODEL_NAME}Factory"
 SEEDER_NAME="${MODEL_NAME}Seeder"
 CONTROLLER_NAME="${MODEL_NAME}Controller"
@@ -43,21 +43,19 @@ class $MODEL_NAME extends Model
     use HasFactory, SoftDeletes;
 
     protected \$fillable = [
-        'description',
+        'student_id',
+        'type',
         'amount_usd',
         'amount_lbp',
-        'exchange_rate',
-        'faculty_id',
-        'credit_price_usd',
-        'credit_price_lbp',
+        'description',
     ];
 
     protected \$dates = ['deleted_at'];
 
     // Relationships
-    public function faculty()
+    public function student()
     {
-        return \$this->belongsTo(Faculty::class);
+        return \$this->belongsTo(Student::class);
     }
 }
 EOL
@@ -77,13 +75,11 @@ class Create${TABLE_NAME}Table extends Migration
     {
         Schema::create('$TABLE_NAME', function (Blueprint \$table) {
             \$table->id();
-            \$table->text('description');
+            \$table->unsignedBigInteger('student_id');
+            \$table->string('type', 100);
             \$table->decimal('amount_usd', 10, 2);
             \$table->decimal('amount_lbp', 10, 2);
-            \$table->decimal('exchange_rate', 10, 4);
-            \$table->unsignedBigInteger('faculty_id');
-            \$table->decimal('credit_price_usd', 10, 2);
-            \$table->decimal('credit_price_lbp', 10, 2);
+            \$table->text('description');
             \$table->timestamps();
             \$table->softDeletes();
         });
@@ -177,13 +173,11 @@ class $FACTORY_NAME extends Factory
     public function definition()
     {
         return [
-            'description' => \$this->faker->text(),
+            'student_id' => \App\Models\Student::inRandomOrder()->first()->id,
+            'type' => \$this->faker->word(),
             'amount_usd' => \$this->faker->randomFloat(2, 0, 1000),
             'amount_lbp' => \$this->faker->randomFloat(2, 0, 1000),
-            'exchange_rate' => \$this->faker->randomFloat(4, 1, 100),
-            'faculty_id' => \App\Models\Faculty::inRandomOrder()->first()->id,
-            'credit_price_usd' => \$this->faker->randomFloat(2, 0, 1000),
-            'credit_price_lbp' => \$this->faker->randomFloat(2, 0, 1000),
+            'description' => \$this->faker->text(),
         ];
     }
 }
@@ -222,13 +216,11 @@ class Store$MODEL_NAME extends FormRequest
     public function rules()
     {
         return [
-            'description' => 'required|string',
+            'student_id' => 'required|integer|exists:students,id',
+            'type' => 'required|string|max:100',
             'amount_usd' => 'required|numeric|min:0',
             'amount_lbp' => 'required|numeric|min:0',
-            'exchange_rate' => 'required|numeric|min:0',
-            'faculty_id' => 'required|integer|exists:faculties,id',
-            'credit_price_usd' => 'required|numeric|min:0',
-            'credit_price_lbp' => 'required|numeric|min:0',
+            'description' => 'required|string',
         ];
     }
 }
@@ -248,13 +240,11 @@ class Update$MODEL_NAME extends FormRequest
     public function rules()
     {
         return [
-            'description' => 'sometimes|string',
+            'student_id' => 'sometimes|integer|exists:students,id',
+            'type' => 'sometimes|string|max:100',
             'amount_usd' => 'sometimes|numeric|min:0',
             'amount_lbp' => 'sometimes|numeric|min:0',
-            'exchange_rate' => 'sometimes|numeric|min:0',
-            'faculty_id' => 'sometimes|integer|exists:faculties,id',
-            'credit_price_usd' => 'sometimes|numeric|min:0',
-            'credit_price_lbp' => 'sometimes|numeric|min:0',
+            'description' => 'sometimes|string',
         ];
     }
 }
