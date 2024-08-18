@@ -13,4 +13,10 @@ class AddressController extends Controller
         return Address::withTrashed()->get();
     }
 
+    public function store(StoreAddressRequest $request)
+    {
+        $address = Address::create($request->validated());
+        return response()->json($address, 201);
+    }
+
 }
