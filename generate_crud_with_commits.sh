@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Define your table and model names
-TABLE_NAME="important_dates"
-MODEL_NAME="ImportantDate"
+TABLE_NAME="dorm_registrations"
+MODEL_NAME="DormRegistration"
 FACTORY_NAME="${MODEL_NAME}Factory"
 SEEDER_NAME="${MODEL_NAME}Seeder"
 CONTROLLER_NAME="${MODEL_NAME}Controller"
@@ -43,14 +43,24 @@ class $MODEL_NAME extends Model
     use HasFactory, SoftDeletes;
 
     protected \$fillable = [
-        'title',
-        'description',
-        'date',
+        'student_id',
+        'dorm_room_id',
+        'start_date',
         'end_date',
-        'type',
+        'status',
     ];
 
     protected \$dates = ['deleted_at'];
+
+    public function student()
+    {
+        return \$this->belongsTo(Student::class);
+    }
+
+    public function dormRoom()
+    {
+        return \$this->belongsTo(DormRoom::class);
+    }
 }
 EOL
 commit_changes "Adding content to $MODEL_NAME model"
@@ -69,11 +79,11 @@ class Create${MODEL_NAME}Table extends Migration
     {
         Schema::create('$TABLE_NAME', function (Blueprint \$table) {
             \$table->id();
-            \$table->string('title', 100);
-            \$table->text('description')->nullable();
-            \$table->date('date');
+            \$table->foreignId('student_id')->constrained()->onDelete('cascade');
+            \$table->foreignId('dorm_room_id')->constrained()->onDelete('cascade');
+            \$table->date('start_date');
             \$table->date('end_date')->nullable();
-            \$table->enum('type', ['Deadline', 'Event', 'Holiday', 'Other']);
+            \$table->enum('status', ['Pending', 'Confirmed', 'Canceled'])->default('Pending');
             \$table->timestamps();
             \$table->softDeletes();
         });
@@ -167,11 +177,11 @@ class $FACTORY_NAME extends Factory
     public function definition()
     {
         return [
-            'title' => \$this->faker->sentence,
-            'description' => \$this->faker->text,
-            'date' => \$this->faker->date(),
+            'student_id' => \App\Models\Student::factory(),
+            'dorm_room_id' => \App\Models\DormRoom::factory(),
+            'start_date' => \$this->faker->date(),
             'end_date' => \$this->faker->optional()->date(),
-            'type' => \$this->faker->randomElement(['Deadline', 'Event', 'Holiday', 'Other']),
+            'status' => \$this->faker->randomElement(['Pending', 'Confirmed', 'Canceled']),
         ];
     }
 }
@@ -210,11 +220,11 @@ class Store$MODEL_NAME extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|string|max:100',
-            'description' => 'nullable|string',
-            'date' => 'required|date',
+            'student_id' => 'required|exists:students,id',
+            'dorm_room_id' => 'required|exists:dorm_rooms,id',
+            'start_date' => 'required|date',
             'end_date' => 'nullable|date',
-            'type' => 'required|in:Deadline,Event,Holiday,Other',
+            'status' => 'required|in:Pending,Confirmed,Canceled',
         ];
     }
 }
@@ -234,11 +244,11 @@ class Update$MODEL_NAME extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'sometimes|string|max:100',
-            'description' => 'sometimes|string',
-            'date' => 'sometimes|date',
+            'student_id' => 'sometimes|exists:students,id',
+            'dorm_room_id' => 'sometimes|exists:dorm_rooms,id',
+            'start_date' => 'sometimes|date',
             'end_date' => 'sometimes|date',
-            'type' => 'sometimes|in:Deadline,Event,Holiday,Other',
+            'status' => 'sometimes|in:Pending,Confirmed,Canceled',
         ];
     }
 }
