@@ -21,4 +21,9 @@ class BusRouteController extends Controller
         return response()->json($busRoute, 201);
     }
 
+    public function show(BusRoute $busRoute)
+    {
+        return response()->json($busRoute);
+    }
+
 }
