@@ -13,16 +13,17 @@ class UpdateCourseInstructorRequest extends FormRequest
     }
 
     public function rules()
-{
-    return [
-        'course_id' => 'required|exists:courses,id',
-        'instructor_id' => 'required|exists:instructors,id',
-        'semester_id' => 'required|exists:semesters,id',
-        'capacity' => 'required|integer',
-        'campus_id' => 'required|exists:campuses,id',
-        'room_id' => 'required|exists:rooms,id',
-        'schedule' => 'required|string|max:100',
-    ];
-}
+    {
+        return [
+            'course_id' => 'sometimes|required|exists:courses,id',
+            'instructor_id' => 'sometimes|required|exists:instructors,id',
+            'semester_id' => 'sometimes|required|exists:semesters,id',
+            'capacity' => 'sometimes|required|integer',
+            'campus_id' => 'sometimes|required|exists:campuses,id',
+            'room_id' => 'sometimes|required|exists:rooms,id',
+            'schedule' => 'sometimes|required|string|max:100',
+        ];
+    }
+    
 
 }
