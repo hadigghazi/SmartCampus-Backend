@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Define your table and model names
-TABLE_NAME="academic_calendar"
-MODEL_NAME="AcademicCalendar"
+TABLE_NAME="important_dates"
+MODEL_NAME="ImportantDate"
 FACTORY_NAME="${MODEL_NAME}Factory"
 SEEDER_NAME="${MODEL_NAME}Seeder"
 CONTROLLER_NAME="${MODEL_NAME}Controller"
