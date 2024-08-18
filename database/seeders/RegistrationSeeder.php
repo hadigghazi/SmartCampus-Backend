@@ -9,12 +9,6 @@ class RegistrationSeeder extends Seeder
 {
     public function run()
     {
-         = [
-            // Add sample data here
-        ];
-
-        foreach ($items as $item) {
-            Registration::create($item);
-        }
+        Registration::factory()->count(10)->create();
     }
 }

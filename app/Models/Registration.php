@@ -20,5 +20,4 @@ class Registration extends Model
 
     protected $dates = ['deleted_at'];
 
-    // Add relationships if needed
 }

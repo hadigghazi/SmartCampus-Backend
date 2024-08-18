@@ -23,6 +23,7 @@ use App\Http\Controllers\CourseInstructorController;
 use App\Http\Controllers\DormController;
 use App\Http\Controllers\DormRoomController;
 use App\Http\Controllers\BusRouteController;
+use App\Http\Controllers\RegistrationController;
 
 
 Route::apiResource('faculties', FacultyController::class);
@@ -113,7 +114,8 @@ Route::delete('dorm-rooms/{id}/force-delete', [DormRoomController::class, 'force
 Route::apiResource('bus-routes', BusRouteController::class);
 Route::post('bus-routes/{id}/restore', [BusRouteController::class, 'restore']);
 Route::delete('bus-routes/{id}/force-delete', [BusRouteController::class, 'forceDelete']);
-Route::get('campuses/{campusId}/bus-routes', [BusRouteController::class, 'routesByCampus']); // New route
+Route::get('campuses/{campusId}/bus-routes', [BusRouteController::class, 'routesByCampus']); 
+
 Route::apiResource('registrations', RegistrationController::class);
 Route::post('registrations/{id}/restore', [RegistrationController::class, 'restore']);
 Route::delete('registrations/{id}/force-delete', [RegistrationController::class, 'forceDelete']);

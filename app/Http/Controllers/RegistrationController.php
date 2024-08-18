@@ -20,22 +20,29 @@ class RegistrationController extends Controller
         return response()->json($item, 201);
     }
 
-    public function show(Registration $item)
-    {
-        return response()->json($item);
+    public function show($id)
+{
+    $item = FacultyCampus::withTrashed()->findOrFail($id);
+    if ($item->trashed()) {
+        return response()->json(['error' => 'Not found'], 404);
     }
+    return response()->json($item);
+}
 
-    public function update(UpdateRegistration $request, Registration $item)
-    {
-        $item->update($request->validated());
-        return response()->json($item);
-    }
+public function update(UpdateRegistration $request, $id)
+{
+    $item = Registration::withTrashed()->findOrFail($id);
+    $item->update($request->validated());
+    return response()->json($item);
+}
 
-    public function destroy(Registration $item)
-    {
-        $item->delete();
-        return response()->json(null, 204);
-    }
+public function destroy($id)
+{
+    $item = Registration::withTrashed()->findOrFail($id);
+    $item->delete();
+    return response()->json(null, 204);
+}
+
 
     public function restore($id)
     {
