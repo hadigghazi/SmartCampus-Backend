@@ -4,24 +4,24 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreatesubmissionsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
         Schema::create('submissions', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('assignment_id');
+            $table->unsignedBigInteger('student_id');
+            $table->string('file_path', 255);
+            $table->date('submission_date');
+            $table->decimal('grade', 5, 2);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('submissions');
     }
-};
+}
