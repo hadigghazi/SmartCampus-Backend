@@ -6,23 +6,15 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateDormRoomRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return false;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
-    public function rules(): array
+    public function rules()
     {
         return [
-            //
+            'dorm_id' => 'sometimes|exists:dorms,id',
+            'room_number' => 'sometimes|string|max:20',
+            'capacity' => 'sometimes|integer',
+            'available_beds' => 'sometimes|integer',
+            'floor' => 'sometimes|integer',
+            'description' => 'nullable|string',
         ];
     }
 }
