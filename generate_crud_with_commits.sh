@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Define your table and model names
-TABLE_NAME="dorm_registrations"
-MODEL_NAME="DormRegistration"
+TABLE_NAME="bus_registrations"
+MODEL_NAME="BusRegistration"
 FACTORY_NAME="${MODEL_NAME}Factory"
 SEEDER_NAME="${MODEL_NAME}Seeder"
 CONTROLLER_NAME="${MODEL_NAME}Controller"
@@ -44,23 +44,12 @@ class $MODEL_NAME extends Model
 
     protected \$fillable = [
         'student_id',
-        'dorm_room_id',
-        'start_date',
-        'end_date',
+        'bus_route_id',
+        'registration_date',
         'status',
     ];
 
     protected \$dates = ['deleted_at'];
-
-    public function student()
-    {
-        return \$this->belongsTo(Student::class);
-    }
-
-    public function dormRoom()
-    {
-        return \$this->belongsTo(DormRoom::class);
-    }
 }
 EOL
 commit_changes "Adding content to $MODEL_NAME model"
@@ -80,9 +69,8 @@ class Create${MODEL_NAME}Table extends Migration
         Schema::create('$TABLE_NAME', function (Blueprint \$table) {
             \$table->id();
             \$table->foreignId('student_id')->constrained()->onDelete('cascade');
-            \$table->foreignId('dorm_room_id')->constrained()->onDelete('cascade');
-            \$table->date('start_date');
-            \$table->date('end_date')->nullable();
+            \$table->foreignId('bus_route_id')->constrained()->onDelete('cascade');
+            \$table->date('registration_date');
             \$table->enum('status', ['Pending', 'Confirmed', 'Canceled'])->default('Pending');
             \$table->timestamps();
             \$table->softDeletes();
@@ -177,10 +165,9 @@ class $FACTORY_NAME extends Factory
     public function definition()
     {
         return [
-            'student_id' => \App\Models\Student::factory(),
-            'dorm_room_id' => \App\Models\DormRoom::factory(),
-            'start_date' => \$this->faker->date(),
-            'end_date' => \$this->faker->optional()->date(),
+            'student_id' => \$this->faker->numberBetween(1, 100),
+            'bus_route_id' => \$this->faker->numberBetween(1, 100),
+            'registration_date' => \$this->faker->date(),
             'status' => \$this->faker->randomElement(['Pending', 'Confirmed', 'Canceled']),
         ];
     }
@@ -221,9 +208,8 @@ class Store$MODEL_NAME extends FormRequest
     {
         return [
             'student_id' => 'required|exists:students,id',
-            'dorm_room_id' => 'required|exists:dorm_rooms,id',
-            'start_date' => 'required|date',
-            'end_date' => 'nullable|date',
+            'bus_route_id' => 'required|exists:bus_routes,id',
+            'registration_date' => 'required|date',
             'status' => 'required|in:Pending,Confirmed,Canceled',
         ];
     }
@@ -245,9 +231,8 @@ class Update$MODEL_NAME extends FormRequest
     {
         return [
             'student_id' => 'sometimes|exists:students,id',
-            'dorm_room_id' => 'sometimes|exists:dorm_rooms,id',
-            'start_date' => 'sometimes|date',
-            'end_date' => 'sometimes|date',
+            'bus_route_id' => 'sometimes|exists:bus_routes,id',
+            'registration_date' => 'sometimes|date',
             'status' => 'sometimes|in:Pending,Confirmed,Canceled',
         ];
     }
