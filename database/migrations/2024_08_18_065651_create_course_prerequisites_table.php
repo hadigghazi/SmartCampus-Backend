@@ -15,7 +15,6 @@ class CreateCoursePrerequisitesTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            // Foreign keys
             $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');
             $table->foreign('prerequisite_course_id')->references('id')->on('courses')->onDelete('cascade');
         });
