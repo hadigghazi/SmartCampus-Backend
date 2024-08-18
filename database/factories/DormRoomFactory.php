@@ -2,22 +2,23 @@
 
 namespace Database\Factories;
 
+use App\Models\DormRoom;
+use App\Models\Dorm;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\DormRoom>
- */
 class DormRoomFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array
+    protected $model = DormRoom::class;
+
+    public function definition()
     {
         return [
-            //
+            'dorm_id' => Dorm::inRandomOrder()->first()->id, 
+            'room_number' => $this->faker->word,
+            'capacity' => $this->faker->numberBetween(1, 10), 
+            'available_beds' => $this->faker->numberBetween(0, 10), 
+            'floor' => $this->faker->numberBetween(1, 10), 
+            'description' => $this->faker->text, 
         ];
     }
 }
