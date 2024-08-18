@@ -58,4 +58,11 @@ class FacultyCampusController extends Controller
         return response()->json(null, 204);
     }
 
+    public function restore($id)
+    {
+        $facultyCampus = FacultyCampus::withTrashed()->findOrFail($id);
+        $facultyCampus->restore();
+        return response()->json($facultyCampus);
+    }
+
 }
