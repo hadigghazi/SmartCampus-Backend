@@ -23,6 +23,9 @@ class ExamController extends Controller
     public function show($id)
     {
         $item = Exam::withTrashed()->findOrFail($id);
+        if ($item->trashed()) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
         return response()->json($item);
     }
 
