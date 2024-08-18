@@ -38,4 +38,11 @@ class BusRouteController extends Controller
         return response()->json(null, 204);
     }
 
+    public function restore($id)
+    {
+        $busRoute = BusRoute::withTrashed()->findOrFail($id);
+        $busRoute->restore();
+        return response()->json($busRoute);
+    }
+
 }
