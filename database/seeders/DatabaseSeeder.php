@@ -44,7 +44,8 @@ class DatabaseSeeder extends Seeder
         NewsSeeder::class,
         AnnouncementSeeder::class,
         DeanSeeder::class,
-        CourseMaterialSeeder::class
+        CourseMaterialSeeder::class,
+        LibraryBookSeeder::class
     ]);
     }
 }

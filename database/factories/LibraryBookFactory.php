@@ -18,7 +18,7 @@ class LibraryBookFactory extends Factory
             'isbn' => $this->faker->isbn13(),
             'copies' => $this->faker->numberBetween(1, 100),
             'publication_year' => $this->faker->year(),
-            'campus_id' => Campus::factory(), // Reference the Campus factory
+            'campus_id' => Campus::factory(), 
         ];
     }
 }

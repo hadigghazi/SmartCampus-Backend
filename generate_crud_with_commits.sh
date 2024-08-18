@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Define your table and model names
-TABLE_NAME="library_books"
-MODEL_NAME="LibraryBook"
+TABLE_NAME="book_borrows"
+MODEL_NAME="BookBorrow"
 FACTORY_NAME="${MODEL_NAME}Factory"
 SEEDER_NAME="${MODEL_NAME}Seeder"
 CONTROLLER_NAME="${MODEL_NAME}Controller"
@@ -43,15 +43,15 @@ class $MODEL_NAME extends Model
     use HasFactory, SoftDeletes;
 
     protected \$fillable = [
-        'title',
-        'author',
-        'isbn',
-        'copies',
-        'publication_year',
-        'campus_id',
+        'student_id',
+        'book_id',
+        'due_date',
+        'return_date',
+        'status',
+        'notes',
     ];
 
-    protected \$dates = ['deleted_at'];
+    protected \$dates = ['due_date', 'return_date', 'deleted_at'];
 }
 EOL
 commit_changes "Adding content to $MODEL_NAME model"
@@ -70,12 +70,12 @@ class Create${MODEL_NAME}Table extends Migration
     {
         Schema::create('$TABLE_NAME', function (Blueprint \$table) {
             \$table->id();
-            \$table->string('title', 100);
-            \$table->string('author', 100);
-            \$table->string('isbn', 20);
-            \$table->integer('copies');
-            \$table->integer('publication_year');
-            \$table->foreignId('campus_id')->constrained('campuses')->onDelete('cascade');
+            \$table->foreignId('student_id')->constrained('students')->onDelete('cascade');
+            \$table->foreignId('book_id')->constrained('library_books')->onDelete('cascade');
+            \$table->date('due_date');
+            \$table->date('return_date')->nullable();
+            \$table->enum('status', ['Borrowed', 'Returned', 'Overdue'])->default('Borrowed');
+            \$table->text('notes')->nullable();
             \$table->timestamps();
             \$table->softDeletes();
         });
@@ -160,7 +160,8 @@ cat > database/factories/$FACTORY_NAME.php <<EOL
 namespace Database\Factories;
 
 use App\Models\\$MODEL_NAME;
-use App\Models\Campus; // Reference to Campus factory
+use App\Models\Student; // Reference to Student factory
+use App\Models\LibraryBook; // Reference to LibraryBook factory
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class $FACTORY_NAME extends Factory
@@ -170,12 +171,12 @@ class $FACTORY_NAME extends Factory
     public function definition()
     {
         return [
-            'title' => \$this->faker->sentence(),
-            'author' => \$this->faker->name(),
-            'isbn' => \$this->faker->isbn13(),
-            'copies' => \$this->faker->numberBetween(1, 100),
-            'publication_year' => \$this->faker->year(),
-            'campus_id' => Campus::factory(), // Reference the Campus factory
+            'student_id' => Student::factory(),
+            'book_id' => LibraryBook::factory(),
+            'due_date' => \$this->faker->date(),
+            'return_date' => \$this->faker->optional()->date(),
+            'status' => \$this->faker->randomElement(['Borrowed', 'Returned', 'Overdue']),
+            'notes' => \$this->faker->optional()->paragraph(),
         ];
     }
 }
@@ -214,12 +215,12 @@ class Store$MODEL_NAME extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|string|max:100',
-            'author' => 'required|string|max:100',
-            'isbn' => 'required|string|max:20',
-            'copies' => 'required|integer',
-            'publication_year' => 'required|integer',
-            'campus_id' => 'required|exists:campuses,id',
+            'student_id' => 'required|exists:students,id',
+            'book_id' => 'required|exists:library_books,id',
+            'due_date' => 'required|date',
+            'return_date' => 'nullable|date',
+            'status' => 'required|in:Borrowed,Returned,Overdue',
+            'notes' => 'nullable|string',
         ];
     }
 }
@@ -239,12 +240,12 @@ class Update$MODEL_NAME extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'sometimes|string|max:100',
-            'author' => 'sometimes|string|max:100',
-            'isbn' => 'sometimes|string|max:20',
-            'copies' => 'sometimes|integer',
-            'publication_year' => 'sometimes|integer',
-            'campus_id' => 'sometimes|exists:campuses,id',
+            'student_id' => 'sometimes|exists:students,id',
+            'book_id' => 'sometimes|exists:library_books,id',
+            'due_date' => 'sometimes|date',
+            'return_date' => 'nullable|date',
+            'status' => 'sometimes|in:Borrowed,Returned,Overdue',
+            'notes' => 'nullable|string',
         ];
     }
 }
