@@ -39,4 +39,15 @@ class FacultyCampusController extends Controller
         return response()->json($facultyCampus);
     }
 
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'faculty_id' => 'sometimes|required|exists:faculties,id',
+            'campus_id' => 'sometimes|required|exists:campuses,id',
+        ]);
+
+        $facultyCampus = FacultyCampus::findOrFail($id);
+        $facultyCampus->update($request->all());
+        return response()->json($facultyCampus);
+    }
 }
