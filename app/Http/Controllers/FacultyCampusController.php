@@ -65,4 +65,10 @@ class FacultyCampusController extends Controller
         return response()->json($facultyCampus);
     }
 
+    public function forceDelete($id)
+    {
+        $facultyCampus = FacultyCampus::withTrashed()->findOrFail($id);
+        $facultyCampus->forceDelete();
+        return response()->json(null, 204);
+    }
 }
