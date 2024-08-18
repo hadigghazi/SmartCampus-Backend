@@ -32,4 +32,11 @@ class AddressController extends Controller
         return response()->json($address);
     }
 
+    public function destroy($id)
+    {
+        $address = Address::findOrFail($id);
+        $address->delete();
+        return response()->json(null, 204);
+    }
+
 }
