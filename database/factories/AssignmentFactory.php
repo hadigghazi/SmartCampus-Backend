@@ -2,22 +2,20 @@
 
 namespace Database\Factories;
 
+use App\Models\Assignment;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Assignment>
- */
 class AssignmentFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array
+    protected $model = Assignment::class;
+
+    public function definition()
     {
         return [
-            //
+            'course_id' => \App\Models\Course::inRandomOrder()->first()->id,
+            'title' => $this->faker->sentence(3),
+            'description' => $this->faker->paragraph(),
+            'due_date' => $this->faker->date(),
         ];
     }
 }
