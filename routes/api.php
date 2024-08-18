@@ -202,3 +202,6 @@ Route::delete('book_borrows/{id}/force-delete', [BookBorrowController::class, 'f
 Route::apiResource('course_drop_requests', CourseDropRequestController::class);
 Route::post('course_drop_requests/{id}/restore', [CourseDropRequestController::class, 'restore']);
 Route::delete('course_drop_requests/{id}/force-delete', [CourseDropRequestController::class, 'forceDelete']);
+Route::apiResource('ai_instructor_interactions', AIInstructorInteractionController::class);
+Route::post('ai_instructor_interactions/{id}/restore', [AIInstructorInteractionController::class, 'restore']);
+Route::delete('ai_instructor_interactions/{id}/force-delete', [AIInstructorInteractionController::class, 'forceDelete']);
