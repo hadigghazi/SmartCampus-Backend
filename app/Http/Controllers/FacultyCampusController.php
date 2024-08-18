@@ -13,4 +13,13 @@ class FacultyCampusController extends Controller
         return response()->json($facultiesCampuses);
     }
 
+    public function facultiesByCampus($campusId)
+    {
+        $faculties = FacultyCampus::where('campus_id', $campusId)
+            ->with('faculty')
+            ->get()
+            ->pluck('faculty');
+        return response()->json($faculties);
+    }
+
 }
