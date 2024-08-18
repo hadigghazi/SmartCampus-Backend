@@ -37,4 +37,11 @@ class CoursePrerequisiteController extends Controller
         return response()->json(null, 204);
     }
 
+    public function restore($id)
+    {
+        $coursePrerequisite = CoursePrerequisite::withTrashed()->findOrFail($id);
+        $coursePrerequisite->restore();
+        return response()->json($coursePrerequisite);
+    }
+
 }
