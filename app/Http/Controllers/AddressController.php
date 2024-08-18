@@ -45,4 +45,11 @@ class AddressController extends Controller
         $address->restore();
         return response()->json($address);
     }
+
+    public function forceDelete($id)
+    {
+        $address = Address::withTrashed()->findOrFail($id);
+        $address->forceDelete();
+        return response()->json(null, 204);
+    }
 }
