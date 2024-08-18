@@ -6,23 +6,15 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdatePayment extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return false;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
-    public function rules(): array
+    public function rules()
     {
         return [
-            //
+            'student_id' => 'sometimes|integer|exists:students,id',
+            'description' => 'sometimes|string',
+            'amount_usd' => 'sometimes|numeric|min:0',
+            'amount_lbp' => 'sometimes|numeric|min:0',
+            'exchange_rate' => 'sometimes|numeric|min:0',
+            'payment_date' => 'sometimes|date',
         ];
     }
 }
