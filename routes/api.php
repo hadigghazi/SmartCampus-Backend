@@ -42,11 +42,30 @@ use App\Http\Controllers\LibraryBookController;
 use App\Http\Controllers\BookBorrowController;
 use App\Http\Controllers\CourseDropRequestController;
 use App\Http\Controllers\AIInstructorInteractionController;
+use App\Http\Controllers\AuthController;
 
 
-Route::apiResource('faculties', FacultyController::class);
-Route::post('faculties/{id}/restore', [FacultyController::class, 'restore']);
-Route::delete('faculties/{id}/force-delete', [FacultyController::class, 'forceDelete']);
+Route::group(['prefix' => 'auth'], function () {
+    Route::post('register', [AuthController::class, 'register']);
+    Route::post('login', [AuthController::class, 'login']);
+    Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:api');
+    Route::post('refresh', [AuthController::class, 'refresh'])->middleware('auth:api');
+    Route::get('me', [AuthController::class, 'me'])->middleware('auth:api');
+});
+// Route::apiResource('faculties', FacultyController::class);
+// Route::post('faculties/{id}/restore', [FacultyController::class, 'restore']);
+// Route::delete('faculties/{id}/force-delete', [FacultyController::class, 'forceDelete']);
+
+
+Route::group([
+    'middleware' => 'auth.user',
+    'prefix' => 'faculties'
+], function () {
+    Route::apiResource('/', FacultyController::class);
+
+    Route::post('faculties/{id}/restore', [FacultyController::class, 'restore']);
+    Route::delete('faculties/{id}/force-delete', [FacultyController::class, 'forceDelete']);
+});
 
 Route::apiResource('campuses', CampusController::class);
 Route::post('campuses/{id}/restore', [CampusController::class, 'restore']);
@@ -206,6 +225,13 @@ Route::apiResource('course_drop_requests', CourseDropRequestController::class);
 Route::post('course_drop_requests/{id}/restore', [CourseDropRequestController::class, 'restore']);
 Route::delete('course_drop_requests/{id}/force-delete', [CourseDropRequestController::class, 'forceDelete']);
 
-Route::apiResource('ai_instructor_interactions', AIInstructorInteractionController::class);
-Route::post('ai_instructor_interactions/{id}/restore', [AIInstructorInteractionController::class, 'restore']);
-Route::delete('ai_instructor_interactions/{id}/force-delete', [AIInstructorInteractionController::class, 'forceDelete']);
+Route::group([
+    'middleware' => 'authenticate',
+    'prefix' => 'ai_instructor_interactions'
+], function () {
+    Route::apiResource('/', AIInstructorInteractionController::class);
+
+    Route::post('ai_instructor_interactions/{id}/restore', [AIInstructorInteractionController::class, 'restore']);
+    Route::delete('ai_instructor_interactions/{id}/force-delete', [AIInstructorInteractionController::class, 'forceDelete']);
+    Route::delete('ai_instructor_interactions/clear', [AIInstructorInteractionController::class, 'clear']);
+});

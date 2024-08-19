@@ -56,4 +56,12 @@ class AIInstructorInteractionController extends Controller
         $item->forceDelete();
         return response()->json(null, 204);
     }
+
+    public function clear()
+{
+    AIInstructorInteraction::query()->delete();
+
+    return response()->json(['message' => 'All interactions have been deleted.']);
+}
+    
 }

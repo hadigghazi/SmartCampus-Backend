@@ -3,12 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Model
+class User extends Authenticatable implements JWTSubject
 {
-    use HasFactory, SoftDeletes;
+    use HasApiTokens, HasFactory, SoftDeletes, Notifiable;
 
     protected $fillable = [
         'first_name',
@@ -29,7 +32,26 @@ class User extends Model
         'profile_picture',
     ];
 
+    protected $guarded = [];
+
+    protected $hidden = [
+        'password',
+        'remember_token'
+    ];
+
     protected $casts = [
         'date_of_birth' => 'date',
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
     ];
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 }
