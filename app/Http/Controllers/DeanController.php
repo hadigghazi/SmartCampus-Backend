@@ -56,4 +56,14 @@ class DeanController extends Controller
         $item->forceDelete();
         return response()->json(null, 204);
     }
+
+    public function getDeansByCampus($campusId)
+    {
+        $deans = Dean::where('campus_id', $campusId)
+                     ->with('faculty') 
+                     ->withTrashed()
+                     ->get();
+                     
+        return response()->json($deans);
+    }
 }

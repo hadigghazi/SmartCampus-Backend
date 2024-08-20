@@ -18,4 +18,9 @@ class Dean extends Model
     ];
 
     protected $dates = ['deleted_at'];
+
+    public function faculty()
+    {
+        return $this->belongsTo(Faculty::class);
+    }
 }

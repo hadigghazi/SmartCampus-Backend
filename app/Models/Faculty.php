@@ -25,4 +25,9 @@ class Faculty extends Model
     {
         return $this->hasMany(Major::class);
     }
+
+    public function deans()
+    {
+        return $this->hasMany(Dean::class);
+    }
 }
