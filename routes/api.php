@@ -52,10 +52,6 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('refresh', [AuthController::class, 'refresh'])->middleware('auth:api');
     Route::get('me', [AuthController::class, 'me'])->middleware('auth:api');
 });
-// Route::apiResource('faculties', FacultyController::class);
-// Route::post('faculties/{id}/restore', [FacultyController::class, 'restore']);
-// Route::delete('faculties/{id}/force-delete', [FacultyController::class, 'forceDelete']);
-
 
 Route::group([
     'middleware' => 'auth.user',
