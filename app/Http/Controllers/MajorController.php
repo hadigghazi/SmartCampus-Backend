@@ -52,6 +52,12 @@ class MajorController extends Controller
         return response()->json(null, 204);
     }
 
+    public function getMajorsByFaculty($facultyId)
+    {
+        $majors = Major::where('faculty_id', $facultyId)->get();
+        return response()->json($majors);
+    }
+
     public function suggestMajor(Request $request)
     {
         $request->validate([

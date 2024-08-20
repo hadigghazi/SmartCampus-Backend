@@ -81,6 +81,7 @@ Route::delete('centers/{id}/force-delete', [CenterController::class, 'forceDelet
 
 Route::apiResource('majors', MajorController::class);
 Route::post('/suggest-major', [MajorController::class, 'suggestMajor']);
+Route::get('/majors/faculty/{facultyId}', [MajorController::class, 'getMajorsByFaculty']);
 Route::post('majors/{id}/restore', [MajorController::class, 'restore']);
 Route::delete('majors/{id}/force-delete', [MajorController::class, 'forceDelete']);
 
