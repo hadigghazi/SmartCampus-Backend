@@ -53,15 +53,19 @@ Route::group(['prefix' => 'auth'], function () {
     Route::get('me', [AuthController::class, 'me'])->middleware('auth:api');
 });
 
-Route::group([
-    'middleware' => 'auth.user',
-    'prefix' => 'faculties'
-], function () {
-    Route::apiResource('/', FacultyController::class);
+// Route::group([
+//     'middleware' => 'auth.user',
+//     'prefix' => 'faculties'
+// ], function () {
+//     Route::apiResource('/', FacultyController::class);
 
-    Route::post('faculties/{id}/restore', [FacultyController::class, 'restore']);
-    Route::delete('faculties/{id}/force-delete', [FacultyController::class, 'forceDelete']);
-});
+//     Route::post('faculties/{id}/restore', [FacultyController::class, 'restore']);
+//     Route::delete('faculties/{id}/force-delete', [FacultyController::class, 'forceDelete']);
+// });
+
+Route::apiResource('faculties', FacultyController::class);
+Route::post('faculties/{id}/restore', [FacultyController::class, 'restore']);
+Route::delete('faculties/{id}/force-delete', [FacultyController::class, 'forceDelete']);
 
 Route::apiResource('campuses', CampusController::class);
 Route::post('campuses/{id}/restore', [CampusController::class, 'restore']);
