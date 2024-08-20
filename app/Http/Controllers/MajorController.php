@@ -66,7 +66,7 @@ class MajorController extends Controller
 
         $majors = Major::all()->pluck('name', 'description')->toArray();
 
-        $prompt = "Given the following interests and skills, suggest the most suitable major from the provided list. ";
+        $prompt = "Given the following interests and skills, suggest the most suitable major from the provided list. Explain in details why this major is suitable and what it offers, and the opportunities it opens and so on";
         $prompt .= "Interests: $interests. ";
         $prompt .= "Skills: $skills. ";
         $prompt .= "Preferences: $preferences. ";
@@ -81,7 +81,7 @@ class MajorController extends Controller
                 ['role' => 'system', 'content' => 'You are a helpful assistant.'],
                 ['role' => 'user', 'content' => $prompt],
             ],
-            'max_tokens' => 150,
+            'max_tokens' => 1000,
         ]);
 
         $suggestion = $response->json()['choices'][0]['message']['content'];
