@@ -52,4 +52,16 @@ class CourseController extends Controller
         $course->forceDelete();
         return response()->json(null, 204);
     }
+
+    public function getCoursesByFaculty($facultyId)
+    {
+        $courses = Course::where('faculty_id', $facultyId)->get();
+        return response()->json($courses);
+    }
+
+    public function getCoursesByMajor($majorId)
+    {
+        $courses = Course::where('major_id', $majorId)->get();
+        return response()->json($courses);
+    }
 }

@@ -96,6 +96,8 @@ Route::delete('rooms/{id}/force-delete', [RoomController::class, 'forceDelete'])
 Route::apiResource('courses', CourseController::class);
 Route::post('courses/{id}/restore', [CourseController::class, 'restore']);
 Route::delete('courses/{id}/force-delete', [CourseController::class, 'forceDelete']);
+Route::get('/courses/faculty/{facultyId}', [CourseController::class, 'getCoursesByFaculty']);
+Route::get('/courses/major/{majorId}', [CourseController::class, 'getCoursesByMajor']);
 
 Route::apiResource('semesters', SemesterController::class);
 Route::post('semesters/{id}/restore', [SemesterController::class, 'restore']);
