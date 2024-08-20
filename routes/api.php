@@ -80,6 +80,7 @@ Route::post('centers/{id}/restore', [CenterController::class, 'restore']);
 Route::delete('centers/{id}/force-delete', [CenterController::class, 'forceDelete']);
 
 Route::apiResource('majors', MajorController::class);
+Route::post('/suggest-major', [MajorController::class, 'suggestMajor']);
 Route::post('majors/{id}/restore', [MajorController::class, 'restore']);
 Route::delete('majors/{id}/force-delete', [MajorController::class, 'forceDelete']);
 

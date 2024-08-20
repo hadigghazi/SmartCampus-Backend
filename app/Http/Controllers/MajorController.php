@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Major;
 use App\Http\Requests\StoreMajorRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class MajorController extends Controller
 {
@@ -49,5 +50,44 @@ class MajorController extends Controller
         $major = Major::withTrashed()->findOrFail($id);
         $major->forceDelete();
         return response()->json(null, 204);
+    }
+
+    public function suggestMajor(Request $request)
+    {
+        $request->validate([
+            'interests' => 'required|string',
+            'skills' => 'required|string',
+            'preferences' => 'nullable|string',
+        ]);
+
+        $interests = $request->input('interests');
+        $skills = $request->input('skills');
+        $preferences = $request->input('preferences', '');
+
+        $majors = Major::all()->pluck('name', 'description')->toArray();
+
+        $prompt = "Given the following interests and skills, suggest the most suitable major from the provided list. ";
+        $prompt .= "Interests: $interests. ";
+        $prompt .= "Skills: $skills. ";
+        $prompt .= "Preferences: $preferences. ";
+        $prompt .= "Majors: " . implode(", ", array_keys($majors)) . ". ";
+        $prompt .= "Descriptions: " . implode(", ", array_values($majors)) . ".";
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('OPENAI_API_KEY'),
+        ])->post('https://api.openai.com/v1/chat/completions', [
+            'model' => 'gpt-3.5-turbo',
+            'messages' => [
+                ['role' => 'system', 'content' => 'You are a helpful assistant.'],
+                ['role' => 'user', 'content' => $prompt],
+            ],
+            'max_tokens' => 150,
+        ]);
+
+        $suggestion = $response->json()['choices'][0]['message']['content'];
+
+        return response()->json([
+            'suggested_major' => $suggestion,
+        ]);
     }
 }
