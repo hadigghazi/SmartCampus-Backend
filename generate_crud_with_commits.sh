@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Define your table and model names
-TABLE_NAME="ai_instructor_interactions"
-MODEL_NAME="AIInstructorInteraction"
+TABLE_NAME="majors_faculties_campuses"
+MODEL_NAME="MajorFacultyCampus"
 FACTORY_NAME="${MODEL_NAME}Factory"
 SEEDER_NAME="${MODEL_NAME}Seeder"
 CONTROLLER_NAME="${MODEL_NAME}Controller"
@@ -43,9 +43,8 @@ class $MODEL_NAME extends Model
     use HasFactory, SoftDeletes;
 
     protected \$fillable = [
-        'user_id',
-        'question',
-        'answer',
+        'major_id',
+        'faculty_campus_id',
     ];
 
     protected \$dates = ['deleted_at'];
@@ -67,9 +66,8 @@ class Create${MODEL_NAME}Table extends Migration
     {
         Schema::create('$TABLE_NAME', function (Blueprint \$table) {
             \$table->id();
-            \$table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            \$table->text('question');
-            \$table->text('answer');
+            \$table->foreignId('major_id')->constrained('majors')->onDelete('cascade');
+            \$table->foreignId('faculty_campus_id')->constrained('faculties_campuses')->onDelete('cascade');
             \$table->timestamps();
             \$table->softDeletes();
         });
@@ -154,7 +152,8 @@ cat > database/factories/$FACTORY_NAME.php <<EOL
 namespace Database\Factories;
 
 use App\Models\\$MODEL_NAME;
-use App\Models\User; // Reference to User factory
+use App\Models\Major;
+use App\Models\FacultyCampus;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class $FACTORY_NAME extends Factory
@@ -164,9 +163,8 @@ class $FACTORY_NAME extends Factory
     public function definition()
     {
         return [
-            'user_id' => User::factory(),
-            'question' => \$this->faker->sentence(),
-            'answer' => \$this->faker->paragraph(),
+            'major_id' => Major::factory(),
+            'faculty_campus_id' => FacultyCampus::factory(),
         ];
     }
 }
@@ -205,9 +203,8 @@ class Store$MODEL_NAME extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => 'required|exists:users,id',
-            'question' => 'required|string',
-            'answer' => 'required|string',
+            'major_id' => 'required|exists:majors,id',
+            'faculty_campus_id' => 'required|exists:faculties_campuses,id',
         ];
     }
 }
@@ -227,9 +224,8 @@ class Update$MODEL_NAME extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => 'sometimes|exists:users,id',
-            'question' => 'sometimes|string',
-            'answer' => 'sometimes|string',
+            'major_id' => 'sometimes|exists:majors,id',
+            'faculty_campus_id' => 'sometimes|exists:faculties_campuses,id',
         ];
     }
 }
