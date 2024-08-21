@@ -2,22 +2,20 @@
 
 namespace Database\Factories;
 
+use App\Models\MajorFacultyCampus;
+use App\Models\Major;
+use App\Models\FacultyCampus;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\MajorFacultyCampus>
- */
 class MajorFacultyCampusFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array
+    protected $model = MajorFacultyCampus::class;
+
+    public function definition()
     {
         return [
-            //
+            'major_id' => Major::factory(),
+            'faculty_campus_id' => FacultyCampus::factory(),
         ];
     }
 }
