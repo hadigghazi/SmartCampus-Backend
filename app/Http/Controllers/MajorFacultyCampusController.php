@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\MajorFacultyCampus;
 use App\Http\Requests\StoreMajorFacultyCampus;
 use App\Http\Requests\UpdateMajorFacultyCampus;
+use Illuminate\Support\Facades\DB;
 
 class MajorFacultyCampusController extends Controller
 {
@@ -55,5 +56,19 @@ class MajorFacultyCampusController extends Controller
         $item = MajorFacultyCampus::withTrashed()->findOrFail($id);
         $item->forceDelete();
         return response()->json(null, 204);
+    }
+
+    public function getMajorsByFacultyAndCampus($facultyId, $campusId)
+    {
+        $majors = DB::table('majors')
+        ->join('majors_faculties_campuses', 'majors.id', '=', 'majors_faculties_campuses.major_id')
+        ->join('faculties_campuses', 'majors_faculties_campuses.faculty_campus_id', '=', 'faculties_campuses.id')
+        ->join('faculties', 'faculties_campuses.faculty_id', '=', 'faculties.id')
+        ->where('faculties.id', $facultyId)
+        ->where('faculties_campuses.campus_id', $campusId)
+        ->select('majors.id as major_id', 'majors.name as major_name')
+        ->get();
+
+        return response()->json($majors);
     }
 }
