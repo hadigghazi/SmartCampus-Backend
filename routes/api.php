@@ -239,4 +239,6 @@ Route::group([
     Route::post('ai_instructor_interactions/{id}/restore', [AIInstructorInteractionController::class, 'restore']);
     Route::delete('ai_instructor_interactions/{id}/force-delete', [AIInstructorInteractionController::class, 'forceDelete']);
     Route::delete('ai_instructor_interactions/clear', [AIInstructorInteractionController::class, 'clear']);
-});
+});Route::apiResource('majors_faculties_campuses', MajorFacultyCampusController::class);
+Route::post('majors_faculties_campuses/{id}/restore', [MajorFacultyCampusController::class, 'restore']);
+Route::delete('majors_faculties_campuses/{id}/force-delete', [MajorFacultyCampusController::class, 'forceDelete']);
