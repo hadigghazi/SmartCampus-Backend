@@ -16,4 +16,16 @@ class MajorFacultyCampus extends Model
     ];
 
     protected $dates = ['deleted_at'];
+
+    protected $table = 'majors_faculties_campuses';
+
+    public function major()
+    {
+        return $this->belongsTo(Major::class, 'major_id');
+    }
+
+    public function facultyCampus()
+    {
+        return $this->belongsTo(FacultyCampus::class, 'faculty_campus_id');
+    }
 }
