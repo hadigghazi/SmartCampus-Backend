@@ -11,7 +11,7 @@ class CourseController extends Controller
 {
     public function index()
     {
-        $courses = Course::withTrashed()->get();
+        $courses = Course::get();
         return response()->json($courses);
     }
 

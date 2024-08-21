@@ -10,7 +10,7 @@ class BookBorrowController extends Controller
 {
     public function index()
     {
-        $items = BookBorrow::withTrashed()->get();
+        $items = BookBorrow::get();
         return response()->json($items);
     }
 

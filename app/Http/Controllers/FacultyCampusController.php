@@ -11,7 +11,7 @@ class FacultyCampusController extends Controller
 {
     public function index()
     {
-        $facultyCampuses = FacultyCampus::withTrashed()->get();
+        $facultyCampuses = FacultyCampus::get();
         return response()->json($facultyCampuses);
     }
 

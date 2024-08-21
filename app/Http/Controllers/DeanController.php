@@ -10,7 +10,7 @@ class DeanController extends Controller
 {
     public function index()
     {
-        $items = Dean::withTrashed()->get();
+        $items = Dean::get();
         return response()->json($items);
     }
 

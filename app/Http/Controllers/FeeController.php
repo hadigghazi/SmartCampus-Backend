@@ -10,7 +10,7 @@ class FeeController extends Controller
 {
     public function index()
     {
-        $items = Fee::withTrashed()->get();
+        $items = Fee::get();
         return response()->json($items);
     }
 

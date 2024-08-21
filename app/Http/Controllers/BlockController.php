@@ -11,7 +11,7 @@ class BlockController extends Controller
 {
     public function index()
     {
-        $blocks = Block::withTrashed()->get();
+        $blocks = Block::get();
         return response()->json($blocks);
     }
 

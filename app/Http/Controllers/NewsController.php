@@ -10,7 +10,7 @@ class NewsController extends Controller
 {
     public function index()
     {
-        $items = News::withTrashed()->get();
+        $items = News::get();
         return response()->json($items);
     }
 

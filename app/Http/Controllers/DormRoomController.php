@@ -10,7 +10,7 @@ class DormRoomController extends Controller
 {
     public function index()
     {
-        $dormRooms = DormRoom::withTrashed()->get();
+        $dormRooms = DormRoom::get();
         return response()->json($dormRooms);
     }
 

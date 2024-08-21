@@ -10,7 +10,7 @@ class AssignmentController extends Controller
 {
     public function index()
     {
-        $items = Assignment::withTrashed()->get();
+        $items = Assignment::get();
         return response()->json($items);
     }
 

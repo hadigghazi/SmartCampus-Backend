@@ -11,7 +11,7 @@ class BusRouteController extends Controller
 {
     public function index()
     {
-        $busRoutes = BusRoute::withTrashed()->get();
+        $busRoutes = BusRoute::get();
         return response()->json($busRoutes);
     }
 

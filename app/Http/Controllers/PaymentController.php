@@ -10,7 +10,7 @@ class PaymentController extends Controller
 {
     public function index()
     {
-        $items = Payment::withTrashed()->get();
+        $items = Payment::get();
         return response()->json($items);
     }
 

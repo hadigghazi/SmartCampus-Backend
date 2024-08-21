@@ -11,7 +11,7 @@ class MajorController extends Controller
 {
     public function index()
     {
-        $majors = Major::withTrashed()->get();
+        $majors = Major::get();
         return response()->json($majors);
     }
 

@@ -10,7 +10,7 @@ class RegistrationController extends Controller
 {
     public function index()
     {
-        $items = Registration::withTrashed()->get();
+        $items = Registration::get();
         return response()->json($items);
     }
 

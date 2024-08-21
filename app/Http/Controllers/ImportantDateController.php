@@ -10,7 +10,7 @@ class ImportantDateController extends Controller
 {
     public function index()
     {
-        $items = ImportantDate::withTrashed()->get();
+        $items = ImportantDate::get();
         return response()->json($items);
     }
 

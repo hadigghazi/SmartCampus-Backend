@@ -10,7 +10,7 @@ class AnnouncementController extends Controller
 {
     public function index()
     {
-        $items = Announcement::withTrashed()->get();
+        $items = Announcement::get();
         return response()->json($items);
     }
 

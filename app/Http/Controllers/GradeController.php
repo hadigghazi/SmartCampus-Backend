@@ -10,7 +10,7 @@ class GradeController extends Controller
 {
     public function index()
     {
-        $items = Grade::withTrashed()->get();
+        $items = Grade::get();
         return response()->json($items);
     }
 

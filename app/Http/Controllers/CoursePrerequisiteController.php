@@ -10,7 +10,7 @@ class CoursePrerequisiteController extends Controller
 {
     public function index()
     {
-        $coursePrerequisites = CoursePrerequisite::withTrashed()->get();
+        $coursePrerequisites = CoursePrerequisite::get();
         return response()->json($coursePrerequisites);
     }
 

@@ -11,7 +11,7 @@ class RoomController extends Controller
 {
     public function index()
     {
-        $rooms = Room::withTrashed()->get();
+        $rooms = Room::get();
         return response()->json($rooms);
     }
 

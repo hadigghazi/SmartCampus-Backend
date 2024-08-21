@@ -10,7 +10,7 @@ class CourseMaterialController extends Controller
 {
     public function index()
     {
-        $items = CourseMaterial::withTrashed()->get();
+        $items = CourseMaterial::get();
         return response()->json($items);
     }
 

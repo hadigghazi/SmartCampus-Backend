@@ -11,7 +11,7 @@ class InstructorController extends Controller
 {
     public function index()
     {
-        $instructors = Instructor::withTrashed()->get();
+        $instructors = Instructor::get();
         return response()->json($instructors);
     }
 

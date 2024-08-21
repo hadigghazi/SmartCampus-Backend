@@ -10,7 +10,7 @@ class AIInstructorInteractionController extends Controller
 {
     public function index()
     {
-        $items = AIInstructorInteraction::withTrashed()->get();
+        $items = AIInstructorInteraction::get();
         return response()->json($items);
     }
 

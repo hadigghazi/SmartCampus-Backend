@@ -10,7 +10,7 @@ class FinancialAidScholarshipController extends Controller
 {
     public function index()
     {
-        $items = FinancialAidScholarship::withTrashed()->get();
+        $items = FinancialAidScholarship::get();
         return response()->json($items);
     }
 

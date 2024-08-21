@@ -10,7 +10,7 @@ class AdminController extends Controller
 {
     public function index()
     {
-        $admins = Admin::withTrashed()->get();
+        $admins = Admin::get();
         return response()->json($admins);
     }
 

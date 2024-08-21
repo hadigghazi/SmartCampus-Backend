@@ -112,6 +112,7 @@ Route::apiResource('students', StudentController::class)->except(['create', 'edi
 Route::get('/students/user/{userId}', [StudentController::class, 'getStudentByUserId']);
 Route::post('students/{id}/restore', [StudentController::class, 'restore']);
 Route::delete('students/{id}/force-delete', [StudentController::class, 'forceDelete']);
+Route::get('/students-with-users', [StudentController::class, 'getStudentsWithUserDetails']);
 
 Route::apiResource('contacts', ContactController::class)->except(['create', 'edit']);
 Route::post('contacts/{id}/restore', [ContactController::class, 'restore']);

@@ -10,7 +10,7 @@ class FacultyController extends Controller
 {
     public function index()
     {
-        $faculties = Faculty::withTrashed()->get();
+        $faculties = Faculty::get();
         return response()->json($faculties);
     }
 

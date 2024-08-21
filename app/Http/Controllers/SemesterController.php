@@ -2,52 +2,52 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Address;
-use App\Http\Requests\StoreAddressRequest;
-use App\Http\Requests\UpdateAddressRequest;
+use App\Models\Semester;
+use App\Http\Requests\StoreSemesterRequest;
+use App\Http\Requests\UpdateSemesterRequest;
 
-class AddressController extends Controller
+class SemesterController extends Controller
 {
     public function index()
     {
-        $addresses = Address::withTrashed()->get();
-        return response()->json($addresses);
+        $semester = Semester::get();
+        return response()->json($semester);
     }
 
-    public function store(StoreAddressRequest $request)
+    public function store(StoreSemesterRequest $request)
     {
-        $address = Address::create($request->validated());
-        return response()->json($address, 201);
+        $semester = Semester::create($request->validated());
+        return response()->json(sSemester, 201);
     }
 
-    public function show(Address $address)
+    public function show(Semester $semester)
     {
-        return response()->json($address);
+        return response()->json($semester);
     }
 
-    public function update(UpdateAddressRequest $request, Address $address)
+    public function update(UpdateSemesterRequest $request, Semester $semester)
     {
-        $address->update($request->validated());
-        return response()->json($address);
+        $semester->update($request->validated());
+        return response()->json($semester);
     }
 
-    public function destroy(Address $address)
+    public function destroy(Semester $semester)
     {
-        $address->delete();
+        $semester->delete();
         return response()->json(null, 204);
     }
 
     public function restore($id)
     {
-        $address = Address::withTrashed()->findOrFail($id);
-        $address->restore();
-        return response()->json($address);
+        $semester = Semester::withTrashed()->findOrFail($id);
+        $semester->restore();
+        return response()->json($semester);
     }
 
     public function forceDelete($id)
     {
-        $address = Address::withTrashed()->findOrFail($id);
-        $address->forceDelete();
+        $semester = Semester::withTrashed()->findOrFail($id);
+        $semester->forceDelete();
         return response()->json(null, 204);
     }
 }

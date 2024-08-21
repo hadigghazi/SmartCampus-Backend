@@ -11,7 +11,7 @@ class StudentController extends Controller
 {
     public function index()
     {
-        $students = Student::withTrashed()->get();
+        $students = Student::get();
         return response()->json($students);
     }
 
@@ -66,4 +66,10 @@ class StudentController extends Controller
             return response()->json(['error' => 'Internal server error'], 500);
         }
     }
+
+    public function getStudentsWithUserDetails()
+{
+    $students = Student::with('user:id,first_name,middle_name,last_name')->get();
+    return response()->json($students);
+}
 }

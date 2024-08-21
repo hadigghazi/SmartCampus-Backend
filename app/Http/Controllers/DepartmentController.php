@@ -10,7 +10,7 @@ class DepartmentController extends Controller
 {
     public function index()
     {
-        $departments = Department::withTrashed()->get();
+        $departments = Department::get();
         return response()->json($departments);
     }
 

@@ -10,7 +10,7 @@ class AddressController extends Controller
 {
     public function index()
     {
-        return Address::withTrashed()->get();
+        return Address::get();
     }
 
     public function store(StoreAddressRequest $request)

@@ -10,7 +10,7 @@ class BusRegistrationController extends Controller
 {
     public function index()
     {
-        $items = BusRegistration::withTrashed()->get();
+        $items = BusRegistration::get();
         return response()->json($items);
     }
 

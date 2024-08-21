@@ -10,7 +10,7 @@ class ExamController extends Controller
 {
     public function index()
     {
-        $items = Exam::withTrashed()->get();
+        $items = Exam::get();
         return response()->json($items);
     }
 

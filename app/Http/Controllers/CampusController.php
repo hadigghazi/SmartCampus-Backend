@@ -10,7 +10,7 @@ class CampusController extends Controller
 {
     public function index()
     {
-        $campuses = Campus::withTrashed()->get();
+        $campuses = Campus::get();
         return response()->json($campuses);
     }
 

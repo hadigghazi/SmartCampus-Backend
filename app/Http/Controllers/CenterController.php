@@ -10,7 +10,7 @@ class CenterController extends Controller
 {
     public function index()
     {
-        $centers = Center::withTrashed()->get();
+        $centers = Center::get();
         return response()->json($centers);
     }
 

@@ -10,7 +10,7 @@ class CourseInstructorController extends Controller
 {
     public function index()
     {
-        $courseInstructors = CourseInstructor::withTrashed()->get();
+        $courseInstructors = CourseInstructor::get();
         return response()->json($courseInstructors);
     }
 

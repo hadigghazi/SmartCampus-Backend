@@ -10,7 +10,7 @@ class LibraryBookController extends Controller
 {
     public function index()
     {
-        $items = LibraryBook::withTrashed()->get();
+        $items = LibraryBook::get();
         return response()->json($items);
     }
 

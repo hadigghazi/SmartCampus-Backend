@@ -10,7 +10,7 @@ class CourseDropRequestController extends Controller
 {
     public function index()
     {
-        $items = CourseDropRequest::withTrashed()->get();
+        $items = CourseDropRequest::get();
         return response()->json($items);
     }
 

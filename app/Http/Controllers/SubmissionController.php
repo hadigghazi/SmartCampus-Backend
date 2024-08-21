@@ -10,7 +10,7 @@ class SubmissionController extends Controller
 {
     public function index()
     {
-        $items = Submission::withTrashed()->get();
+        $items = Submission::get();
         return response()->json($items);
     }
 
