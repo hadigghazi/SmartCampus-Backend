@@ -109,6 +109,7 @@ Route::post('users/{id}/restore', [UserController::class, 'restore']);
 Route::delete('users/{id}/force-delete', [UserController::class, 'forceDelete']);
 
 Route::apiResource('students', StudentController::class)->except(['create', 'edit']);
+Route::get('/students/user/{userId}', [StudentController::class, 'getStudentByUserId']);
 Route::post('students/{id}/restore', [StudentController::class, 'restore']);
 Route::delete('students/{id}/force-delete', [StudentController::class, 'forceDelete']);
 

@@ -11,7 +11,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::withTrashed()->get();
+        $users = User::get();
         return response()->json($users);
     }
 

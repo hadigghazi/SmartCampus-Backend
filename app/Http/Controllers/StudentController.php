@@ -51,4 +51,19 @@ class StudentController extends Controller
         $student->forceDelete();
         return response()->json(null, 204);
     }
+
+    public function getStudentByUserId($userId)
+    {
+        try {
+            $student = Student::where('user_id', $userId)->first();
+
+            if (!$student) {
+                return response()->json(['error' => 'Student not found'], 404);
+            }
+
+            return response()->json($student);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Internal server error'], 500);
+        }
+    }
 }
