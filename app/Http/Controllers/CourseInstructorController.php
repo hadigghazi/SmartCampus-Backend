@@ -3,6 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\CourseInstructor;
+use App\Models\Course;
+use App\Models\Instructor;
+use App\Models\Campus;
+use App\Models\Semester;
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreCourseInstructorRequest;
 use App\Http\Requests\UpdateCourseInstructorRequest;
 
@@ -49,5 +54,30 @@ class CourseInstructorController extends Controller
         $courseInstructor = CourseInstructor::withTrashed()->findOrFail($id);
         $courseInstructor->forceDelete();
         return response()->json(null, 204);
+    }
+
+    public function getCourseOptions($id)
+    {
+        $courseOptions = CourseInstructor::where('course_id', $id)
+            ->with('instructor', 'campus', 'semester', 'room') 
+            ->get()
+            ->map(function ($courseInstructor) {
+                return [
+                    'id' => $courseInstructor->id,
+                    'instructor_name' => $courseInstructor->instructor->name,
+                    'campus_name' => $courseInstructor->campus->name,
+                    'schedule' => $this->formatSchedule($courseInstructor->schedule),
+                    'available_seats' => $courseInstructor->capacity,
+                    'semester_name' => $courseInstructor->semester->name,
+                ];
+            });
+
+        return response()->json($courseOptions);
+    }
+
+    private function formatSchedule($schedule)
+    {
+      //TODO
+        return $schedule;
     }
 }

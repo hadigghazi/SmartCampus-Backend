@@ -144,6 +144,7 @@ Route::post('course-prerequisites/{id}/restore', [CoursePrerequisiteController::
 Route::delete('course-prerequisites/{id}/force-delete', [CoursePrerequisiteController::class, 'forceDelete']);
 
 Route::apiResource('course-instructors', CourseInstructorController::class);
+Route::get('courses/{id}/options', [CourseInstructorController::class, 'getCourseOptions']);
 Route::post('course-instructors/{id}/restore', [CourseInstructorController::class, 'restore']);
 Route::delete('course-instructors/{id}/force-delete', [CourseInstructorController::class, 'forceDelete']);
 
