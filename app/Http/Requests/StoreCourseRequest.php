@@ -14,12 +14,12 @@ class StoreCourseRequest extends FormRequest
     public function rules()
     {
         return [
-            'code' => 'required|max:10',
-            'name' => 'required|max:100',
+            'code' => 'required|max:10|unique:courses,code',
+            'name' => 'required|max:100|unique:courses,name',
             'description' => 'nullable',
             'credits' => 'required|integer',
             'major_id' => 'required|exists:majors,id',
             'faculty_id' => 'required|exists:faculties,id',
-        ];
+        ];        
     }
 }
