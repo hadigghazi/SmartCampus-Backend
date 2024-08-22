@@ -125,6 +125,7 @@ Route::delete('admins/{id}/force-delete', [AdminController::class, 'forceDelete'
 Route::apiResource('instructors', InstructorController::class);
 Route::post('instructors/{id}/restore', [InstructorController::class, 'restore']);
 Route::delete('instructors/{id}/force-delete', [InstructorController::class, 'forceDelete']);
+Route::get('/instructors-with-users', [InstructorController::class, 'getInstructorsWithUserDetails']);
 
 Route::apiResource('addresses', AddressController::class);
 Route::post('addresses/{id}/restore', [AddressController::class, 'restore']);

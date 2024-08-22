@@ -51,4 +51,10 @@ class InstructorController extends Controller
         $instructor->forceDelete();
         return response()->json(null, 204);
     }
+
+    public function getInstructorsWithUserDetails()
+    {
+        $instructors = Instructor::with('user:id,first_name,middle_name,last_name')->get();
+        return response()->json($instructors);
+    }
 }
