@@ -13,7 +13,7 @@ class StoreBookBorrow extends FormRequest
             'book_id' => 'required|exists:library_books,id',
             'due_date' => 'required|date',
             'return_date' => 'nullable|date',
-            'status' => 'required|in:Borrowed,Returned,Overdue',
+            'status' => 'required|in:Requested,Rejected,Borrowed,Returned,Overdue',
             'notes' => 'nullable|string',
         ];
     }

@@ -56,4 +56,15 @@ class BookBorrowController extends Controller
         $item->forceDelete();
         return response()->json(null, 204);
     }
+
+    public function indexByBookId($bookId): JsonResponse
+    {
+        if (!is_numeric($bookId)) {
+            return response()->json(['message' => 'Invalid book ID'], 400);
+        }
+
+        $borrowRequests = BookBorrow::where('book_id', $bookId)->get();
+
+        return response()->json($borrowRequests);
+    }
 }
