@@ -6,6 +6,7 @@ use App\Models\BookBorrow;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\StoreBookBorrow;
 use App\Http\Requests\UpdateBookBorrow;
+use Carbon\Carbon;
 
 class BookBorrowController extends Controller
 {
@@ -60,8 +61,14 @@ class BookBorrowController extends Controller
 
     public function indexByBookId($bookId): JsonResponse
     {
-        $bookBorrows = BookBorrow::where('book_id', $bookId)->get();
+        $currentDate = Carbon::now();
 
-        return response()->json($bookBorrows);
+    BookBorrow::where('status', 'Borrowed')
+        ->where('due_date', '<', $currentDate)
+        ->update(['status' => 'Overdue']);
+
+    $bookBorrows = BookBorrow::where('book_id', $bookId)->get();
+
+    return response()->json($bookBorrows);
     }
 }
