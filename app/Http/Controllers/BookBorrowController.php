@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BookBorrow;
+use Illuminate\Http\JsonResponse;
 use App\Http\Requests\StoreBookBorrow;
 use App\Http\Requests\UpdateBookBorrow;
 
@@ -59,12 +60,8 @@ class BookBorrowController extends Controller
 
     public function indexByBookId($bookId): JsonResponse
     {
-        if (!is_numeric($bookId)) {
-            return response()->json(['message' => 'Invalid book ID'], 400);
-        }
+        $bookBorrows = BookBorrow::where('book_id', $bookId)->get();
 
-        $borrowRequests = BookBorrow::where('book_id', $bookId)->get();
-
-        return response()->json($borrowRequests);
+        return response()->json($bookBorrows);
     }
 }

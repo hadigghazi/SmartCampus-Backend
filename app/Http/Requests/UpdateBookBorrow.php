@@ -9,11 +9,11 @@ class UpdateBookBorrow extends FormRequest
     public function rules()
     {
         return [
-            'student_id' => 'required|exists:students,id',
-            'book_id' => 'required|exists:library_books,id',
-            'due_date' => 'required|date',
+            'student_id' => 'sometimes|exists:students,id',
+            'book_id' => 'sometimes|exists:library_books,id',
+            'due_date' => 'sometimes|date',
             'return_date' => 'nullable|date',
-            'status' => 'required|in:Requested,Rejected,Borrowed,Returned,Overdue',
+            'status' => 'sometimes|in:Requested,Rejected,Borrowed,Returned,Overdue',
             'notes' => 'nullable|string',
         ];
     }
