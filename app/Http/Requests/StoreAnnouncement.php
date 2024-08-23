@@ -13,8 +13,8 @@ class StoreAnnouncement extends FormRequest
             'content' => 'required|string',
             'published_date' => 'required|date',
             'author_id' => 'required|exists:users,id',
-            'visibility' => 'required|string|max:50',
-            'category' => 'required|string|max:50',
-        ];
+            'visibility' => 'required|string|in:General,Admins,Instructors,Students',
+            'category' => 'required|string|in:General,Urgent,Event',
+        ];        
     }
 }

@@ -11,12 +11,8 @@ class LibraryBook extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'title',
-        'author',
-        'isbn',
-        'copies',
-        'publication_year',
-        'campus_id',
+         'isbn', 'title', 'author', 'description', 'publication_year',
+        'copies', 'campus_id', 'pages'
     ];
 
     protected $dates = ['deleted_at'];

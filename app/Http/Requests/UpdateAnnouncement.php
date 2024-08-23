@@ -9,12 +9,12 @@ class UpdateAnnouncement extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'sometimes|string|max:100',
-            'content' => 'sometimes|string',
-            'published_date' => 'sometimes|date',
-            'author_id' => 'sometimes|exists:users,id',
-            'visibility' => 'sometimes|string|max:50',
-            'category' => 'sometimes|string|max:50',
+            'title' => 'required|string|max:100',
+            'content' => 'required|string',
+            'published_date' => 'required|date',
+            'author_id' => 'required|exists:users,id',
+            'visibility' => 'required|string|in:General,Admins,Instructors,Students',
+            'category' => 'required|string|in:General,Urgent,Event',
         ];
     }
 }

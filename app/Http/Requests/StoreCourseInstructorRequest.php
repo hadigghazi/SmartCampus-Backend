@@ -22,7 +22,7 @@ class StoreCourseInstructorRequest extends FormRequest
             'capacity' => 'required|integer',
             'campus_id' => 'required|exists:campuses,id',
             'room_id' => 'required|exists:rooms,id',
-            'schedule' => 'required|string|max:100',
+            'schedule' => 'required|string|max:1000',
         ];
     }
     
