@@ -10,12 +10,7 @@ class Department extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['name', 'description', 'campus_id'];
-
-    public function campus()
-    {
-        return $this->belongsTo(Campus::class);
-    }
+    protected $fillable = ['name', 'description'];
 
     public function instructors()
     {
