@@ -25,6 +25,13 @@ class Student extends Model
         'emergency_contact_id',
     ];
 
+    protected $attributes = [
+        'passport_number' => '',
+        'visa_status' => '',
+        'additional_info' => null,
+        'current_semester_id' => null,
+    ];
+
     public function user()
     {
     return $this->belongsTo(User::class, 'user_id');

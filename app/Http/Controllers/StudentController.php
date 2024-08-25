@@ -26,12 +26,15 @@ class StudentController extends Controller
         return response()->json($student);
     }
 
-    public function update(UpdateStudentRequest $request, Student $student)
+    public function update(UpdateStudentRequest $request, $id)
     {
+        $student = Student::findOrFail($id);
+    
         $student->update($request->validated());
-        return response()->json($student);
+    
+        return response()->json(['message' => 'Student updated successfully', 'student' => $student]);
     }
-
+    
     public function destroy(Student $student)
     {
         $student->delete();

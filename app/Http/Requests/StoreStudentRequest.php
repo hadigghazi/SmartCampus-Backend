@@ -10,18 +10,17 @@ class StoreStudentRequest extends FormRequest
     {
         return [
             'user_id' => 'required|exists:users,id',
-            'government_id' => 'required|string|max:20',
+            'government_id' => 'required|string|max:20|unique:students,government_id',
             'civil_status_number' => 'required|string|max:20',
-            'passport_number' => 'required|string|max:20',
-            'visa_status' => 'required|string|max:50',
+            'passport_number' => 'nullable|string|max:20|unique:students,passport_number',
+            'visa_status' => 'nullable|string|max:50',
             'native_language' => 'required|string|max:50',
             'secondary_language' => 'required|string|max:50',
             'current_semester_id' => 'nullable|exists:semesters,id',
-            'additional_info' => 'required|string',
+            'additional_info' => 'nullable|string',
             'transportation' => 'required|boolean',
             'dorm_residency' => 'required|boolean',
-            'emergency_contact_id' => 'nullable|exists:contacts,id',
-        ];
+        ];        
     }
 
     public function authorize()

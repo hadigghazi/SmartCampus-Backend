@@ -13,7 +13,6 @@ class UpdateInstructorRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => 'required|exists:users,id',
             'department_id' => 'required|exists:departments,id',
             'specialization' => 'sometimes|required|string|max:100',
         ];
