@@ -87,10 +87,12 @@ Route::post('majors/{id}/restore', [MajorController::class, 'restore']);
 Route::delete('majors/{id}/force-delete', [MajorController::class, 'forceDelete']);
 
 Route::apiResource('blocks', BlockController::class);
+Route::get('blocks-by-campus/{campus_id}', [BlockController::class, 'getBlocksByCampus']);
 Route::post('blocks/{id}/restore', [BlockController::class, 'restore']);
 Route::delete('blocks/{id}/force-delete', [BlockController::class, 'forceDelete']);
 
 Route::apiResource('rooms', RoomController::class);
+Route::get('rooms-by-block/{block_id}', [RoomController::class, 'getRoomsByBlock']);
 Route::post('rooms/{id}/restore', [RoomController::class, 'restore']);
 Route::delete('rooms/{id}/force-delete', [RoomController::class, 'forceDelete']);
 
@@ -119,10 +121,13 @@ Route::post('contacts/{id}/restore', [ContactController::class, 'restore']);
 Route::delete('contacts/{id}/force-delete', [ContactController::class, 'forceDelete']);
 
 Route::apiResource('admins', AdminController::class);
+Route::get('/admins/user/{userId}', [AdminController::class, 'getAdminByUserId']);
 Route::post('admins/{id}/restore', [AdminController::class, 'restore']);
 Route::delete('admins/{id}/force-delete', [AdminController::class, 'forceDelete']);
+Route::get('/admins-with-users', [AdminController::class, 'getAdminsWithUserDetails']);
 
 Route::apiResource('instructors', InstructorController::class);
+Route::get('/instructors/user/{userId}', [InstructorController::class, 'getInstructorByUserId']);
 Route::post('instructors/{id}/restore', [InstructorController::class, 'restore']);
 Route::delete('instructors/{id}/force-delete', [InstructorController::class, 'forceDelete']);
 Route::get('/instructors-with-users', [InstructorController::class, 'getInstructorsWithUserDetails']);
@@ -167,6 +172,8 @@ Route::post('registrations/{id}/restore', [RegistrationController::class, 'resto
 Route::delete('registrations/{id}/force-delete', [RegistrationController::class, 'forceDelete']);
 
 Route::apiResource('exams', ExamController::class);
+Route::get('get_exam_details', [ExamController::class, 'getAllExams']);
+Route::get('exams/details/{id}', [ExamController::class, 'getExamDetails']);
 Route::post('exams/{id}/restore', [ExamController::class, 'restore']);
 Route::delete('exams/{id}/force-delete', [ExamController::class, 'forceDelete']);
 

@@ -50,4 +50,25 @@ class AdminController extends Controller
         $admin->forceDelete();
         return response()->json(null, 204);
     }
+
+    public function getAdminByUserId($userId)
+    {
+        try {
+            $admin = Admin::where('user_id', $userId)->first();
+
+            if (!$admin) {
+                return response()->json(['error' => 'Admin not found'], 404);
+            }
+
+            return response()->json($admin);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Internal server error'], 500);
+        }
+    }
+
+    public function getAdminsWithUserDetails()
+    {
+        $admins = Admin::with('user:id,first_name,middle_name,last_name')->get();
+        return response()->json($admins);
+    }
 }

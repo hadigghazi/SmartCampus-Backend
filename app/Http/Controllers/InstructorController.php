@@ -52,6 +52,21 @@ class InstructorController extends Controller
         return response()->json(null, 204);
     }
 
+    public function getInstructorByUserId($userId)
+    {
+        try {
+            $instructor = Instructor::where('user_id', $userId)->first();
+
+            if (!$instructor) {
+                return response()->json(['error' => 'Instructor not found'], 404);
+            }
+
+            return response()->json($instructor);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Internal server error'], 500);
+        }
+    }
+
     public function getInstructorsWithUserDetails()
     {
         $instructors = Instructor::with('user:id,first_name,middle_name,last_name')->get();

@@ -10,11 +10,9 @@ class UpdateExam extends FormRequest
     {
         return [
             'course_id' => 'sometimes|integer|exists:courses,id',
-            'instructor_id' => 'sometimes|integer|exists:instructors,id',
             'date' => 'sometimes|date',
             'time' => 'sometimes|date_format:H:i:s',
             'duration' => 'sometimes|integer',
-            'campus_id' => 'sometimes|integer|exists:campuses,id',
             'room_id' => 'sometimes|integer|exists:rooms,id',
         ];
     }

@@ -22,24 +22,38 @@ class Exam extends Model
 
     protected $dates = ['deleted_at'];
 
-    // Relationships
-    public function course()
-    {
-        return $this->belongsTo(Course::class);
-    }
+    // Exam.php
+public function course()
+{
+    return $this->belongsTo(Course::class);
+}
 
-    public function instructor()
-    {
-        return $this->belongsTo(Instructor::class);
-    }
+public function instructor()
+{
+    return $this->belongsTo(Instructor::class);
+}
 
-    public function campus()
-    {
-        return $this->belongsTo(Campus::class);
-    }
+public function room()
+{
+    return $this->belongsTo(Room::class);
+}
 
-    public function room()
-    {
-        return $this->belongsTo(Room::class);
-    }
+// Instructor.php
+public function user()
+{
+    return $this->belongsTo(User::class);
+}
+
+// Room.php
+public function block()
+{
+    return $this->belongsTo(Block::class);
+}
+
+// Block.php
+public function campus()
+{
+    return $this->belongsTo(Campus::class);
+}
+
 }

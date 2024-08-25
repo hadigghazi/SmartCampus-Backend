@@ -55,4 +55,10 @@ class RoomController extends Controller
 
         return response()->json(null, 204);
     }
+
+    public function getRoomsByBlock($block_id)
+{
+    $rooms = Room::where('block_id', $block_id)->get();
+    return response()->json($rooms);
+}
 }

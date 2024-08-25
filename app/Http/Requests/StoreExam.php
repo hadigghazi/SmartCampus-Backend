@@ -10,7 +10,6 @@ class StoreExam extends FormRequest
     {
         return [
             'course_id' => 'required|integer|exists:courses,id',
-            'instructor_id' => 'required|integer|exists:instructors,id',
             'date' => 'required|date',
             'time' => 'required|date_format:H:i:s',
             'duration' => 'required|integer',

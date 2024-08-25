@@ -55,4 +55,10 @@ class BlockController extends Controller
 
         return response()->json(null, 204);
     }
+
+    public function getBlocksByCampus($campus_id)
+{
+    $blocks = Block::where('campus_id', $campus_id)->get();
+    return response()->json($blocks);
+}
 }
