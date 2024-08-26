@@ -17,7 +17,7 @@ class SemesterController extends Controller
     public function store(StoreSemesterRequest $request)
     {
         $semester = Semester::create($request->validated());
-        return response()->json(sSemester, 201);
+        return response()->json($semester, 201);
     }
 
     public function show(Semester $semester)

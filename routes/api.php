@@ -145,6 +145,7 @@ Route::post('campuses/{campusId}/faculties/attach', [FacultyCampusController::cl
 Route::delete('campuses/{campusId}/faculties/{facultyId}', [FacultyCampusController::class, 'detachFacultyFromCampus']);
 
 Route::apiResource('course-prerequisites', CoursePrerequisiteController::class);
+Route::get('courses/{course}/prerequisites', [CoursePrerequisiteController::class, 'getCoursePrerequisiteByCourse']);
 Route::post('course-prerequisites/{id}/restore', [CoursePrerequisiteController::class, 'restore']);
 Route::delete('course-prerequisites/{id}/force-delete', [CoursePrerequisiteController::class, 'forceDelete']);
 

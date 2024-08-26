@@ -50,4 +50,21 @@ class CoursePrerequisiteController extends Controller
         $coursePrerequisite->forceDelete();
         return response()->json(null, 204);
     }
+
+    public function getCoursePrerequisiteByCourse($courseId)
+    {
+        if (!is_numeric($courseId)) {
+            return response()->json(['error' => 'Invalid course ID'], 400);
+        }
+    
+        $prerequisites = CoursePrerequisite::where('course_id', $courseId)
+            ->whereHas('prerequisiteCourse', function ($query) {
+                $query->whereNull('deleted_at');
+            })
+            ->with('prerequisiteCourse') 
+            ->get();
+    
+        return response()->json($prerequisites);
+    }
+    
 }
