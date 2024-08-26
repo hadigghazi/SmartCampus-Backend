@@ -5,18 +5,25 @@ namespace App\Http\Controllers;
 use App\Models\Semester;
 use App\Http\Requests\StoreSemesterRequest;
 use App\Http\Requests\UpdateSemesterRequest;
+use Illuminate\Http\Request;
 
 class SemesterController extends Controller
 {
     public function index()
     {
-        $semester = Semester::get();
+        $semester = Semester::all();
         return response()->json($semester);
     }
 
     public function store(StoreSemesterRequest $request)
     {
-        $semester = Semester::create($request->validated());
+        $data = $request->validated();
+
+        if (isset($data['is_current']) && $data['is_current']) {
+            Semester::where('is_current', true)->update(['is_current' => false]);
+        }
+
+        $semester = Semester::create($data);
         return response()->json($semester, 201);
     }
 
@@ -27,7 +34,15 @@ class SemesterController extends Controller
 
     public function update(UpdateSemesterRequest $request, Semester $semester)
     {
-        $semester->update($request->validated());
+        $data = $request->validated();
+        
+        if (isset($data['is_current']) && $data['is_current']) {
+            Semester::where('id', '!=', $semester->id)
+                ->where('is_current', true)
+                ->update(['is_current' => false]);
+        }
+
+        $semester->update($data);
         return response()->json($semester);
     }
 
