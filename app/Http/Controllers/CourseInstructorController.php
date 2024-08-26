@@ -82,9 +82,41 @@ class CourseInstructorController extends Controller
     
     private function formatSchedule($schedule)
     {
-        // Format the schedule as needed
         return $schedule;
     }
     
+    public function getAssignedCourses($id)
+{
+    $courses = CourseInstructor::where('instructor_id', $id)->get();
+    return response()->json($courses);
+}
+
+public function getCoursesForInstructor($id)
+{
+    $courses = CourseInstructor::where('instructor_id', $id)
+        ->with('course', 'campus', 'semester', 'room.block')
+        ->get()
+        ->map(function ($courseInstructor) {
+            $course = $courseInstructor->course;
+            $campus = $courseInstructor->campus;
+            $semester = $courseInstructor->semester;
+            $room = $courseInstructor->room;
+            $block = $room ? $room->block : null;
+
+            return [
+                'course_id' => $courseInstructor->course_id,
+                'course_code' => $course ? $course->code : 'Unknown Course Code',
+                'course_name' => $course ? $course->name : 'Unknown Course',
+                'campus_name' => $campus ? $campus->name : 'Unknown Campus',
+                'semester_name' => $semester ? $semester->name : 'Unknown Semester',
+                'room' => $block ? "{$block->name} - Room {$room->number}" : 'Unknown Room',
+                'schedule' => $this->formatSchedule($courseInstructor->schedule),
+                'available_seats' => $courseInstructor->capacity,
+            ];
+        });
+
+    return response()->json($courses);
+}
+
 
 }
