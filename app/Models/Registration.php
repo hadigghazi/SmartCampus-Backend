@@ -20,4 +20,19 @@ class Registration extends Model
 
     protected $dates = ['deleted_at'];
 
+    public function courseInstructor()
+    {
+        return $this->belongsTo(CourseInstructor::class);
+    }
+
+    public function student()
+    {
+        return $this->belongsTo(Student::class);
+    }
+
+    public function semester()
+    {
+        return $this->belongsTo(Semester::class);
+    }
+
 }

@@ -57,4 +57,37 @@ public function destroy($id)
         $item->forceDelete();
         return response()->json(null, 204);
     }
+
+    public function getRegistrationsByStudent($studentId)
+    {
+        $registrations = Registration::with([
+            'courseInstructor.course:id,code,name',
+            'courseInstructor.instructor.user:id,first_name,middle_name,last_name',
+            'semester:id,name' 
+        ])->where('student_id', $studentId)->get();
+    
+        $formattedRegistrations = $registrations->map(function ($registration) {
+            $courseInstructor = $registration->courseInstructor;
+            $course = $courseInstructor ? $courseInstructor->course : null;
+            $instructor = $courseInstructor ? $courseInstructor->instructor : null;
+            $instructorUser = $instructor ? $instructor->user : null;
+            $semester = $registration->semester; 
+    
+            return [
+                'id' => $registration->id,
+                'course_code' => $course ? $course->code : 'N/A',
+                'course_name' => $course ? $course->name : 'N/A',
+                'instructor_name' => $instructorUser 
+                    ? $instructorUser->first_name . ' ' . $instructorUser->middle_name . ' ' . $instructorUser->last_name 
+                    : 'N/A',
+                'status' => $registration->status,
+                'semester_name' => $semester ? $semester->name : 'N/A', // Return the semester name
+                'created_at' => $registration->created_at,
+                'updated_at' => $registration->updated_at,
+            ];
+        });
+    
+        return response()->json($formattedRegistrations);
+    }
+    
 }
