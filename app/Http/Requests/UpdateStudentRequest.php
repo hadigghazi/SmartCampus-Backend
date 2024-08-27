@@ -9,6 +9,7 @@ class UpdateStudentRequest extends FormRequest
     public function rules()
     {
         return [
+            'major_id' => 'sometimes|exists:majors,id',
             'government_id' => 'sometimes|string|max:20|unique:students,government_id',
             'civil_status_number' => 'sometimes|string|max:20',
             'passport_number' => 'nullable|string|max:20|unique:students,passport_number',

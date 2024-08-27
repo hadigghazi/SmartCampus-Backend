@@ -23,6 +23,7 @@ class Student extends Model
         'transportation',
         'dorm_residency',
         'emergency_contact_id',
+        'major_id'
     ];
 
     protected $attributes = [

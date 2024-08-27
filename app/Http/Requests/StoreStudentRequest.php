@@ -10,6 +10,7 @@ class StoreStudentRequest extends FormRequest
     {
         return [
             'user_id' => 'required|exists:users,id',
+            'major_id' => 'required|exists:majors,id',
             'government_id' => 'required|string|max:20|unique:students,government_id',
             'civil_status_number' => 'required|string|max:20',
             'passport_number' => 'nullable|string|max:20|unique:students,passport_number',
