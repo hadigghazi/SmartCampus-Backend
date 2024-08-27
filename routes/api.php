@@ -139,6 +139,7 @@ Route::delete('addresses/{id}/force-delete', [AddressController::class, 'forceDe
 Route::apiResource('faculties-campuses', FacultyCampusController::class);
 Route::get('campuses/{campusId}/faculties', [FacultyCampusController::class, 'facultiesByCampus']);
 Route::get('faculties/{facultyId}/campuses', [FacultyCampusController::class, 'campusesByFaculty']);
+Route::get('faculty-campus-id/{facultyId}/{campusId}', [FacultyCampusController::class, 'getFacultyCampusId']);
 Route::post('faculties-campuses/{id}/restore', [FacultyCampusController::class, 'restore']);
 Route::delete('faculties-campuses/{id}/force-delete', [FacultyCampusController::class, 'forceDelete']);
 Route::post('campuses/{campusId}/faculties/attach', [FacultyCampusController::class, 'attachFacultyToCampus']);

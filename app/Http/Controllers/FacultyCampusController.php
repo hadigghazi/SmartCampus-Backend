@@ -90,4 +90,20 @@ class FacultyCampusController extends Controller
         return response()->json(null, 204);
     }
 
+
+public function getFacultyCampusId($facultyId, $campusId)
+{
+    $facultyCampus = FacultyCampus::where('faculty_id', $facultyId)
+                                  ->where('campus_id', $campusId)
+                                  ->first();
+
+    if ($facultyCampus) {
+        return response()->json(['faculty_campus_id' => $facultyCampus->id]);
+    }
+
+    return response()->json(['message' => 'Not found'], 404);
+}
+
+
+
 }
