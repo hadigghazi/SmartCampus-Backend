@@ -261,3 +261,5 @@ Route::apiResource('majors_faculties_campuses', MajorFacultyCampusController::cl
 Route::get('majors/{facultyId}/campuses/{campusId}', [MajorFacultyCampusController::class, 'getMajorsByFacultyAndCampus']);
 Route::post('majors_faculties_campuses/{id}/restore', [MajorFacultyCampusController::class, 'restore']);
 Route::delete('majors_faculties_campuses/{id}/force-delete', [MajorFacultyCampusController::class, 'forceDelete']);
+Route::post('/attach-major', [MajorFacultyCampusController::class, 'attachMajorToFacultyCampus']);
+Route::post('/detach-major', [MajorFacultyCampusController::class, 'detachMajorFromFacultyCampus']);
