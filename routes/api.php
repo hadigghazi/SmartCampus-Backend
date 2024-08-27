@@ -229,6 +229,7 @@ Route::apiResource('deans', DeanController::class);
 Route::post('deans/{id}/restore', [DeanController::class, 'restore']);
 Route::delete('deans/{id}/force-delete', [DeanController::class, 'forceDelete']);
 Route::get('deans/campus/{campusId}', [DeanController::class, 'getDeansByCampus']);
+Route::get('/deans/{facultyId}/{campusId}', [DeanController::class, 'getDeanByFacultyAndCampus']);
 
 Route::apiResource('course_materials', CourseMaterialController::class);
 Route::post('course_materials/{id}/restore', [CourseMaterialController::class, 'restore']);

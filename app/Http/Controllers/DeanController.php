@@ -61,9 +61,22 @@ class DeanController extends Controller
     {
         $deans = Dean::where('campus_id', $campusId)
                      ->with('faculty') 
-                     ->withTrashed()
                      ->get();
                      
         return response()->json($deans);
     }
+
+    public function getDeanByFacultyAndCampus($facultyId, $campusId)
+{
+    $dean = Dean::where('faculty_id', $facultyId)
+                ->where('campus_id', $campusId)
+                ->first();     
+
+    if (!$dean) {
+        return response()->json(['error' => 'Dean not found'], 404);
+    }
+
+    return response()->json($dean);
+}
+
 }
