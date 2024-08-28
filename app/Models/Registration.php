@@ -30,6 +30,11 @@ class Registration extends Model
         return $this->belongsTo(Student::class);
     }
 
+    public function grade()
+{
+    return $this->hasOne(Grade::class, 'registration_id');
+}
+
     public function semester()
     {
         return $this->belongsTo(Semester::class);

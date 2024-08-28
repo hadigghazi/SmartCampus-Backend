@@ -61,33 +61,42 @@ public function destroy($id)
     public function getRegistrationsByStudent($studentId)
     {
         $registrations = Registration::with([
-            'courseInstructor.course:id,code,name',
+            'courseInstructor.course:id,code,name,credits',
             'courseInstructor.instructor.user:id,first_name,middle_name,last_name',
-            'semester:id,name' 
-        ])->where('student_id', $studentId)->get();
-    
-        $formattedRegistrations = $registrations->map(function ($registration) {
+            'semester:id,name,start_date,end_date',
+            'grade'
+        ])
+        ->where('student_id', $studentId)
+        ->get()
+        ->map(function ($registration) {
             $courseInstructor = $registration->courseInstructor;
             $course = $courseInstructor ? $courseInstructor->course : null;
             $instructor = $courseInstructor ? $courseInstructor->instructor : null;
             $instructorUser = $instructor ? $instructor->user : null;
-            $semester = $registration->semester; 
+            $semester = $registration->semester;
+            $grade = $registration->grade;
     
             return [
                 'id' => $registration->id,
                 'course_code' => $course ? $course->code : 'N/A',
                 'course_name' => $course ? $course->name : 'N/A',
+                'credits' => $course ? $course->credits : 'N/A',
                 'instructor_name' => $instructorUser 
                     ? $instructorUser->first_name . ' ' . $instructorUser->middle_name . ' ' . $instructorUser->last_name 
                     : 'N/A',
                 'status' => $registration->status,
-                'semester_name' => $semester ? $semester->name : 'N/A', // Return the semester name
+                'semester_id' => $semester ? $semester->id : 'N/A',
+                'semester_name' => $semester ? $semester->name : 'N/A',
+                'start_date' => $semester ? $semester->start_date : 'N/A',
+                'end_date' => $semester ? $semester->end_date : 'N/A',
+                'grade' => $grade ? $grade->grade : 'N/A', 
                 'created_at' => $registration->created_at,
                 'updated_at' => $registration->updated_at,
             ];
         });
     
-        return response()->json($formattedRegistrations);
+        return response()->json($registrations);
     }
+    
     
 }
