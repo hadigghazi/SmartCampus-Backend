@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Semester;
+use App\Models\Registration;
 use App\Http\Requests\StoreSemesterRequest;
 use App\Http\Requests\UpdateSemesterRequest;
 use Illuminate\Http\Request;
@@ -80,4 +81,21 @@ class SemesterController extends Controller
 
         return response()->json($currentSemester, 200);
     }
+
+    public function getSemestersForStudent($studentId)
+{
+    $semesterIds = Registration::where('student_id', $studentId)
+        ->distinct()
+        ->pluck('semester_id');
+    
+    if ($semesterIds->isEmpty()) {
+        return response()->json(['error' => 'No registrations found for the given student'], 404);
+    }
+
+    $semesters = Semester::whereIn('id', $semesterIds)
+        ->get(['id', 'name']);
+    
+    return response()->json($semesters);
+}
+
 }

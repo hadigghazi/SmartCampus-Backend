@@ -104,6 +104,7 @@ Route::get('/courses/major/{majorId}', [CourseController::class, 'getCoursesByMa
 
 Route::apiResource('semesters', SemesterController::class);
 Route::get('/semester/current', [SemesterController::class, 'getCurrentSemester']);
+Route::get('/semesters_by_student/{id}', [SemesterController::class, 'getSemestersForStudent']);
 Route::post('semesters/{id}/restore', [SemesterController::class, 'restore']);
 Route::delete('semesters/{id}/force-delete', [SemesterController::class, 'forceDelete']);
 
