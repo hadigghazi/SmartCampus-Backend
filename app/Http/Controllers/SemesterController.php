@@ -6,6 +6,8 @@ use App\Models\Semester;
 use App\Http\Requests\StoreSemesterRequest;
 use App\Http\Requests\UpdateSemesterRequest;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+
 
 class SemesterController extends Controller
 {
@@ -64,5 +66,18 @@ class SemesterController extends Controller
         $semester = Semester::withTrashed()->findOrFail($id);
         $semester->forceDelete();
         return response()->json(null, 204);
+    }
+
+    public function getCurrentSemester(): JsonResponse
+    {
+        $currentSemester = Semester::where('is_current', true)->first();
+
+        if (!$currentSemester) {
+            return response()->json([
+                'message' => 'No current semester found.'
+            ], 404);
+        }
+
+        return response()->json($currentSemester, 200);
     }
 }
