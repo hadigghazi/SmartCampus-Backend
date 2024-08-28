@@ -10,10 +10,16 @@ class StoreRegistration extends FormRequest
     {
         return [
             'student_id' => 'required|integer',
-            'course_id' => 'required|integer',
-            'instructor_id' => 'required|integer',
+            'course_instructor_id' => 'required|integer',
             'semester_id' => 'required|integer',
-            'status' => 'required|in:Registered,Completed,Failed',
+            'status' => 'sometimes|in:Registered,Completed,Failed',
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'status' => $this->input('status', 'Registered'),
+        ]);
     }
 }

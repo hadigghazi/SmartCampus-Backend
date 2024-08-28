@@ -178,7 +178,7 @@ Route::delete('registrations/{id}/force-delete', [RegistrationController::class,
 
 Route::apiResource('exams', ExamController::class);
 Route::get('get_exam_details', [ExamController::class, 'getAllExams']);
-Route::get('exams/details/{id}', [ExamController::class, 'getExamDetails']);
+Route::get('exams/details/{id}', [ExamController::class, 'getExamsForStudent']);
 Route::post('exams/{id}/restore', [ExamController::class, 'restore']);
 Route::delete('exams/{id}/force-delete', [ExamController::class, 'forceDelete']);
 

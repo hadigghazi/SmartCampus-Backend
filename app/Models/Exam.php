@@ -18,11 +18,12 @@ class Exam extends Model
         'duration',
         'campus_id',
         'room_id',
+        'semester_id',
+        'course_instructor_id',
     ];
 
     protected $dates = ['deleted_at'];
 
-    // Exam.php
 public function course()
 {
     return $this->belongsTo(Course::class);
@@ -38,22 +39,30 @@ public function room()
     return $this->belongsTo(Room::class);
 }
 
-// Instructor.php
 public function user()
 {
     return $this->belongsTo(User::class);
 }
 
-// Room.php
 public function block()
 {
     return $this->belongsTo(Block::class);
 }
 
-// Block.php
 public function campus()
 {
     return $this->belongsTo(Campus::class);
 }
+
+public function semester()
+{
+    return $this->belongsTo(Semester::class);
+}
+
+public function courseInstructor()
+{
+    return $this->belongsTo(CourseInstructor::class);
+}
+
 
 }

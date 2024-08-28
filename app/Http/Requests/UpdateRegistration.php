@@ -10,8 +10,7 @@ class UpdateRegistration extends FormRequest
     {
         return [
             'student_id' => 'sometimes|integer',
-            'course_id' => 'sometimes|integer',
-            'instructor_id' => 'sometimes|integer',
+            'course_instructor_id' => 'sometimes|integer',
             'semester_id' => 'sometimes|integer',
             'status' => 'sometimes|in:Registered,Completed,Failed',
         ];

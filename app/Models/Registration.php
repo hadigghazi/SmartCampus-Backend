@@ -12,10 +12,13 @@ class Registration extends Model
 
     protected $fillable = [
         'student_id',
-        'course_id',
-        'instructor_id',
+        'course_instructor_id',
         'semester_id',
         'status',
+    ];    
+
+    protected $attributes = [
+        'status' => 'Registered',
     ];
 
     protected $dates = ['deleted_at'];

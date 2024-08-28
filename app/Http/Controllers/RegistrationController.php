@@ -22,7 +22,7 @@ class RegistrationController extends Controller
 
     public function show($id)
 {
-    $item = FacultyCampus::withTrashed()->findOrFail($id);
+    $item = Registration::withTrashed()->findOrFail($id);
     if ($item->trashed()) {
         return response()->json(['error' => 'Not found'], 404);
     }
@@ -94,7 +94,6 @@ public function destroy($id)
                 'updated_at' => $registration->updated_at,
             ];
         });
-    
         return response()->json($registrations);
     }
     

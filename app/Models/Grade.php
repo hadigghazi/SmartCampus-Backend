@@ -19,7 +19,6 @@ class Grade extends Model
 
     protected $dates = ['deleted_at'];
 
-    // Relationships
     public function registration()
     {
         return $this->belongsTo(Registration::class);
