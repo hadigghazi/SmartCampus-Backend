@@ -7,6 +7,7 @@ use App\Models\Registration;
 use App\Http\Requests\StoreSemesterRequest;
 use App\Http\Requests\UpdateSemesterRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
 
 
@@ -97,5 +98,23 @@ class SemesterController extends Controller
     
     return response()->json($semesters);
 }
+
+public function getSemestersForInstructor($instructorId)
+{
+    $semesters = DB::table('course_instructors')
+        ->join('semesters', 'course_instructors.semester_id', '=', 'semesters.id')
+        ->where('course_instructors.instructor_id', $instructorId)
+        ->select('semesters.id', 'semesters.name')
+        ->distinct()
+        ->orderBy('semesters.created_at', 'desc')
+        ->get();
+
+    if ($semesters->isEmpty()) {
+        return response()->json(['error' => 'No semesters found for the given instructor'], 404);
+    }
+
+    return response()->json($semesters);
+}
+
 
 }

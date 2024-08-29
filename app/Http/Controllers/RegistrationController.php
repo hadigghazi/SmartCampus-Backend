@@ -75,6 +75,7 @@ public function destroy($id)
             $instructorUser = $instructor ? $instructor->user : null;
             $semester = $registration->semester;
             $grade = $registration->grade;
+            $schedule = $courseInstructor ? $courseInstructor->schedule : null;
     
             return [
                 'id' => $registration->id,
@@ -91,6 +92,7 @@ public function destroy($id)
                 'end_date' => $semester ? $semester->end_date : 'N/A',
                 'grade' => $grade ? $grade->grade : 'N/A', 
                 'course_instructor_id' => $registration->course_instructor_id,
+                'schedule' => $schedule ?? 'N/A',
                 'created_at' => $registration->created_at,
                 'updated_at' => $registration->updated_at,
             ];

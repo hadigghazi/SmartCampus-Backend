@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CourseInstructor;
 use App\Models\Course;
 use App\Models\Instructor;
+use App\Models\Registration;
 use App\Models\Campus;
 use App\Models\Semester;
 use Illuminate\Http\Request;
@@ -102,21 +103,29 @@ public function getCoursesForInstructor($id)
             $semester = $courseInstructor->semester;
             $room = $courseInstructor->room;
             $block = $room ? $room->block : null;
+            $numberOfStudents = Registration::where('course_instructor_id', $courseInstructor->id)
+            ->whereNull('deleted_at')
+            ->count();
 
             return [
+                'id' => $courseInstructor->id,
                 'course_id' => $courseInstructor->course_id,
                 'course_code' => $course ? $course->code : 'Unknown Course Code',
                 'course_name' => $course ? $course->name : 'Unknown Course',
+                'credits' => $course ? $course->credits : 'Unknown Credits',
                 'campus_name' => $campus ? $campus->name : 'Unknown Campus',
                 'semester_name' => $semester ? $semester->name : 'Unknown Semester',
-                'room' => $block ? "{$block->name} - Room {$room->number}" : 'Unknown Room',
+                'semester_id' => $semester ? $semester->id : 'Unknown Semester',
+                'from_date' => $semester ? $semester->start_date : 'Unknown Start Date',
+                'to_date' => $semester ? $semester->end_date : 'Unknown End Date',
+                'room' => $block ? "Block {$block->name} - Room {$room->number}" : 'Unknown Room',
                 'schedule' => $this->formatSchedule($courseInstructor->schedule),
                 'available_seats' => $courseInstructor->capacity,
+                'number_of_students' => $numberOfStudents,
             ];
         });
 
     return response()->json($courses);
 }
-
 
 }

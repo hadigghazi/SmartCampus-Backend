@@ -105,6 +105,7 @@ Route::get('/courses/major/{majorId}', [CourseController::class, 'getCoursesByMa
 Route::apiResource('semesters', SemesterController::class);
 Route::get('/semester/current', [SemesterController::class, 'getCurrentSemester']);
 Route::get('/semesters_by_student/{id}', [SemesterController::class, 'getSemestersForStudent']);
+Route::get('/semesters_by_instructor/{id}', [SemesterController::class, 'getSemestersForInstructor']);
 Route::post('semesters/{id}/restore', [SemesterController::class, 'restore']);
 Route::delete('semesters/{id}/force-delete', [SemesterController::class, 'forceDelete']);
 
@@ -180,6 +181,7 @@ Route::delete('registrations/{id}/force-delete', [RegistrationController::class,
 Route::apiResource('exams', ExamController::class);
 Route::get('get_exam_details', [ExamController::class, 'getAllExams']);
 Route::get('exams/details/{id}', [ExamController::class, 'getExamsForStudent']);
+Route::get('exams/instructor-details/{id}', [ExamController::class, 'getExamsForInstructor']);
 Route::post('exams/{id}/restore', [ExamController::class, 'restore']);
 Route::delete('exams/{id}/force-delete', [ExamController::class, 'forceDelete']);
 

@@ -149,6 +149,72 @@ public function getExamsForStudent($studentId)
 }
 
 
+public function getExamsForInstructor($instructorId)
+{
+    $currentSemester = $this->getCurrentSemester();
+    
+    if (!$currentSemester) {
+        return response()->json(['error' => 'No current semester found'], 404);
+    }
+
+    $exams = Exam::with([
+            'room.block.campus',
+            'courseInstructor.course:id,code,name,credits',
+            'courseInstructor.instructor.user:id,first_name,middle_name,last_name'
+        ])
+        ->whereHas('courseInstructor', function ($query) use ($instructorId, $currentSemester) {
+            $query->where('instructor_id', $instructorId)
+                  ->where('semester_id', $currentSemester->id);
+        })
+        ->whereNull('deleted_at')
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    if ($exams->isEmpty()) {
+        return response()->json(['error' => 'No exams found for the given instructor in the current semester'], 404);
+    }
+
+    $formattedExams = $exams->map(function ($exam) {
+        $room = $exam->room;
+        $block = $room ? $room->block : null; 
+        $campus = $block ? $block->campus : null; 
+        $semester = $exam->courseInstructor->semester;
+        $courseInstructor = $exam->courseInstructor;
+        $instructor = $courseInstructor ? $courseInstructor->instructor : null;
+        $user = $instructor ? $instructor->user : null; 
+
+        $courseName = $courseInstructor->course->name ?? 'N/A';
+        $courseCode = $courseInstructor->course->code ?? 'N/A';
+        $roomNumber = $room->number ?? 'N/A';
+        $blockName = $block->name ?? 'N/A';
+        $campusName = $campus->name ?? 'N/A';
+        $semesterName = $semester->name ?? 'N/A';
+        $instructorName = $user 
+            ? trim("{$user->first_name} {$user->middle_name} {$user->last_name}")
+            : 'N/A';
+
+        return [
+            'id' => $exam->id,
+            'course_name' => $courseName,
+            'course_code' => $courseCode,
+            'date' => $exam->date,
+            'time' => $exam->time,
+            'duration' => $exam->duration,
+            'room_number' => $roomNumber,
+            'block_name' => $blockName,
+            'campus_name' => $campusName,
+            'semester_name' => $semesterName,
+            'instructor_name' => $instructorName,
+            'created_at' => $exam->created_at,
+            'updated_at' => $exam->updated_at,
+            'deleted_at' => $exam->deleted_at,
+        ];
+    });
+
+    return response()->json($formattedExams);
+}
+
+
     public function getExamDetails($courseInstructorId)
     {
         $exam = Exam::with([
