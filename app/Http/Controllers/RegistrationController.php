@@ -90,6 +90,7 @@ public function destroy($id)
                 'start_date' => $semester ? $semester->start_date : 'N/A',
                 'end_date' => $semester ? $semester->end_date : 'N/A',
                 'grade' => $grade ? $grade->grade : 'N/A', 
+                'course_instructor_id' => $registration->course_instructor_id,
                 'created_at' => $registration->created_at,
                 'updated_at' => $registration->updated_at,
             ];
