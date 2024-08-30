@@ -2,58 +2,50 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\CourseMaterial;
-use App\Http\Requests\StoreCourseMaterial;
-use App\Http\Requests\UpdateCourseMaterial;
 
 class CourseMaterialController extends Controller
 {
-    public function index()
+    public function store(Request $request)
     {
-        $items = CourseMaterial::get();
-        return response()->json($items);
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'course_instructor_id' => 'required|exists:course_instructors,id',
+            'file' => 'required|file|mimes:pdf,docx,pptx,zip|max:20480', 
+        ]);
+
+        $filePath = $request->file('file')->store('course_materials', 'public');
+        $fileName = $request->file('file')->getClientOriginalName();
+
+        $courseMaterial = CourseMaterial::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'course_instructor_id' => $request->course_instructor_id,
+            'file_path' => $filePath,
+            'file_name' => $fileName,
+            'uploaded_by' => auth()->id(),
+        ]);
+
+        return response()->json($courseMaterial, 201);
     }
 
-    public function store(StoreCourseMaterial $request)
+    public function index($courseInstructorId)
     {
-        $item = CourseMaterial::create($request->validated());
-        return response()->json($item, 201);
+        $materials = CourseMaterial::where('course_instructor_id', $courseInstructorId)->get();
+        return response()->json($materials);
     }
-
+    
     public function show($id)
     {
-        $item = CourseMaterial::withTrashed()->findOrFail($id);
-        if ($item->trashed()) {
-            return response()->json(['error' => 'Not found'], 404);
-        }
-        return response()->json($item);
+        $material = CourseMaterial::findOrFail($id);
+        return response()->json($material);
     }
-
-    public function update(UpdateCourseMaterial $request, $id)
+    
+    public function download($id)
     {
-        $item = CourseMaterial::withTrashed()->findOrFail($id);
-        $item->update($request->validated());
-        return response()->json($item);
-    }
-
-    public function destroy($id)
-    {
-        $item = CourseMaterial::withTrashed()->findOrFail($id);
-        $item->delete();
-        return response()->json(null, 204);
-    }
-
-    public function restore($id)
-    {
-        $item = CourseMaterial::withTrashed()->findOrFail($id);
-        $item->restore();
-        return response()->json($item);
-    }
-
-    public function forceDelete($id)
-    {
-        $item = CourseMaterial::withTrashed()->findOrFail($id);
-        $item->forceDelete();
-        return response()->json(null, 204);
+        $material = CourseMaterial::findOrFail($id);
+        return response()->download(storage_path('app/public/' . $material->file_path), $material->file_name);
     }
 }
