@@ -237,6 +237,7 @@ Route::get('/deans/{facultyId}/{campusId}', [DeanController::class, 'getDeanByFa
 
 Route::get('/instructor-courses/{courseInstructorId}/materials', [CourseMaterialController::class, 'index']);
 Route::post('/instructor-courses/{courseInstructorId}/materials', [CourseMaterialController::class, 'store']);
+Route::delete('/course-materials/{id}', [CourseMaterialController::class, 'destroy']);
 Route::get('/course-materials/{id}', [CourseMaterialController::class, 'show']);
 Route::get('/course-materials/{id}/download', [CourseMaterialController::class, 'download']);
 Route::post('course_materials/{id}/restore', [CourseMaterialController::class, 'restore']);

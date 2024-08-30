@@ -47,4 +47,25 @@ class CourseMaterialController extends Controller
         $material = CourseMaterial::findOrFail($id);
         return response()->download(storage_path('app/public/' . $material->file_path), $material->file_name);
     }
+
+    public function destroy($id)
+    {
+        $item = CourseMaterial::withTrashed()->findOrFail($id);
+        $item->delete();
+        return response()->json(null, 204);
+    }
+
+    public function restore($id)
+    {
+        $item = CourseMaterial::withTrashed()->findOrFail($id);
+        $item->restore();
+        return response()->json($item);
+    }
+
+    public function forceDelete($id)
+    {
+        $item = CourseMaterial::withTrashed()->findOrFail($id);
+        $item->forceDelete();
+        return response()->json(null, 204);
+    }
 }
