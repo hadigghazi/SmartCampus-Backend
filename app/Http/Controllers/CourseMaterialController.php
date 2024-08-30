@@ -25,7 +25,6 @@ class CourseMaterialController extends Controller
             'course_instructor_id' => $request->course_instructor_id,
             'file_path' => $filePath,
             'file_name' => $fileName,
-            'uploaded_by' => auth()->id(),
         ]);
 
         return response()->json($courseMaterial, 201);
