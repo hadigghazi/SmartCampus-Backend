@@ -9,9 +9,9 @@ class StoreAssignment extends FormRequest
     public function rules()
     {
         return [
-            'course_id' => 'required|integer|exists:courses,id',
-            'title' => 'required|string|max:100',
-            'description' => 'required|string',
+            'course_instructor_id' => 'required|integer|exists:course_instructors,id',
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
             'due_date' => 'required|date',
         ];
     }

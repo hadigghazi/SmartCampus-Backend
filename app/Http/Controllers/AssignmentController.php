@@ -56,4 +56,12 @@ class AssignmentController extends Controller
         $item->forceDelete();
         return response()->json(null, 204);
     }
+
+    public function getByInstructor($courseInstructorId)
+{
+    $assignments = Assignment::where('course_instructor_id', $courseInstructorId)
+        ->whereNull('deleted_at')
+        ->get();
+    return response()->json($assignments);
+}
 }

@@ -190,6 +190,7 @@ Route::post('grades/{id}/restore', [GradeController::class, 'restore']);
 Route::delete('grades/{id}/force-delete', [GradeController::class, 'forceDelete']);
 
 Route::apiResource('assignments', AssignmentController::class);
+Route::get('assignments/instructor/{courseInstructorId}', [AssignmentController::class, 'getByInstructor']);
 Route::post('assignments/{id}/restore', [AssignmentController::class, 'restore']);
 Route::delete('assignments/{id}/force-delete', [AssignmentController::class, 'forceDelete']);
 
