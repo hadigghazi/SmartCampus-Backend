@@ -188,6 +188,8 @@ Route::post('exams/{id}/restore', [ExamController::class, 'restore']);
 Route::delete('exams/{id}/force-delete', [ExamController::class, 'forceDelete']);
 
 Route::apiResource('grades', GradeController::class);
+Route::post('/grades/add', [GradeController::class, 'addGrade']);
+Route::get('/grades/get/{course_instructor_id}', [GradeController::class, 'getGradesByInstructor']);
 Route::post('grades/{id}/restore', [GradeController::class, 'restore']);
 Route::delete('grades/{id}/force-delete', [GradeController::class, 'forceDelete']);
 
