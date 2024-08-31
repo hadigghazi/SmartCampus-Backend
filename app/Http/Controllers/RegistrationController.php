@@ -100,5 +100,25 @@ public function destroy($id)
         return response()->json($registrations);
     }
     
-    
+    public function getRegisteredStudents($courseInstructorId)
+{
+    $registrations = Registration::where('course_instructor_id', $courseInstructorId)
+        ->with('student.user')
+        ->get()
+        ->map(function ($registration) {
+            $user = $registration->student->user;
+
+            return [
+                'student_id' => $registration->student_id,
+                'first_name' => $user ? $user->first_name : 'Unknown',
+                'middle_name' => $user ? $user->middle_name : 'Unknown',
+                'last_name' => $user ? $user->last_name : 'Unknown',
+                'email' => $user ? $user->email : 'Unknown',
+                'profile_picture' =>  $user ? $user->profile_picture : 'Unknown', 
+            ];
+        });
+
+    return response()->json($registrations);
+}
+
 }

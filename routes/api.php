@@ -154,6 +154,7 @@ Route::post('course-prerequisites/{id}/restore', [CoursePrerequisiteController::
 Route::delete('course-prerequisites/{id}/force-delete', [CoursePrerequisiteController::class, 'forceDelete']);
 
 Route::apiResource('course-instructors', CourseInstructorController::class);
+Route::get('/course-details/{courseInstructorId}', [CourseInstructorController::class, 'getCourseDetails']);
 Route::get('/instructors/{id}/courses', [CourseInstructorController::class, 'getCoursesForInstructor']);
 Route::get('courses/{id}/options', [CourseInstructorController::class, 'getCourseOptions']);
 Route::post('course-instructors/{id}/restore', [CourseInstructorController::class, 'restore']);
@@ -174,6 +175,7 @@ Route::delete('bus-routes/{id}/force-delete', [BusRouteController::class, 'force
 Route::get('campuses/{campusId}/bus-routes', [BusRouteController::class, 'routesByCampus']); 
 
 Route::apiResource('registrations', RegistrationController::class);
+Route::get('course-instructor-students/{id}', [RegistrationController::class, 'getRegisteredStudents']);
 Route::get('student/{id}/registration', [RegistrationController::class, 'getRegistrationsByStudent']);
 Route::post('registrations/{id}/restore', [RegistrationController::class, 'restore']);
 Route::delete('registrations/{id}/force-delete', [RegistrationController::class, 'forceDelete']);

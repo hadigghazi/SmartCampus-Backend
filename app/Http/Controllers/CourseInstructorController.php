@@ -128,4 +128,24 @@ public function getCoursesForInstructor($id)
     return response()->json($courses);
 }
 
+public function getCourseDetails($courseInstructorId)
+{
+    $courseInstructor = CourseInstructor::find($courseInstructorId);
+
+    if (!$courseInstructor) {
+        return response()->json(['message' => 'Course Instructor not found.'], 404);
+    }
+
+    $course = Course::find($courseInstructor->course_id);
+
+    if (!$course) {
+        return response()->json(['message' => 'Course not found.'], 404);
+    }
+
+    return response()->json([
+        'course_code' => $course->code,
+        'course_name' => $course->name,
+    ]);
+}
+
 }
