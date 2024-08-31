@@ -56,4 +56,42 @@ class CourseDropRequestController extends Controller
         $item->forceDelete();
         return response()->json(null, 204);
     }
+
+    public function requestDrop(Request $request)
+    {
+        $validated = $request->validate([
+            'student_id' => 'required|integer|exists:students,id',
+            'course_instructor_id' => 'required|integer|exists:course_instructors,id',
+            'reason' => 'required|string',
+        ]);
+
+        $dropRequest = CourseDropRequest::create([
+            'student_id' => $validated['student_id'],
+            'course_instructor_id' => $validated['course_instructor_id'],
+            'reason' => $validated['reason'],
+            'status' => 'Pending', 
+        ]);
+
+        return response()->json($dropRequest, 201);
+    }
+
+    public function getDropRequestsByInstructor($courseInstructorId)
+    {
+        $dropRequests = CourseDropRequest::where('course_instructor_id', $courseInstructorId)->get();
+        return response()->json($dropRequests);
+    }
+
+
+    public function updateStatus(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'status' => 'required|in:Approved,Rejected',
+        ]);
+
+        $dropRequest = CourseDropRequest::findOrFail($id);
+        $dropRequest->update(['status' => $validated['status']]);
+
+        return response()->json($dropRequest);
+    }
+
 }
