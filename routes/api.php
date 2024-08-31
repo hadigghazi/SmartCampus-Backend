@@ -198,9 +198,13 @@ Route::get('assignments/instructor/{courseInstructorId}', [AssignmentController:
 Route::post('assignments/{id}/restore', [AssignmentController::class, 'restore']);
 Route::delete('assignments/{id}/force-delete', [AssignmentController::class, 'forceDelete']);
 
-Route::apiResource('submissions', SubmissionController::class);
-Route::post('submissions/{id}/restore', [SubmissionController::class, 'restore']);
-Route::delete('submissions/{id}/force-delete', [SubmissionController::class, 'forceDelete']);
+
+Route::get('/assignments/{assignmentId}/submissions', [SubmissionController::class, 'index']);
+Route::post('/assignments/{assignmentId}/submissions', [SubmissionController::class, 'store']);
+Route::delete('/submissions/{id}', [SubmissionController::class, 'destroy']);
+Route::get('/submissions/{id}/download', [SubmissionController::class, 'download']);
+Route::post('/submissions/{id}/restore', [SubmissionController::class, 'restore']);
+Route::delete('/submissions/{id}/force-delete', [SubmissionController::class, 'forceDelete']);
 
 Route::apiResource('payments', PaymentController::class);
 Route::post('payments/{id}/restore', [PaymentController::class, 'restore']);
