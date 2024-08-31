@@ -10,7 +10,7 @@ class UpdateCourseDropRequest extends FormRequest
     {
         return [
             'student_id' => 'sometimes|exists:students,id',
-            'course_id' => 'sometimes|exists:courses,id',
+            'course_instructor_id' => 'sometimes|exists:course_instructors,id',
             'reason' => 'sometimes|string',
             'status' => 'sometimes|in:Pending,Approved,Rejected',
         ];

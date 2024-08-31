@@ -12,7 +12,7 @@ class CourseDropRequest extends Model
 
     protected $fillable = [
         'student_id',
-        'course_id',
+        'course_instructor_id',
         'reason',
         'status',
     ];

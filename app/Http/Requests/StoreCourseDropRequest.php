@@ -10,7 +10,7 @@ class StoreCourseDropRequest extends FormRequest
     {
         return [
             'student_id' => 'required|exists:students,id',
-            'course_id' => 'required|exists:courses,id',
+            'course_instructor_id' => 'required|exists:course_instructors,id',
             'reason' => 'required|string',
             'status' => 'required|in:Pending,Approved,Rejected',
         ];

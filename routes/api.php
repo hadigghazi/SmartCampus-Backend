@@ -201,6 +201,7 @@ Route::delete('assignments/{id}/force-delete', [AssignmentController::class, 'fo
 
 Route::get('/assignments/{assignmentId}/submissions', [SubmissionController::class, 'index']);
 Route::post('/assignments/{assignmentId}/submissions', [SubmissionController::class, 'store']);
+Route::get('/assignments/{assignmentId}/all-submissions', [SubmissionController::class, 'getAllSubmissions']);
 Route::delete('/submissions/{id}', [SubmissionController::class, 'destroy']);
 Route::get('/submissions/{id}/download', [SubmissionController::class, 'download']);
 Route::post('/submissions/{id}/restore', [SubmissionController::class, 'restore']);

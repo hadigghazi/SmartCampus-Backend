@@ -100,4 +100,22 @@ class SubmissionController extends Controller
         $submission->forceDelete();
         return response()->json(null, 204);
     }
+
+    public function getAllSubmissions($assignmentId)
+    {
+        if (!Assignment::find($assignmentId)) {
+            return response()->json(['error' => 'Assignment not found.'], 404);
+        }
+    
+        $submissions = Submission::where('assignment_id', $assignmentId)
+                                 ->with(['student' => function($query) {
+                                     $query->select('id', 'user_id')
+                                           ->with(['user:id,first_name,middle_name,last_name']);
+                                 }])
+                                 ->get();
+    
+        return response()->json($submissions);
+    }
+    
+
 }
