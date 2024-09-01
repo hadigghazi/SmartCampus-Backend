@@ -263,9 +263,10 @@ Route::delete('book_borrows/{id}/force-delete', [BookBorrowController::class, 'f
 Route::get('book_borrows/by_book/{bookId}', [BookBorrowController::class, 'indexByBookId']);
 
 Route::apiResource('course_drop_requests', CourseDropRequestController::class);
-Route::post('ourse_drop_requests/request', [CourseDropRequestController::class, 'requestDrop']);
-Route::get('ourse_drop_requests/instructor/{courseInstructorId}', [CourseDropRequestController::class, 'getDropRequestsByInstructor']);
-Route::put('ourse_drop_requests/{id}/status', [CourseDropRequestController::class, 'updateStatus']);
+Route::get('/course_drop_requests/check_student_request/{courseInstructorId}', [CourseDropRequestController::class, 'checkDropRequestForStudent']);
+Route::post('course_drop_requests/request', [CourseDropRequestController::class, 'requestDrop']);
+Route::get('course_drop_requests/instructor/{courseInstructorId}', [CourseDropRequestController::class, 'getDropRequestsByInstructor']);
+Route::put('course_drop_requests/{id}/status', [CourseDropRequestController::class, 'updateStatus']);
 Route::post('course_drop_requests/{id}/restore', [CourseDropRequestController::class, 'restore']);
 Route::delete('course_drop_requests/{id}/force-delete', [CourseDropRequestController::class, 'forceDelete']);
 

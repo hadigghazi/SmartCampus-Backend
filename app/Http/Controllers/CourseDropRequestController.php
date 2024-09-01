@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\CourseDropRequest;
+use App\Models\Student;
 use App\Http\Requests\StoreCourseDropRequest;
 use App\Http\Requests\UpdateCourseDropRequest;
 
@@ -60,13 +62,17 @@ class CourseDropRequestController extends Controller
     public function requestDrop(Request $request)
     {
         $validated = $request->validate([
-            'student_id' => 'required|integer|exists:students,id',
             'course_instructor_id' => 'required|integer|exists:course_instructors,id',
             'reason' => 'required|string',
         ]);
 
+        $userId = auth()->user()->id;
+
+        $student = Student::where('user_id', $userId)->firstOrFail();
+        $studentId = $student->id;
+
         $dropRequest = CourseDropRequest::create([
-            'student_id' => $validated['student_id'],
+            'student_id' => $studentId,
             'course_instructor_id' => $validated['course_instructor_id'],
             'reason' => $validated['reason'],
             'status' => 'Pending', 
@@ -79,6 +85,24 @@ class CourseDropRequestController extends Controller
     {
         $dropRequests = CourseDropRequest::where('course_instructor_id', $courseInstructorId)->get();
         return response()->json($dropRequests);
+    }
+
+    public function checkDropRequestForStudent($courseInstructorId)
+    {
+        $userId = auth()->user()->id;
+
+        $student = Student::where('user_id', $userId)->firstOrFail();
+        $studentId = $student->id;
+        
+        $dropRequest = CourseDropRequest::where('course_instructor_id', $courseInstructorId)
+                            ->where('student_id', $studentId)
+                            ->first();
+
+        if ($dropRequest) {
+            return response()->json(['exists' => true, 'dropRequest' => $dropRequest], 200);
+        }
+
+        return response()->json(['exists' => false], 200);
     }
 
 
