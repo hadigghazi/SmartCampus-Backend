@@ -163,10 +163,10 @@ class CourseMaterialController extends Controller
                 ],
                 [
                     'role' => 'user',
-                    'content' => 'Generate practice questions for the following content:\n' . $content,
+                    'content' => 'Generate practice questions for the following content, make sure to include some big problems also if the content allows for it:\n' . $content,
                 ],
             ],
-            'max_tokens' => 1000,
+            'max_tokens' => 2000,
             'temperature' => 0.5,
         ]);
     
