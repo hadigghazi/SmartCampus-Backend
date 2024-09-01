@@ -250,6 +250,7 @@ Route::post('/instructor-courses/{courseInstructorId}/materials', [CourseMateria
 Route::delete('/course-materials/{id}', [CourseMaterialController::class, 'destroy']);
 Route::get('/course-materials/{id}', [CourseMaterialController::class, 'show']);
 Route::get('/course-materials/{id}/download', [CourseMaterialController::class, 'download']);
+Route::post('/generate-practice-questions', [CourseMaterialController::class, 'generate']);
 Route::post('course_materials/{id}/restore', [CourseMaterialController::class, 'restore']);
 Route::delete('course_materials/{id}/force-delete', [CourseMaterialController::class, 'forceDelete']);
 

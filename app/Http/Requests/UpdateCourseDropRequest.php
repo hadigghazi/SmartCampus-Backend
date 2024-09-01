@@ -11,6 +11,7 @@ class UpdateCourseDropRequest extends FormRequest
         return [
             'course_instructor_id' => 'sometimes|exists:course_instructors,id',
             'reason' => 'sometimes|string',
+            'status' => 'sometimes|in:Pending,Approved,Rejected',
         ];
     }
 }

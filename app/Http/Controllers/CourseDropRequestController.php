@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\CourseDropRequest;
 use App\Models\Student;
+use App\Models\Registration;
+use App\Models\Grade;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreCourseDropRequest;
 use App\Http\Requests\UpdateCourseDropRequest;
 
@@ -83,9 +86,21 @@ class CourseDropRequestController extends Controller
 
     public function getDropRequestsByInstructor($courseInstructorId)
     {
-        $dropRequests = CourseDropRequest::where('course_instructor_id', $courseInstructorId)->get();
+        $dropRequests = CourseDropRequest::where('course_instructor_id', $courseInstructorId)
+            ->join('students', 'course_drop_requests.student_id', '=', 'students.id')
+            ->join('users', 'students.user_id', '=', 'users.id')
+            ->get([
+                'course_drop_requests.id',
+                'course_drop_requests.student_id',
+                'course_drop_requests.reason',
+                'course_drop_requests.status',
+                \DB::raw("CONCAT(users.first_name, ' ', users.middle_name, ' ', users.last_name) AS student_name"),
+            ]);
+    
         return response()->json($dropRequests);
     }
+    
+    
 
     public function checkDropRequestForStudent($courseInstructorId)
     {
@@ -111,11 +126,43 @@ class CourseDropRequestController extends Controller
         $validated = $request->validate([
             'status' => 'required|in:Approved,Rejected',
         ]);
-
+    
         $dropRequest = CourseDropRequest::findOrFail($id);
+    
         $dropRequest->update(['status' => $validated['status']]);
-
+    
+        if ($validated['status'] === 'Approved') {
+            $registration = DB::table('registrations')
+                ->where('student_id', $dropRequest->student_id)
+                ->where('course_instructor_id', $dropRequest->course_instructor_id)
+                ->first();
+    
+            if ($registration) {
+                $grade = DB::table('grades')
+                    ->where('registration_id', $registration->id)
+                    ->first();
+    
+                if ($grade) {
+                    DB::table('grades')
+                        ->where('registration_id', $registration->id)
+                        ->update([
+                            'grade' => 0,
+                            'letter_grade' => 'F',
+                            'gpa' => 0,
+                        ]);
+                } else {
+                    DB::table('grades')->insert([
+                        'registration_id' => $registration->id,
+                        'grade' => 0,
+                        'letter_grade' => 'F',
+                        'gpa' => 0,
+                    ]);
+                }
+            }
+        }
+    
         return response()->json($dropRequest);
     }
+    
 
 }

@@ -18,4 +18,8 @@ class CourseDropRequest extends Model
     ];
 
     protected $dates = ['deleted_at'];
+    public function student()
+    {
+        return $this->belongsTo(Student::class, 'student_id');
+    }
 }
