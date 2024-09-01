@@ -96,4 +96,16 @@ class BookBorrowController extends Controller
 
         return response()->json($bookBorrow, 201);
     }
+
+    public function getBorrowRequestsForBookByLoggedInUser($bookId)
+{
+    $user = Auth::user();
+    $student = Student::where('user_id', $user->id)->firstOrFail();
+
+    $borrowRequests = BookBorrow::where('book_id', $bookId)
+        ->where('student_id', $student->id)
+        ->get();
+
+    return response()->json($borrowRequests);
+}
 }
