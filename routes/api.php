@@ -259,6 +259,7 @@ Route::post('library_books/{id}/restore', [LibraryBookController::class, 'restor
 Route::delete('library_books/{id}/force-delete', [LibraryBookController::class, 'forceDelete']);
 
 Route::apiResource('book_borrows', BookBorrowController::class);
+Route::post('/book-borrow', [BookBorrowController::class, 'borrowBook']);
 Route::post('book_borrows/{id}/restore', [BookBorrowController::class, 'restore']);
 Route::delete('book_borrows/{id}/force-delete', [BookBorrowController::class, 'forceDelete']);
 Route::get('book_borrows/by_book/{bookId}', [BookBorrowController::class, 'indexByBookId']);

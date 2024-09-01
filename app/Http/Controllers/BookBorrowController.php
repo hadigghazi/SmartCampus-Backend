@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\BookBorrow;
+use App\Models\Student;
+use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\StoreBookBorrow;
 use App\Http\Requests\UpdateBookBorrow;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class BookBorrowController extends Controller
 {
@@ -70,5 +73,27 @@ class BookBorrowController extends Controller
     $bookBorrows = BookBorrow::where('book_id', $bookId)->get();
 
     return response()->json($bookBorrows);
+    }
+
+    public function borrowBook(Request $request): JsonResponse
+    {
+        $request->validate([
+            'book_id' => 'required|integer|exists:library_books,id',
+            'due_date' => 'required|date',
+            'notes' => 'nullable|string',
+        ]);
+
+        $user = Auth::user();
+        $student = Student::where('user_id', $user->id)->firstOrFail();
+
+        $bookBorrow = BookBorrow::create([
+            'book_id' => $request->input('book_id'),
+            'student_id' => $student->id,
+            'due_date' => $request->input('due_date'),
+            'status' => 'Requested',
+            'notes' => $request->input('notes'),
+        ]);
+
+        return response()->json($bookBorrow, 201);
     }
 }
