@@ -2,65 +2,83 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PaymentUsd;
+use App\Models\Payment;
+use App\Models\Semester;
+use App\Models\Fee;
 use Illuminate\Http\Request;
 
-class PaymentUsdController extends Controller
+class PaymentController extends Controller
 {
-    public function index()
-    {
-        $paymentsUsd = PaymentUsd::all();
-        return response()->json($paymentsUsd);
-    }
-
+    
     public function store(Request $request)
     {
-        $request->validate([
-            'student_id' => 'required|exists:students,id',
-            'description' => 'required|string',
+        $validatedData = $request->validate([
+            'student_id' => 'required|integer',
             'amount_paid' => 'required|numeric',
             'payment_date' => 'required|date',
+            'currency' => 'required|in:USD,LBP',
+            'description' => 'required|string'
         ]);
-
-        $paymentUsd = PaymentUsd::create($request->all());
-        return response()->json($paymentUsd, 201);
+    
+        $currentSemester = Semester::where('is_current', true)->first();
+        if (!$currentSemester) {
+            return response()->json(['error' => 'No current semester found'], 400);
+        }
+    
+        $totalFeeUSD = Fee::where('student_id', $validatedData['student_id'])
+            ->where('semester_id', $currentSemester->id)
+            ->sum('amount_usd');
+    
+        $totalFeeLBP = Fee::where('student_id', $validatedData['student_id'])
+            ->where('semester_id', $currentSemester->id)
+            ->sum('amount_lbp');
+    
+        $totalPaidUSD = Payment::where('student_id', $validatedData['student_id'])
+            ->where('semester_id', $currentSemester->id)
+            ->where('currency', 'USD')
+            ->sum('amount_paid');
+    
+        $totalPaidLBP = Payment::where('student_id', $validatedData['student_id'])
+            ->where('semester_id', $currentSemester->id)
+            ->where('currency', 'LBP')
+            ->sum('amount_paid');
+    
+        if ($validatedData['currency'] == 'USD') {
+            $totalPaidUSD += $validatedData['amount_paid'];
+        } else {
+            $totalPaidLBP += $validatedData['amount_paid'];
+        }
+    
+        $remainingFeeUSD = $totalFeeUSD - $totalPaidUSD;
+        $remainingFeeLBP = $totalFeeLBP - $totalPaidLBP;
+    
+        if (($validatedData['currency'] == 'USD' && $remainingFeeUSD < 0) ||
+            ($validatedData['currency'] == 'LBP' && $remainingFeeLBP < 0)) {
+            return response()->json(['error' => 'Payment amount exceeds remaining fees.'], 400);
+        }
+    
+        $payment = Payment::create(array_merge($validatedData, ['semester_id' => $currentSemester->id]));
+    
+    
+        return response()->json([
+            'payment' => $payment,
+            'total_fee_usd' => $remainingFeeUSD,
+            'total_fee_lbp' => $remainingFeeLBP,
+        ], 201);
     }
-
-    public function show(PaymentUsd $paymentUsd)
-    {
-        return response()->json($paymentUsd);
-    }
-
-    public function update(Request $request, PaymentUsd $paymentUsd)
-    {
-        $request->validate([
-            'student_id' => 'required|exists:students,id',
-            'description' => 'required|string',
-            'amount_paid' => 'required|numeric',
-            'payment_date' => 'required|date',
-        ]);
-
-        $paymentUsd->update($request->all());
-        return response()->json($paymentUsd);
-    }
-
-    public function destroy(PaymentUsd $paymentUsd)
-    {
-        $paymentUsd->delete();
-        return response()->json(null, 204);
-    }
-
+    
+    
     public function restore($id)
     {
-        $paymentUsd = PaymentUsd::withTrashed()->findOrFail($id);
-        $paymentUsd->restore();
-        return response()->json($paymentUsd);
+        $payment = Payment::withTrashed()->findOrFail($id);
+        $payment->restore();
+        return response()->json($payment);
     }
 
     public function forceDelete($id)
     {
-        $paymentUsd = PaymentUsd::withTrashed()->findOrFail($id);
-        $paymentUsd->forceDelete();
+        $payment = Payment::withTrashed()->findOrFail($id);
+        $payment->forceDelete();
         return response()->json(null, 204);
     }
 }
