@@ -40,6 +40,11 @@ use App\Http\Controllers\BookBorrowController;
 use App\Http\Controllers\CourseDropRequestController;
 use App\Http\Controllers\AIInstructorInteractionController;
 use App\Http\Controllers\MajorFacultyCampusController;
+use App\Http\Controllers\PaymentSettingController;
+use App\Http\Controllers\FeeController;
+use App\Http\Controllers\PaymentUsdController;
+use App\Http\Controllers\PaymentLbpController;
+use App\Http\Controllers\FinancialAidScholarshipController;
 use App\Http\Controllers\AuthController;
 
 
@@ -275,3 +280,25 @@ Route::post('majors_faculties_campuses/{id}/restore', [MajorFacultyCampusControl
 Route::delete('majors_faculties_campuses/{id}/force-delete', [MajorFacultyCampusController::class, 'forceDelete']);
 Route::post('/attach-major', [MajorFacultyCampusController::class, 'attachMajorToFacultyCampus']);
 Route::post('/detach-major', [MajorFacultyCampusController::class, 'detachMajorFromFacultyCampus']);
+
+
+Route::apiResource('payment-settings', PaymentSettingController::class);
+Route::apiResource('fees', FeeController::class);
+Route::apiResource('payments-usd', PaymentUsdController::class);
+Route::apiResource('payments-lbp', PaymentLbpController::class);
+Route::apiResource('financial-aid-scholarships', FinancialAidScholarshipController::class);
+
+Route::post('payment-settings/{id}/restore', [PaymentSettingController::class, 'restore']);
+Route::delete('payment-settings/{id}/force-delete', [PaymentSettingController::class, 'forceDelete']);
+
+Route::post('fees/{id}/restore', [FeeController::class, 'restore']);
+Route::delete('fees/{id}/force-delete', [FeeController::class, 'forceDelete']);
+
+Route::post('payments-usd/{id}/restore', [PaymentUsdController::class, 'restore']);
+Route::delete('payments-usd/{id}/force-delete', [PaymentUsdController::class, 'forceDelete']);
+
+Route::post('payments-lbp/{id}/restore', [PaymentLbpController::class, 'restore']);
+Route::delete('payments-lbp/{id}/force-delete', [PaymentLbpController::class, 'forceDelete']);
+
+Route::post('financial-aid-scholarships/{id}/restore', [FinancialAidScholarshipController::class, 'restore']);
+Route::delete('financial-aid-scholarships/{id}/force-delete', [FinancialAidScholarshipController::class, 'forceDelete']);
