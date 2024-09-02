@@ -69,14 +69,6 @@ class RegistrationController extends Controller
             'amount_lbp' => $totalPriceLBP,
             'semester_id' => $currentSemester->id,
         ]);
-
-        $totalFeesUSD = Fee::where('student_id', $registration->student_id)
-            ->where('semester_id', $currentSemester->id)
-            ->sum('amount_usd');
-
-        $totalFeesLBP = Fee::where('student_id', $registration->student_id)
-            ->where('semester_id', $currentSemester->id)
-            ->sum('amount_lbp');
     
         $existingRegistrationFee = Fee::where('student_id', $registration->student_id)
             ->whereNull('course_id')
@@ -94,11 +86,7 @@ class RegistrationController extends Controller
             ]);
         }
     
-        return response()->json([
-            'registration' => $registration,
-            'total_fees_usd' => $totalFeesUSD,
-            'total_fees_lbp' => $totalFeesLBP,
-        ], 201);
+        return response()->json($registration, 201);
     }
     
     public function show($id)
