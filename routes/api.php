@@ -28,9 +28,6 @@ use App\Http\Controllers\ExamController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\SubmissionController;
-use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\FeeController;
-use App\Http\Controllers\FinancialAidScholarshipController;
 use App\Http\Controllers\ImportantDateController;
 use App\Http\Controllers\DormRegistrationController;
 use App\Http\Controllers\BusRegistrationController;
@@ -206,18 +203,6 @@ Route::delete('/submissions/{id}', [SubmissionController::class, 'destroy']);
 Route::get('/submissions/{id}/download', [SubmissionController::class, 'download']);
 Route::post('/submissions/{id}/restore', [SubmissionController::class, 'restore']);
 Route::delete('/submissions/{id}/force-delete', [SubmissionController::class, 'forceDelete']);
-
-Route::apiResource('payments', PaymentController::class);
-Route::post('payments/{id}/restore', [PaymentController::class, 'restore']);
-Route::delete('payments/{id}/force-delete', [PaymentController::class, 'forceDelete']);
-
-Route::apiResource('fees', FeeController::class);
-Route::post('fees/{id}/restore', [FeeController::class, 'restore']);
-Route::delete('fees/{id}/force-delete', [FeeController::class, 'forceDelete']);
-
-Route::apiResource('financial_aid_scholarships', FinancialAidScholarshipController::class);
-Route::post('financial_aid_scholarships/{id}/restore', [FinancialAidScholarshipController::class, 'restore']);
-Route::delete('financial_aid_scholarships/{id}/force-delete', [FinancialAidScholarshipController::class, 'forceDelete']);
 
 Route::apiResource('important_dates', ImportantDateController::class);
 Route::post('important_dates/{id}/restore', [ImportantDateController::class, 'restore']);
