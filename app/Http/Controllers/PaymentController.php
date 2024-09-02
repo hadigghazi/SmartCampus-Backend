@@ -81,4 +81,19 @@ class PaymentController extends Controller
         $payment->forceDelete();
         return response()->json(null, 204);
     }
+
+    public function getPaymentsByStudent($student_id)
+    {
+        $currentSemester = Semester::where('is_current', true)->first();
+        if (!$currentSemester) {
+            return response()->json(['error' => 'No current semester found'], 400);
+        }
+    
+        $payments = Payment::where('student_id', $student_id)
+            ->where('semester_id', $currentSemester->id)
+            ->get();
+    
+        return response()->json($payments);
+    }
+    
 }
