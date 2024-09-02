@@ -20,69 +20,75 @@ class RegistrationController extends Controller
     }
 
     public function store(StoreRegistration $request)
-{
-    $registration = Registration::create($request->validated());
-
-    $currentSemester = Semester::where('is_current', true)->first();
-    if (!$currentSemester) {
-        return response()->json(['error' => 'No current semester found'], 400);
-    }
-
-    if ($registration->semester_id !== $currentSemester->id) {
-        return response()->json(['error' => 'Registration not for the current semester'], 400);
-    }
-
-    $courseInstructor = $registration->courseInstructor;
-    if (!$courseInstructor) {
-        return response()->json(['error' => 'Invalid course instructor'], 400);
-    }
-
-    $course = Course::find($courseInstructor->course_id);
-    if (!$course) {
-        return response()->json(['error' => 'Invalid course'], 400);
-    }
-
-    $faculty = Faculty::find($course->faculty_id);
-    if (!$faculty) {
-        return response()->json(['error' => 'Invalid faculty'], 400);
-    }
-
-    $paymentSettings = PaymentSetting::latest('effective_date')->first();
-    if (!$paymentSettings) {
-        return response()->json(['error' => 'Payment settings not found'], 400);
-    }
-
-    $totalPriceUSD = $faculty->credit_price_usd * $course->credits;
-    $totalPriceLBP = $totalPriceUSD * $paymentSettings->lbp_percentage * $paymentSettings->exchange_rate;
-
-    $amountUSD = $totalPriceUSD * (1 - $paymentSettings->lbp_percentage);
-
-    Fee::create([
-        'student_id' => $registration->student_id,
-        'course_id' => $course->id,
-        'description' => $course->code,
-        'amount_usd' => $amountUSD,
-        'amount_lbp' => $totalPriceLBP,
-    ]);
-
-    $existingRegistrationFee = Fee::where('student_id', $registration->student_id)
-        ->whereNull('course_id')
-        ->where('description', 'Registration Fee')
-        ->exists();
-
-    if (!$existingRegistrationFee) {
+    {
+        $currentSemester = Semester::where('is_current', true)->first();
+        if (!$currentSemester) {
+            return response()->json(['error' => 'No current semester found'], 400);
+        }
+    
+        if ($request->semester_id !== $currentSemester->id) {
+            return response()->json(['error' => 'Registration not for the current semester'], 400);
+        }
+    
+        $registration = Registration::create($request->validated());
+    
+        $courseInstructor = $registration->courseInstructor;
+        if (!$courseInstructor) {
+            $registration->delete();
+            return response()->json(['error' => 'Invalid course instructor'], 400);
+        }
+    
+        $course = Course::find($courseInstructor->course_id);
+        if (!$course) {
+            $registration->delete();
+            return response()->json(['error' => 'Invalid course'], 400);
+        }
+    
+        $faculty = Faculty::find($course->faculty_id);
+        if (!$faculty) {
+            $registration->delete();
+            return response()->json(['error' => 'Invalid faculty'], 400);
+        }
+    
+        $paymentSettings = PaymentSetting::latest('effective_date')->first();
+        if (!$paymentSettings) {
+            $registration->delete();
+            return response()->json(['error' => 'Payment settings not found'], 400);
+        }
+    
+        $totalPriceUSD = $faculty->credit_price_usd * $course->credits;
+        $totalPriceLBP = $totalPriceUSD * $paymentSettings->lbp_percentage * $paymentSettings->exchange_rate;
+    
+        $amountUSD = $totalPriceUSD * (1 - $paymentSettings->lbp_percentage);
+    
         Fee::create([
             'student_id' => $registration->student_id,
-            'description' => 'Registration Fee',
-            'amount_usd' => $paymentSettings->registration_fee_usd,
-            'amount_lbp' => 0,
+            'course_id' => $course->id,
+            'description' => $course->code,
+            'amount_usd' => $amountUSD,
+            'amount_lbp' => $totalPriceLBP,
+            'semester_id' => $currentSemester->id,
         ]);
+    
+        $existingRegistrationFee = Fee::where('student_id', $registration->student_id)
+            ->whereNull('course_id')
+            ->where('description', 'Registration Fee')
+            ->where('semester_id', $currentSemester->id)
+            ->exists();
+    
+        if (!$existingRegistrationFee) {
+            Fee::create([
+                'student_id' => $registration->student_id,
+                'description' => 'Registration Fee',
+                'amount_usd' => $paymentSettings->registration_fee_usd,
+                'amount_lbp' => 0,
+                'semester_id' => $currentSemester->id,
+            ]);
+        }
+    
+        return response()->json($registration, 201);
     }
-
-    return response()->json($registration, 201);
-}
-
-
+    
     public function show($id)
 {
     $item = Registration::withTrashed()->findOrFail($id);

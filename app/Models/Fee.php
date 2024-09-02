@@ -16,6 +16,7 @@ class Fee extends Model
         'description',
         'amount_usd',
         'amount_lbp',
+        'semester_id', 
     ];
 
     protected $dates = ['deleted_at'];
