@@ -19,4 +19,8 @@ class Fee extends Model
     ];
 
     protected $dates = ['deleted_at'];
+    public function semester()
+    {
+        return $this->belongsTo(Semester::class);
+    }
 }

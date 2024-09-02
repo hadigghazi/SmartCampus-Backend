@@ -47,4 +47,10 @@ class CourseInstructor extends Model
     {
         return $this->belongsTo(Room::class);
     }
+
+    public function registrations()
+{
+    return $this->hasMany(Registration::class);
+}
+
 }
