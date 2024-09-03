@@ -3,30 +3,37 @@
 namespace App\Http\Controllers;
 
 use App\Models\FinancialAidScholarship;
+use App\Models\Semester;
 use Illuminate\Http\Request;
 
 class FinancialAidScholarshipController extends Controller
 {
     public function getFinancialAidsScholarshipsByStudent($studentId)
-{
-    $student = Student::find($studentId);
-
-    if (!$student) {
-        return response()->json(['message' => 'Student not found.'], 404);
+    {
+        $student = Student::find($studentId);
+    
+        if (!$student) {
+            return response()->json(['message' => 'Student not found.'], 404);
+        }
+    
+        $currentSemester = Semester::where('is_current', true)->first();
+    
+        if (!$currentSemester) {
+            return response()->json(['message' => 'Current semester not found.'], 404);
+        }
+    
+        $financialAidsScholarships = FinancialAidScholarship::where('student_id', $studentId)
+            ->where('semester_id', $currentSemester->id)
+            ->whereNull('deleted_at')
+            ->get();
+    
+        return response()->json([
+            'message' => 'Financial aids and scholarships for the current semester retrieved successfully.',
+            'data' => $financialAidsScholarships
+        ], 200);
     }
-
-    $financialAidsScholarships = FinancialAidScholarship::where('student_id', $studentId)
-        ->whereNull('deleted_at') 
-        ->get();
-
-    return response()->json([
-        'message' => 'Financial aids and scholarships retrieved successfully.',
-        'data' => $financialAidsScholarships
-    ], 200);
-}
-
-
-public function createFinancialAidScholarship(Request $request)
+    
+    public function createFinancialAidScholarship(Request $request)
 {
     $validatedData = $request->validate([
         'student_id' => 'required|exists:students,id',
@@ -35,8 +42,15 @@ public function createFinancialAidScholarship(Request $request)
         'description' => 'nullable|string',
     ]);
 
+    $currentSemester = Semester::where('is_current', true)->first();
+
+    if (!$currentSemester) {
+        return response()->json(['message' => 'Current semester not found.'], 404);
+    }
+
     $financialAidScholarship = new FinancialAidScholarship();
     $financialAidScholarship->student_id = $validatedData['student_id'];
+    $financialAidScholarship->semester_id = $currentSemester->id; 
     $financialAidScholarship->type = $validatedData['type'];
     $financialAidScholarship->percentage = $validatedData['percentage'];
     $financialAidScholarship->description = $validatedData['description'] ?? '';

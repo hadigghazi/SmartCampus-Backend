@@ -12,10 +12,24 @@ class FinancialAidScholarship extends Model
 
     protected $fillable = [
         'student_id',
-        'amount',
+        'semester_id',
         'type',
-        'effective_date',
+        'percentage',
+        'description',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     protected $dates = ['deleted_at'];
+
+    public function student()
+    {
+        return $this->belongsTo(Student::class);
+    }
+
+    public function semester()
+    {
+        return $this->belongsTo(Semester::class);
+    }
 }
