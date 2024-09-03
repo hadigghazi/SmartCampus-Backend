@@ -7,48 +7,50 @@ use Illuminate\Http\Request;
 
 class FinancialAidScholarshipController extends Controller
 {
-    public function index()
-    {
-        $scholarships = FinancialAidScholarship::all();
-        return response()->json($scholarships);
+    public function getFinancialAidsScholarshipsByStudent($studentId)
+{
+    $student = Student::find($studentId);
+
+    if (!$student) {
+        return response()->json(['message' => 'Student not found.'], 404);
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'student_id' => 'required|exists:students,id',
-            'amount' => 'required|numeric',
-            'type' => 'required|string',
-            'effective_date' => 'required|date',
-        ]);
+    $financialAidsScholarships = FinancialAidScholarship::where('student_id', $studentId)
+        ->whereNull('deleted_at') 
+        ->get();
 
-        $scholarship = FinancialAidScholarship::create($request->all());
-        return response()->json($scholarship, 201);
-    }
+    return response()->json([
+        'message' => 'Financial aids and scholarships retrieved successfully.',
+        'data' => $financialAidsScholarships
+    ], 200);
+}
 
-    public function show(FinancialAidScholarship $financialAidScholarship)
-    {
-        return response()->json($financialAidScholarship);
-    }
 
-    public function update(Request $request, FinancialAidScholarship $financialAidScholarship)
-    {
-        $request->validate([
-            'student_id' => 'required|exists:students,id',
-            'amount' => 'required|numeric',
-            'type' => 'required|string',
-            'effective_date' => 'required|date',
-        ]);
+public function createFinancialAidScholarship(Request $request)
+{
+    $validatedData = $request->validate([
+        'student_id' => 'required|exists:students,id',
+        'type' => 'required|string',
+        'percentage' => 'required|numeric|min:0|max:100',
+        'description' => 'nullable|string',
+    ]);
 
-        $financialAidScholarship->update($request->all());
-        return response()->json($financialAidScholarship);
-    }
+    $financialAidScholarship = new FinancialAidScholarship();
+    $financialAidScholarship->student_id = $validatedData['student_id'];
+    $financialAidScholarship->type = $validatedData['type'];
+    $financialAidScholarship->percentage = $validatedData['percentage'];
+    $financialAidScholarship->description = $validatedData['description'] ?? '';
+    $financialAidScholarship->created_at = now();
+    $financialAidScholarship->updated_at = now();
 
-    public function destroy(FinancialAidScholarship $financialAidScholarship)
-    {
-        $financialAidScholarship->delete();
-        return response()->json(null, 204);
-    }
+    $financialAidScholarship->save();
+
+    return response()->json([
+        'message' => 'Financial aid or scholarship created successfully.',
+        'data' => $financialAidScholarship
+    ], 201);
+}
+
 
     public function restore($id)
     {
@@ -63,4 +65,20 @@ class FinancialAidScholarshipController extends Controller
         $financialAidScholarship->forceDelete();
         return response()->json(null, 204);
     }
+
+    public function deleteFinancialAidScholarship($id)
+{
+    $financialAidScholarship = FinancialAidScholarship::find($id);
+
+    if (!$financialAidScholarship) {
+        return response()->json(['message' => 'Financial aid or scholarship not found.'], 404);
+    }
+
+    $financialAidScholarship->delete();
+
+    return response()->json([
+        'message' => 'Financial aid or scholarship deleted successfully.'
+    ], 200);
+}
+
 }

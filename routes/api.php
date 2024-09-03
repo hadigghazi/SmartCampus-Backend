@@ -284,9 +284,13 @@ Route::post('/detach-major', [MajorFacultyCampusController::class, 'detachMajorF
 Route::apiResource('payment-settings', PaymentSettingController::class);
 Route::apiResource('fees', FeeController::class);
 Route::get('fees_for_student/{id}', [FeeController::class, 'getFeesByStudent']);
+
 Route::apiResource('payments', PaymentController::class);
 Route::get('payments_for_student/{id}', [PaymentController::class, 'getPaymentsByStudent']);
-Route::apiResource('financial-aid-scholarships', FinancialAidScholarshipController::class);
+
+Route::post('/financial-aid-scholarships', [FinancialAidScholarshipController::class, 'createFinancialAidScholarship']);
+Route::get('/financial-aid-scholarships/student/{studentId}', [FinancialAidScholarshipController::class, 'getFinancialAidsScholarshipsByStudent']);
+Route::delete('/financial-aid-scholarships/{id}', [FinancialAidScholarshipController::class, 'deleteFinancialAidScholarship']);
 
 Route::post('payment-settings/{id}/restore', [PaymentSettingController::class, 'restore']);
 Route::delete('payment-settings/{id}/force-delete', [PaymentSettingController::class, 'forceDelete']);
