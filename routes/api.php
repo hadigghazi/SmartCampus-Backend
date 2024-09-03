@@ -284,6 +284,7 @@ Route::post('/detach-major', [MajorFacultyCampusController::class, 'detachMajorF
 Route::apiResource('payment-settings', PaymentSettingController::class);
 Route::apiResource('fees', FeeController::class);
 Route::get('fees_for_student/{id}', [FeeController::class, 'getFeesByStudent']);
+Route::get('total_fees_for_student/{id}', [FeeController::class, 'getTotalFeesByStudent']);
 
 Route::apiResource('payments', PaymentController::class);
 Route::get('payments_for_student/{id}', [PaymentController::class, 'getPaymentsByStudent']);

@@ -81,4 +81,24 @@ class FeeController extends Controller
     return response()->json($fees);
 }
 
+public function getTotalFeesByStudent($student_id)
+{
+    $currentSemester = Semester::where('is_current', true)->first();
+    if (!$currentSemester) {
+        return response()->json(['error' => 'No current semester found'], 400);
+    }
+
+    $totalFees = Fee::where('student_id', $student_id)
+        ->where('semester_id', $currentSemester->id)
+        ->whereNotNull('course_id') 
+        ->selectRaw('SUM(amount_usd) as total_usd, SUM(amount_lbp) as total_lbp')
+        ->first();
+
+    return response()->json([
+        'total_usd' => $totalFees->total_usd ?? 0,
+        'total_lbp' => $totalFees->total_lbp ?? 0,
+    ]);
+}
+
+
 }
