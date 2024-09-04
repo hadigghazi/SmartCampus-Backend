@@ -159,7 +159,7 @@ class CourseController extends Controller
             return "{$course['course_name']} ({$course['course_code']}) - {$course['credits']} credits";
         })->implode(", ");
     
-        $prompt = "Given the following courses available for a student to register for the next semester and their performance in previously completed courses, suggest a set of courses with a maximum total of 12 credits. Make the response talking to the student himself and add some explanations on why he should choose the course.";
+        $prompt = "Given the following courses available for a student to register for the next semester and their performance in previously completed courses, suggest a set of courses with a maximum total of 12 credits(Do not suggest anything over 12 credits). Make the response talking to the student himself and add some explanations on why he should choose the course.";
         $prompt .= "Here is the list of previously completed courses and grades: $courseList. ";
         $prompt .= "Here is the list of available courses: $availableCourseList.";
     
