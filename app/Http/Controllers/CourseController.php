@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Http\Requests\StoreCourseRequest;
 use App\Http\Requests\UpdateCourseRequest;
+use App\Models\Registration;
+use App\Models\CoursePrerequisite;
+use App\Models\CourseInstructor;
 use Illuminate\Http\Request;
 
 class CourseController extends Controller
@@ -63,5 +66,44 @@ class CourseController extends Controller
     {
         $courses = Course::where('major_id', $majorId)->get();
         return response()->json($courses);
+    }
+
+
+    function getAvailableCoursesForStudent($studentId)
+    {
+        $student = \App\Models\Student::find($studentId);
+        if (!$student) {
+            throw new \Exception("Student not found");
+        }
+    
+        $majorId = $student->major_id;
+    
+        $allCoursesInMajor = Course::where('major_id', $majorId)->get();
+    
+        $completedCourseIds = Registration::where('student_id', $studentId)
+            ->where('status', 'Completed')
+            ->pluck('course_instructor_id')
+            ->map(function($courseInstructorId) {
+                return CourseInstructor::find($courseInstructorId)->course_id;
+            })
+            ->toArray();
+    
+        $availableCourses = $allCoursesInMajor->filter(function ($course) use ($completedCourseIds) {
+            return !in_array($course->id, $completedCourseIds);
+        });
+    
+        $finalCourses = $availableCourses->filter(function ($course) use ($studentId, $completedCourseIds) {
+            $prerequisites = CoursePrerequisite::where('course_id', $course->id)->get();
+    
+            foreach ($prerequisites as $prerequisite) {
+                if (!in_array($prerequisite->prerequisite_course_id, $completedCourseIds)) {
+                    return false;
+                }
+            }
+    
+            return true;
+        });
+    
+        return $finalCourses;
     }
 }
