@@ -8,6 +8,8 @@ use App\Models\PaymentSetting;
 use App\Models\Fee;
 use App\Models\Faculty;
 use App\Models\Semester;
+use App\Models\Student;
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreRegistration;
 use App\Http\Requests\UpdateRegistration;
 
@@ -19,18 +21,28 @@ class RegistrationController extends Controller
         return response()->json($items);
     }
 
-    public function store(StoreRegistration $request)
+    public function store(Request $request)
     {
         $currentSemester = Semester::where('is_current', true)->first();
         if (!$currentSemester) {
             return response()->json(['error' => 'No current semester found'], 400);
         }
     
-        if ($request->semester_id !== $currentSemester->id) {
-            return response()->json(['error' => 'Registration not for the current semester'], 400);
+        $student = Student::where('user_id', auth()->id())->first();
+        if (!$student) {
+            return response()->json(['error' => 'Student not found'], 404);
         }
     
-        $registration = Registration::create($request->validated());
+        $validated = $request->validate([
+            'course_instructor_id' => 'required|integer|exists:course_instructors,id',
+            'status' => 'sometimes|in:Registered,Completed,Failed',
+        ]);
+    
+        $validated['student_id'] = $student->id;
+        $validated['semester_id'] = $currentSemester->id;
+        $validated['status'] = $request->input('status', 'Registered');
+    
+        $registration = Registration::create($validated);
     
         $courseInstructor = $registration->courseInstructor;
         if (!$courseInstructor) {
@@ -88,6 +100,7 @@ class RegistrationController extends Controller
     
         return response()->json($registration, 201);
     }
+    
     
     public function show($id)
 {
