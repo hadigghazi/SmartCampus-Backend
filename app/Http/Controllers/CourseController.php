@@ -104,6 +104,25 @@ class CourseController extends Controller
             return true;
         });
     
-        return $finalCourses;
+        $response = $finalCourses->map(function ($course) {
+            $prerequisiteCourses = CoursePrerequisite::where('course_id', $course->id)
+                ->pluck('prerequisite_course_id')
+                ->toArray();
+    
+            $prerequisiteCodes = Course::whereIn('id', $prerequisiteCourses)
+                ->pluck('code')
+                ->toArray();
+    
+            return [
+                'course_id' => $course->id,
+                'course_name' => $course->name,
+                'course_code' => $course->code,
+                'credits' => $course->credits,
+                'prerequisites' => $prerequisiteCodes,
+            ];
+        });
+    
+        return $response->values()->toArray();
     }
+    
 }
