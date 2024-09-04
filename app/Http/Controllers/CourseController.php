@@ -143,21 +143,25 @@ class CourseController extends Controller
     
         $availableCourses = $this->getAvailableCoursesForStudent();
     
-        $courses = collect($availableCourses)->map(function ($course) {
-            return [
-                'course_id' => $course['course_id'],
-                'course_name' => $course['course_name'],
-                'course_code' => $course['course_code'],
-                'credits' => $course['credits'],
-            ];
-        });
+        $registeredCourses = \DB::table('registrations')
+            ->join('course_instructors', 'registrations.course_instructor_id', '=', 'course_instructors.id')
+            ->join('courses', 'course_instructors.course_id', '=', 'courses.id')
+            ->leftJoin('grades', 'registrations.id', '=', 'grades.registration_id')
+            ->where('registrations.student_id', $studentId)
+            ->select('courses.name as course_name', 'courses.code as course_code', 'grades.grade')
+            ->get();
     
-        $courseList = collect($courses)->map(function ($course) {
+        $courseList = collect($registeredCourses)->map(function ($course) {
+            return "{$course->course_name} ({$course->course_code}) - Grade: {$course->grade}";
+        })->implode(", ");
+    
+        $availableCourseList = collect($availableCourses)->map(function ($course) {
             return "{$course['course_name']} ({$course['course_code']}) - {$course['credits']} credits";
         })->implode(", ");
     
-        $prompt = "Given the following courses available for a student to register for the next semester, suggest a set of courses with a maximum total of 12 credits. " .
-                  "Here is the list of courses: $courseList.";
+        $prompt = "Given the following courses available for a student to register for the next semester and their performance in previously completed courses, suggest a set of courses with a maximum total of 12 credits. Make the response talking to the student himself and add some explanations on why he should choose the course.";
+        $prompt .= "Here is the list of previously completed courses and grades: $courseList. ";
+        $prompt .= "Here is the list of available courses: $availableCourseList.";
     
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . env('OPENAI_API_KEY'),
