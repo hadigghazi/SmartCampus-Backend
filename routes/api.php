@@ -160,6 +160,7 @@ Route::apiResource('course-instructors', CourseInstructorController::class);
 Route::get('/course-details/{courseInstructorId}', [CourseInstructorController::class, 'getCourseDetails']);
 Route::get('/instructors/{id}/courses', [CourseInstructorController::class, 'getCoursesForInstructor']);
 Route::get('courses/{id}/options', [CourseInstructorController::class, 'getCourseOptions']);
+Route::get('courses/{id}/available-options', [CourseInstructorController::class, 'getAvailableCourseOptions']);
 Route::post('course-instructors/{id}/restore', [CourseInstructorController::class, 'restore']);
 Route::delete('course-instructors/{id}/force-delete', [CourseInstructorController::class, 'forceDelete']);
 

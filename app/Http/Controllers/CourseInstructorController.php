@@ -80,6 +80,36 @@ class CourseInstructorController extends Controller
     
         return response()->json($courseOptions);
     }
+
+    public function getAvailableCourseOptions($id)
+{
+    $courseOptions = CourseInstructor::where('course_id', $id)
+        ->with('instructor.user', 'campus', 'semester', 'room.block')
+        ->get()
+        ->filter(function ($courseInstructor) {
+            $registrationCount = Registration::where('course_instructor_id', $courseInstructor->id)->count();
+
+            return $courseInstructor->capacity > $registrationCount;
+        })
+        ->map(function ($courseInstructor) {
+            $user = $courseInstructor->instructor->user;
+            $room = $courseInstructor->room;
+            $block = $room ? $room->block : null;
+
+            return [
+                'id' => $courseInstructor->id,
+                'instructor_name' => $user ? "{$user->first_name} {$user->middle_name} {$user->last_name}" : 'Unknown',
+                'campus_name' => $courseInstructor->campus->name,
+                'schedule' => $this->formatSchedule($courseInstructor->schedule),
+                'available_seats' => $courseInstructor->capacity,
+                'semester_name' => $courseInstructor->semester->name,
+                'room' => $block ? "{$block->name} - Room {$room->number}" : 'Unknown Room',
+            ];
+        });
+
+    return response()->json($courseOptions);
+}
+
     
     private function formatSchedule($schedule)
     {

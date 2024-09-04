@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Registration;
 use App\Models\Course;
 use App\Models\PaymentSetting;
+use App\Models\CourseInstructor;
 use App\Models\Fee;
 use App\Models\Faculty;
 use App\Models\Semester;
@@ -42,36 +43,39 @@ class RegistrationController extends Controller
         $validated['semester_id'] = $currentSemester->id;
         $validated['status'] = $request->input('status', 'Registered');
     
-        $registration = Registration::create($validated);
-    
-        $courseInstructor = $registration->courseInstructor;
+        $courseInstructor = CourseInstructor::find($validated['course_instructor_id']);
         if (!$courseInstructor) {
-            $registration->delete();
             return response()->json(['error' => 'Invalid course instructor'], 400);
+        }
+    
+        $registrationCount = Registration::where('course_instructor_id', $validated['course_instructor_id'])
+                                          ->where('semester_id', $currentSemester->id)
+                                          ->count();
+    
+        if ($registrationCount >= $courseInstructor->capacity) {
+            return response()->json(['error' => 'Course capacity has been reached'], 400);
         }
     
         $course = Course::find($courseInstructor->course_id);
         if (!$course) {
-            $registration->delete();
             return response()->json(['error' => 'Invalid course'], 400);
         }
     
         $faculty = Faculty::find($course->faculty_id);
         if (!$faculty) {
-            $registration->delete();
             return response()->json(['error' => 'Invalid faculty'], 400);
         }
     
         $paymentSettings = PaymentSetting::latest('effective_date')->first();
         if (!$paymentSettings) {
-            $registration->delete();
             return response()->json(['error' => 'Payment settings not found'], 400);
         }
     
         $totalPriceUSD = $faculty->credit_price_usd * $course->credits;
         $totalPriceLBP = $totalPriceUSD * $paymentSettings->lbp_percentage * $paymentSettings->exchange_rate;
-    
         $amountUSD = $totalPriceUSD * (1 - $paymentSettings->lbp_percentage);
+    
+        $registration = Registration::create($validated);
     
         Fee::create([
             'student_id' => $registration->student_id,
