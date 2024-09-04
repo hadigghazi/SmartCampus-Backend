@@ -291,7 +291,7 @@ Route::get('total_fees_for_student/{id}', [FeeController::class, 'getTotalFeesBy
 
 Route::apiResource('payments', PaymentController::class);
 Route::get('payments_for_student/{id}', [PaymentController::class, 'getPaymentsByStudent']);
-Route::get('check-fees/{id}', [PaymentController::class, 'checkFeesPaid']);
+Route::get('check-fees', [PaymentController::class, 'checkFeesPaid']);
 
 Route::post('/financial-aid-scholarships', [FinancialAidScholarshipController::class, 'createFinancialAidScholarship']);
 Route::get('/financial-aid-scholarships/student/{studentId}', [FinancialAidScholarshipController::class, 'getFinancialAidsScholarshipsByStudent']);

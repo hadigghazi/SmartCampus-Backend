@@ -98,8 +98,12 @@ class PaymentController extends Controller
     }
     
 
-    public function checkFeesPaid($studentId)
+    public function checkFeesPaid()
     {
+        $userId = auth()->id();
+
+        $studentId = \App\Models\Student::where('user_id', $userId)->value('id');
+        
         $previousSemester = Semester::where('is_current', false)
             ->orderBy('start_date', 'desc') 
             ->first();
