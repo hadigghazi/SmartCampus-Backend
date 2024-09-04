@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use App\Http\Requests\StoreCourseRequest;
 use App\Http\Requests\UpdateCourseRequest;
 use App\Models\Registration;
@@ -69,9 +71,13 @@ class CourseController extends Controller
     }
 
 
-    function getAvailableCoursesForStudent($studentId)
+    function getAvailableCoursesForStudent()
     {
+        $userId = auth()->id();
+
+        $studentId = \App\Models\Student::where('user_id', $userId)->value('id');
         $student = \App\Models\Student::find($studentId);
+
         if (!$student) {
             throw new \Exception("Student not found");
         }
@@ -123,6 +129,63 @@ class CourseController extends Controller
         });
     
         return $response->values()->toArray();
+    }
+
+    public function suggestCoursesForNextSemester()
+    {
+        $userId = auth()->id();
+        $studentId = \App\Models\Student::where('user_id', $userId)->value('id');
+        $student = \App\Models\Student::find($studentId);
+    
+        if (!$student) {
+            throw new \Exception("Student not found");
+        }
+    
+        $availableCourses = $this->getAvailableCoursesForStudent();
+    
+        $courses = collect($availableCourses)->map(function ($course) {
+            return [
+                'course_id' => $course['course_id'],
+                'course_name' => $course['course_name'],
+                'course_code' => $course['course_code'],
+                'credits' => $course['credits'],
+            ];
+        });
+    
+        $courseList = collect($courses)->map(function ($course) {
+            return "{$course['course_name']} ({$course['course_code']}) - {$course['credits']} credits";
+        })->implode(", ");
+    
+        $prompt = "Given the following courses available for a student to register for the next semester, suggest a set of courses with a maximum total of 12 credits. " .
+                  "Here is the list of courses: $courseList.";
+    
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('OPENAI_API_KEY'),
+        ])->post('https://api.openai.com/v1/chat/completions', [
+            'model' => 'gpt-3.5-turbo',
+            'messages' => [
+                ['role' => 'system', 'content' => 'You are a helpful assistant.'],
+                ['role' => 'user', 'content' => $prompt],
+            ],
+            'max_tokens' => 2000,
+            'temperature' => 0.7
+        ]);
+        
+        if ($response->failed()) {
+            return response()->json([
+                'error' => 'Failed to get suggestions from the API.',
+                'status' => $response->status(),
+                'response' => $response->body()
+            ], $response->status());
+        }
+    
+        $responseJson = $response->json();
+    
+        $suggestions = $responseJson['choices'][0]['message']['content'] ?? null;
+    
+        return response()->json([
+            'suggestions' => $suggestions
+        ]);
     }
     
 }
