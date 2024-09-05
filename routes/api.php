@@ -48,9 +48,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OpenAIChatController;
 
 
-Route::middleware('auth', 'role:Student')->group(function () {
     Route::post('openai-instructor', [AIInstructorInteractionController::class, 'chat']);
-});
 
 Route::group(['prefix' => 'auth'], function () {
     Route::post('register', [AuthController::class, 'register']);
