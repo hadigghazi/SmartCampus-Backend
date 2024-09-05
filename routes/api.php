@@ -101,11 +101,16 @@ Route::middleware(['auth:api', 'role:Admin'])->group(function () {
     Route::post('centers/{id}/restore', [CenterController::class, 'restore']);
     Route::delete('centers/{id}/force-delete', [CenterController::class, 'forceDelete']);
 });
-Route::apiResource('majors', MajorController::class);
+
+Route::apiResource('majors', MajorController::class)->only(['index', 'show']);
 Route::post('/suggest-major', [MajorController::class, 'suggestMajor']);
 Route::get('/majors/faculty/{facultyId}', [MajorController::class, 'getMajorsByFaculty']);
-Route::post('majors/{id}/restore', [MajorController::class, 'restore']);
-Route::delete('majors/{id}/force-delete', [MajorController::class, 'forceDelete']);
+
+Route::middleware(['auth:api', 'role:Admin'])->group(function () {
+    Route::apiResource('majors', MajorController::class)->only(['store', 'update', 'destroy']);
+    Route::post('majors/{id}/restore', [MajorController::class, 'restore']);
+    Route::delete('majors/{id}/force-delete', [MajorController::class, 'forceDelete']);
+});
 
 Route::apiResource('blocks', BlockController::class);
 Route::get('blocks-by-campus/{campus_id}', [BlockController::class, 'getBlocksByCampus']);
