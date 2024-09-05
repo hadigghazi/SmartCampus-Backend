@@ -48,7 +48,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OpenAIChatController;
 
 
-    Route::post('openai-instructor', [AIInstructorInteractionController::class, 'chat']);
+Route::post('openai-instructor', [AIInstructorInteractionController::class, 'chat']);
 
 Route::group(['prefix' => 'auth'], function () {
     Route::post('register', [AuthController::class, 'register']);
@@ -166,31 +166,59 @@ Route::middleware(['auth:api', 'role:Admin'])->group(function () {
 });
 
 
-Route::apiResource('students', StudentController::class)->except(['create', 'edit']);
-Route::get('/students/user/{userId}', [StudentController::class, 'getStudentByUserId']);
-Route::post('students/{id}/restore', [StudentController::class, 'restore']);
-Route::delete('students/{id}/force-delete', [StudentController::class, 'forceDelete']);
-Route::get('/students-with-users', [StudentController::class, 'getStudentsWithUserDetails']);
+Route::apiResource('students', StudentController::class)->only(['index', 'show']);
 
-Route::apiResource('contacts', ContactController::class)->except(['create', 'edit']);
-Route::post('contacts/{id}/restore', [ContactController::class, 'restore']);
-Route::delete('contacts/{id}/force-delete', [ContactController::class, 'forceDelete']);
+Route::middleware(['auth:api'])->group(function () {
+    Route::get('/students/user/{userId}', [StudentController::class, 'getStudentByUserId']);
+    Route::get('/students-with-users', [StudentController::class, 'getStudentsWithUserDetails']);
+});
+
+Route::middleware(['auth:api', 'role:Admin'])->group(function () {
+    Route::apiResource('students', StudentController::class)->only(['store', 'update', 'destroy']);
+    Route::post('students/{id}/restore', [StudentController::class, 'restore']);
+    Route::delete('students/{id}/force-delete', [StudentController::class, 'forceDelete']);
+});
+
+
+Route::apiResource('contacts', ContactController::class)->only(['index', 'show']);
+
+Route::middleware(['auth:api', 'role:Admin'])->group(function () {
+    Route::apiResource('contacts', ContactController::class)->only(['store', 'update', 'destroy']);
+    Route::post('contacts/{id}/restore', [ContactController::class, 'restore']);
+    Route::delete('contacts/{id}/force-delete', [ContactController::class, 'forceDelete']);
+});
+
+Route::middleware(['auth:api', 'role:Admin'])->group(function () {
 
 Route::apiResource('admins', AdminController::class);
 Route::get('/admins/user/{userId}', [AdminController::class, 'getAdminByUserId']);
 Route::post('admins/{id}/restore', [AdminController::class, 'restore']);
 Route::delete('admins/{id}/force-delete', [AdminController::class, 'forceDelete']);
 Route::get('/admins-with-users', [AdminController::class, 'getAdminsWithUserDetails']);
+});
 
-Route::apiResource('instructors', InstructorController::class);
-Route::get('/instructors/user/{userId}', [InstructorController::class, 'getInstructorByUserId']);
-Route::post('instructors/{id}/restore', [InstructorController::class, 'restore']);
-Route::delete('instructors/{id}/force-delete', [InstructorController::class, 'forceDelete']);
-Route::get('/instructors-with-users', [InstructorController::class, 'getInstructorsWithUserDetails']);
+Route::apiResource('instructors', InstructorController::class)->only(['index', 'show']);
 
-Route::apiResource('addresses', AddressController::class);
-Route::post('addresses/{id}/restore', [AddressController::class, 'restore']);
-Route::delete('addresses/{id}/force-delete', [AddressController::class, 'forceDelete']);
+Route::middleware(['auth:api', 'role:Admin,Instructor,Student'])->group(function () {
+    Route::get('/instructors/user/{userId}', [InstructorController::class, 'getInstructorByUserId']);
+    Route::get('/instructors-with-users', [InstructorController::class, 'getInstructorsWithUserDetails']);
+});
+
+Route::middleware(['auth:api', 'role:Admin'])->group(function () {
+    Route::apiResource('instructors', InstructorController::class)->only(['store', 'update', 'destroy']);
+    Route::post('instructors/{id}/restore', [InstructorController::class, 'restore']);
+    Route::delete('instructors/{id}/force-delete', [InstructorController::class, 'forceDelete']);
+});
+
+
+Route::apiResource('addresses', AddressController::class)->only(['index', 'show']);
+
+Route::middleware(['auth:api', 'role:Admin'])->group(function () {
+    Route::apiResource('addresses', AddressController::class)->only(['store', 'update', 'destroy']);
+    Route::post('addresses/{id}/restore', [AddressController::class, 'restore']);
+    Route::delete('addresses/{id}/force-delete', [AddressController::class, 'forceDelete']);
+});
+
 
 Route::apiResource('faculties-campuses', FacultyCampusController::class);
 Route::get('campuses/{campusId}/faculties', [FacultyCampusController::class, 'facultiesByCampus']);
