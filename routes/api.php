@@ -45,7 +45,12 @@ use App\Http\Controllers\FeeController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\FinancialAidScholarshipController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\OpenAIChatController;
 
+
+Route::middleware('auth', 'role:Student')->group(function () {
+    Route::post('openai-instructor', [AIInstructorInteractionController::class, 'chat']);
+});
 
 Route::group(['prefix' => 'auth'], function () {
     Route::post('register', [AuthController::class, 'register']);
@@ -264,17 +269,11 @@ Route::get('course_drop_requests/instructor/{courseInstructorId}', [CourseDropRe
 Route::put('course_drop_requests/{id}/status', [CourseDropRequestController::class, 'updateStatus']);
 Route::post('course_drop_requests/{id}/restore', [CourseDropRequestController::class, 'restore']);
 Route::delete('course_drop_requests/{id}/force-delete', [CourseDropRequestController::class, 'forceDelete']);
+Route::delete('ai_instructor_interactions/clear', [AIInstructorInteractionController::class, 'clear']);
 
-Route::group([
-    'middleware' => 'authenticate',
-    'prefix' => 'ai_instructor_interactions'
-], function () {
-    Route::apiResource('/', AIInstructorInteractionController::class);
-
-    Route::post('ai_instructor_interactions/{id}/restore', [AIInstructorInteractionController::class, 'restore']);
-    Route::delete('ai_instructor_interactions/{id}/force-delete', [AIInstructorInteractionController::class, 'forceDelete']);
-    Route::delete('ai_instructor_interactions/clear', [AIInstructorInteractionController::class, 'clear']);
-});
+Route::apiResource('ai_instructor_interactions', AIInstructorInteractionController::class);
+Route::post('ai_instructor_interactions/{id}/restore', [AIInstructorInteractionController::class, 'restore']);
+Route::delete('ai_instructor_interactions/{id}/force-delete', [AIInstructorInteractionController::class, 'forceDelete']);
 
 Route::apiResource('majors_faculties_campuses', MajorFacultyCampusController::class);
 Route::get('majors/{facultyId}/campuses/{campusId}', [MajorFacultyCampusController::class, 'getMajorsByFacultyAndCampus']);
