@@ -121,10 +121,14 @@ Route::middleware(['auth:api', 'role:Admin'])->group(function () {
     Route::delete('blocks/{id}/force-delete', [BlockController::class, 'forceDelete']);
 });
 
-Route::apiResource('rooms', RoomController::class);
+Route::apiResource('rooms', RoomController::class)->only(['index', 'show']);
 Route::get('rooms-by-block/{block_id}', [RoomController::class, 'getRoomsByBlock']);
-Route::post('rooms/{id}/restore', [RoomController::class, 'restore']);
-Route::delete('rooms/{id}/force-delete', [RoomController::class, 'forceDelete']);
+
+Route::middleware(['auth:api', 'role:Admin'])->group(function () {
+    Route::apiResource('rooms', RoomController::class)->only(['store', 'update', 'destroy']);
+    Route::post('rooms/{id}/restore', [RoomController::class, 'restore']);
+    Route::delete('rooms/{id}/force-delete', [RoomController::class, 'forceDelete']);
+});
 
 Route::apiResource('courses', CourseController::class);
 Route::get('suggest-courses', [CourseController::class, 'suggestCoursesForNextSemester']);
