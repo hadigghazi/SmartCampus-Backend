@@ -11,15 +11,12 @@ class Exam extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'course_id',
-        'instructor_id',
+        'course_instructor_id',
         'date',
         'time',
         'duration',
         'campus_id',
-        'room_id',
-        'semester_id',
-        'course_instructor_id',
+        'room_id'
     ];
 
     protected $dates = ['deleted_at'];

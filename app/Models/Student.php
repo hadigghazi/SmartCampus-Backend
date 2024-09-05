@@ -22,7 +22,6 @@ class Student extends Model
         'additional_info',
         'transportation',
         'dorm_residency',
-        'emergency_contact_id',
         'major_id'
     ];
 

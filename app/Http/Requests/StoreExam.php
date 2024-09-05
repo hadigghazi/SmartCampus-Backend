@@ -9,7 +9,7 @@ class StoreExam extends FormRequest
     public function rules()
     {
         return [
-            'course_id' => 'required|integer|exists:courses,id',
+            'course_instructor_id' => 'required|integer|exists:course_instructors,id',
             'date' => 'required|date',
             'time' => 'required|date_format:H:i:s',
             'duration' => 'required|integer',
