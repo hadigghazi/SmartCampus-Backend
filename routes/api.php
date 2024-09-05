@@ -86,14 +86,21 @@ Route::middleware(['auth:api', 'role:Admin'])->group(function () {
     Route::delete('campuses/{id}/force-delete', [CampusController::class, 'forceDelete']);
 });
 
-Route::apiResource('departments', DepartmentController::class);
-Route::post('departments/{id}/restore', [DepartmentController::class, 'restore']);
-Route::delete('departments/{id}/force-delete', [DepartmentController::class, 'forceDelete']);
+Route::apiResource('departments', DepartmentController::class)->only(['index', 'show']);
 
-Route::apiResource('centers', CenterController::class);
-Route::post('centers/{id}/restore', [CenterController::class, 'restore']);
-Route::delete('centers/{id}/force-delete', [CenterController::class, 'forceDelete']);
+Route::middleware(['auth:api', 'role:Admin'])->group(function () {
+    Route::apiResource('departments', DepartmentController::class)->only(['store', 'update', 'destroy']);
+    Route::post('departments/{id}/restore', [DepartmentController::class, 'restore']);
+    Route::delete('departments/{id}/force-delete', [DepartmentController::class, 'forceDelete']);
+});
 
+Route::apiResource('centers', CenterController::class)->only(['index', 'show']);
+
+Route::middleware(['auth:api', 'role:Admin'])->group(function () {
+    Route::apiResource('centers', CenterController::class)->only(['store', 'update', 'destroy']);
+    Route::post('centers/{id}/restore', [CenterController::class, 'restore']);
+    Route::delete('centers/{id}/force-delete', [CenterController::class, 'forceDelete']);
+});
 Route::apiResource('majors', MajorController::class);
 Route::post('/suggest-major', [MajorController::class, 'suggestMajor']);
 Route::get('/majors/faculty/{facultyId}', [MajorController::class, 'getMajorsByFaculty']);
