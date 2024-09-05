@@ -14,9 +14,9 @@ class UpdateSemesterRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:50',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
+            'name' => 'sometimes|string|max:50',
+            'start_date' => 'sometimes|date',
+            'end_date' => 'sometimes|date|after_or_equal:start_date',
             'is_current' => 'nullable|boolean',
         ];
     }

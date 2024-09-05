@@ -16,6 +16,7 @@ class StoreDepartmentRequest extends FormRequest
         return [
             'name' => 'required|max:100',
             'description' => 'nullable|string',
+            'campus_id' => 'required|exists:campuses,id',
         ];
     }
 }

@@ -13,8 +13,7 @@ class RegistrationFactory extends Factory
     {
         return [
             'student_id' => \App\Models\Student::inRandomOrder()->first()->id,
-            'course_id' => \App\Models\Course::inRandomOrder()->first()->id,
-            'instructor_id' => \App\Models\Instructor::inRandomOrder()->first()->id,
+            'course_instructor_id' => 1,
             'semester_id' => \App\Models\Semester::inRandomOrder()->first()->id,
             'status' => $this->faker->randomElement(['Registered', 'Completed', 'Failed']),
         ];

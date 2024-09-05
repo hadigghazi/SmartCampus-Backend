@@ -14,12 +14,12 @@ class UpdateCourseRequest extends FormRequest
     public function rules()
     {
         return [
-            'code' => 'required|max:10|unique:courses,code',
-            'name' => 'required|max:100|unique:courses,name',
+            'code' => 'sometimes|max:10|unique:courses,code',
+            'name' => 'sometimes|max:100|unique:courses,name',
             'description' => 'nullable',
-            'credits' => 'required|integer',
-            'major_id' => 'required|exists:majors,id',
-            'faculty_id' => 'required|exists:faculties,id',
+            'credits' => 'sometimes|integer',
+            'major_id' => 'sometimes|exists:majors,id',
+            'faculty_id' => 'sometimes|exists:faculties,id',
         ];  
     }
 }

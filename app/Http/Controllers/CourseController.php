@@ -28,7 +28,7 @@ class CourseController extends Controller
 
     public function show(Course $course)
     {
-        $course->load('major', 'faculty', 'exams', 'courseInstructors', 'prerequisites', 'prerequisiteCourses');
+        $course->load('major', 'faculty', 'courseInstructors', 'prerequisites', 'prerequisiteCourses');
         return response()->json($course);
     }
 

@@ -128,24 +128,43 @@ Route::middleware(['auth:api', 'role:Admin'])->group(function () {
     Route::delete('rooms/{id}/force-delete', [RoomController::class, 'forceDelete']);
 });
 
-Route::apiResource('courses', CourseController::class);
-Route::get('suggest-courses', [CourseController::class, 'suggestCoursesForNextSemester']);
-Route::get('available-courses/student', [CourseController::class, 'getAvailableCoursesForStudent']);
-Route::post('courses/{id}/restore', [CourseController::class, 'restore']);
-Route::delete('courses/{id}/force-delete', [CourseController::class, 'forceDelete']);
+Route::apiResource('courses', CourseController::class)->only(['index', 'show']);
 Route::get('/courses/faculty/{facultyId}', [CourseController::class, 'getCoursesByFaculty']);
 Route::get('/courses/major/{majorId}', [CourseController::class, 'getCoursesByMajor']);
 
-Route::apiResource('semesters', SemesterController::class);
-Route::get('/semester/current', [SemesterController::class, 'getCurrentSemester']);
-Route::get('/semesters_by_student/{id}', [SemesterController::class, 'getSemestersForStudent']);
-Route::get('/semesters_by_instructor/{id}', [SemesterController::class, 'getSemestersForInstructor']);
-Route::post('semesters/{id}/restore', [SemesterController::class, 'restore']);
-Route::delete('semesters/{id}/force-delete', [SemesterController::class, 'forceDelete']);
+Route::middleware(['auth:api', 'role:Student'])->group(function () {
+    Route::get('suggest-courses', [CourseController::class, 'suggestCoursesForNextSemester']);
+    Route::get('available-courses/student', [CourseController::class, 'getAvailableCoursesForStudent']);
+});
 
-Route::apiResource('users', UserController::class);
-Route::post('users/{id}/restore', [UserController::class, 'restore']);
-Route::delete('users/{id}/force-delete', [UserController::class, 'forceDelete']);
+Route::middleware(['auth:api', 'role:Admin'])->group(function () {
+    Route::apiResource('courses', CourseController::class)->only(['store', 'update', 'destroy']);
+    Route::post('courses/{id}/restore', [CourseController::class, 'restore']);
+    Route::delete('courses/{id}/force-delete', [CourseController::class, 'forceDelete']);
+});
+
+Route::apiResource('semesters', SemesterController::class)->only(['index', 'show']);
+Route::get('/semester/current', [SemesterController::class, 'getCurrentSemester']);
+
+Route::middleware(['auth:api', 'role:Student,Admin,Instructor'])->group(function () {
+    Route::get('/semesters_by_student/{id}', [SemesterController::class, 'getSemestersForStudent']);
+    Route::get('/semesters_by_instructor/{id}', [SemesterController::class, 'getSemestersForInstructor']);
+});
+
+Route::middleware(['auth:api', 'role:Admin'])->group(function () {
+    Route::apiResource('semesters', SemesterController::class)->only(['store', 'update', 'destroy']);
+    Route::post('semesters/{id}/restore', [SemesterController::class, 'restore']);
+    Route::delete('semesters/{id}/force-delete', [SemesterController::class, 'forceDelete']);
+});
+
+Route::apiResource('users', UserController::class)->only(['index', 'show']);
+
+Route::middleware(['auth:api', 'role:Admin'])->group(function () {
+    Route::apiResource('users', UserController::class)->only(['store', 'update', 'destroy']);
+    Route::post('users/{id}/restore', [UserController::class, 'restore']);
+    Route::delete('users/{id}/force-delete', [UserController::class, 'forceDelete']);
+});
+
 
 Route::apiResource('students', StudentController::class)->except(['create', 'edit']);
 Route::get('/students/user/{userId}', [StudentController::class, 'getStudentByUserId']);

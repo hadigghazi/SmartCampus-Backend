@@ -14,6 +14,7 @@ class FacultyFactory extends Factory
         return [
             'name' => $this->faker->word,
             'description' => $this->faker->sentence,
+            'credit_price_usd' => $this->faker->randomFloat(2, 0, 1000),
         ];
     }
 }

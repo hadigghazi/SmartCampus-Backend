@@ -15,7 +15,6 @@ class Submission extends Model
         'student_id',
         'file_path',
         'submission_date',
-        'grade',
     ];
 
     protected $dates = ['deleted_at'];
