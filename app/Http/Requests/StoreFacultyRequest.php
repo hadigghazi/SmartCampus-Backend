@@ -16,6 +16,7 @@ class StoreFacultyRequest extends FormRequest
         return [
             'name' => 'required|max:100',
             'description' => 'nullable|string',
+            'credit_price_usd' => 'required|numeric|min:0'
         ];
     }
 }

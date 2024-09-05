@@ -16,6 +16,7 @@ class UpdateFacultyRequest extends FormRequest
         return [
             'name' => 'required|max:100',
             'description' => 'nullable|string',
+            'credit_price_usd' => 'sometimes|numeric|min:0'
         ];
     }
 }

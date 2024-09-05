@@ -70,9 +70,13 @@ Route::group(['prefix' => 'auth'], function () {
 //     Route::delete('faculties/{id}/force-delete', [FacultyController::class, 'forceDelete']);
 // });
 
-Route::apiResource('faculties', FacultyController::class);
-Route::post('faculties/{id}/restore', [FacultyController::class, 'restore']);
-Route::delete('faculties/{id}/force-delete', [FacultyController::class, 'forceDelete']);
+Route::apiResource('faculties', FacultyController::class)->only(['index', 'show']);
+
+Route::middleware(['auth:api', 'role:Admin'])->group(function () {
+    Route::apiResource('faculties', FacultyController::class)->only(['store', 'update', 'destroy']);
+    Route::post('faculties/{id}/restore', [FacultyController::class, 'restore']);
+    Route::delete('faculties/{id}/force-delete', [FacultyController::class, 'forceDelete']);
+});
 
 Route::apiResource('campuses', CampusController::class);
 Route::post('campuses/{id}/restore', [CampusController::class, 'restore']);

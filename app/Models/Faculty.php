@@ -9,7 +9,7 @@ class Faculty extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['name', 'description'];
+    protected $fillable = ['name', 'description', "credit_price_usd"];
 
     public function departments()
     {

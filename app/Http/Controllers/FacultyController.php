@@ -17,7 +17,6 @@ class FacultyController extends Controller
     public function store(StoreFacultyRequest $request)
     {
         $faculty = Faculty::create($request->validated());
-
         return response()->json($faculty, 201);
     }
 
