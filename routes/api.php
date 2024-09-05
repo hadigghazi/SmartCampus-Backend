@@ -112,10 +112,14 @@ Route::middleware(['auth:api', 'role:Admin'])->group(function () {
     Route::delete('majors/{id}/force-delete', [MajorController::class, 'forceDelete']);
 });
 
-Route::apiResource('blocks', BlockController::class);
+Route::apiResource('blocks', BlockController::class)->only(['index', 'show']);
 Route::get('blocks-by-campus/{campus_id}', [BlockController::class, 'getBlocksByCampus']);
-Route::post('blocks/{id}/restore', [BlockController::class, 'restore']);
-Route::delete('blocks/{id}/force-delete', [BlockController::class, 'forceDelete']);
+
+Route::middleware(['auth:api', 'role:Admin'])->group(function () {
+    Route::apiResource('blocks', BlockController::class)->only(['store', 'update', 'destroy']);
+    Route::post('blocks/{id}/restore', [BlockController::class, 'restore']);
+    Route::delete('blocks/{id}/force-delete', [BlockController::class, 'forceDelete']);
+});
 
 Route::apiResource('rooms', RoomController::class);
 Route::get('rooms-by-block/{block_id}', [RoomController::class, 'getRoomsByBlock']);
