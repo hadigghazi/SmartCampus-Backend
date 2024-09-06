@@ -12,8 +12,7 @@ class ExamFactory extends Factory
     public function definition()
     {
         return [
-            'course_id' => \App\Models\Course::inRandomOrder()->first()->id,
-            'instructor_id' => \App\Models\Instructor::inRandomOrder()->first()->id,
+            'course_instructor_id' => \App\Models\CourseInstructor::inRandomOrder()->first()->id,
             'date' => $this->faker->date(),
             'time' => $this->faker->time(),
             'duration' => $this->faker->numberBetween(60, 180),

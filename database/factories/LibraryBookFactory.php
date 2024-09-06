@@ -15,6 +15,7 @@ class LibraryBookFactory extends Factory
         return [
             'title' => $this->faker->sentence(),
             'author' => $this->faker->name(),
+            'pages' => 1,
             'isbn' => $this->faker->isbn13(),
             'copies' => $this->faker->numberBetween(1, 100),
             'publication_year' => $this->faker->year(),

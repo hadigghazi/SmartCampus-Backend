@@ -241,11 +241,6 @@ Route::middleware(['auth:api', 'role:Admin'])->group(function () {
     Route::delete('course-prerequisites/{id}/force-delete', [CoursePrerequisiteController::class, 'forceDelete']);
 });
 
-Route::get('/course-details/{courseInstructorId}', [CourseInstructorController::class, 'getCourseDetails']);
-Route::get('/instructors/{id}/courses', [CourseInstructorController::class, 'getCoursesForInstructor']);
-Route::get('courses/{id}/options', [CourseInstructorController::class, 'getCourseOptions']);
-Route::get('courses/{id}/available-options', [CourseInstructorController::class, 'getAvailableCourseOptions']);
-
 Route::middleware('auth:api')->group(function () {
     Route::apiResource('course-instructors', CourseInstructorController::class)->only(['index', 'show']);
     Route::get('/course-details/{courseInstructorId}', [CourseInstructorController::class, 'getCourseDetails']);
@@ -308,6 +303,7 @@ Route::middleware(['auth:api', 'role:Admin'])->group(function () {
 
 
 Route::middleware('auth:api')->group(function () {
+    Route::apiResource('grades', GradeController::class)->only(['index', 'show']);
     Route::get('/grades/get/{course_instructor_id}', [GradeController::class, 'getGradesByInstructor']);
 });
 
@@ -400,7 +396,6 @@ Route::middleware(['auth:api', 'role:Admin'])->group(function () {
     Route::delete('deans/{id}/force-delete', [DeanController::class, 'forceDelete']);
 });
 
-
 Route::middleware('auth:api')->group(function () {
     Route::get('/instructor-courses/{courseInstructorId}/materials', [CourseMaterialController::class, 'index']);
     Route::get('/course-materials/{id}', [CourseMaterialController::class, 'show']);
@@ -467,6 +462,7 @@ Route::middleware(['auth:api', 'role:Admin'])->group(function () {
 });
 
 Route::get('majors/{facultyId}/campuses/{campusId}', [MajorFacultyCampusController::class, 'getMajorsByFacultyAndCampus']);
+Route::apiResource('majors_faculties_campuses', MajorFacultyCampusController::class)->only(['index', 'show']);
 
 Route::middleware(['auth:api', 'role:Admin'])->group(function () {
     Route::apiResource('majors_faculties_campuses', MajorFacultyCampusController::class)->only(['store', 'update', 'destroy']);
