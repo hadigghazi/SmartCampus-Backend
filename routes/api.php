@@ -333,12 +333,12 @@ Route::middleware(['auth:api', 'role:Admin'])->group(function () {
     Route::delete('assignments/{id}/force-delete', [AssignmentController::class, 'forceDelete']);
 });
 
+Route::get('/submissions/{id}/download', [SubmissionController::class, 'download']);
 Route::middleware('auth:api')->group(function () {
     Route::get('/assignments/{assignmentId}/submissions', [SubmissionController::class, 'index']);
     Route::post('/assignments/{assignmentId}/submissions', [SubmissionController::class, 'store']);
     Route::delete('/submissions/{id}', [SubmissionController::class, 'destroy']);
     Route::get('/assignments/{assignmentId}/all-submissions', [SubmissionController::class, 'getAllSubmissions']);
-    Route::get('/submissions/{id}/download', [SubmissionController::class, 'download']);
 });
 
 Route::middleware(['auth:api', 'role:Admin'])->group(function () {
@@ -396,10 +396,11 @@ Route::middleware(['auth:api', 'role:Admin'])->group(function () {
     Route::delete('deans/{id}/force-delete', [DeanController::class, 'forceDelete']);
 });
 
+Route::get('/course-materials/{id}/download', [CourseMaterialController::class, 'download']);
+
 Route::middleware('auth:api')->group(function () {
     Route::get('/instructor-courses/{courseInstructorId}/materials', [CourseMaterialController::class, 'index']);
     Route::get('/course-materials/{id}', [CourseMaterialController::class, 'show']);
-    Route::get('/course-materials/{id}/download', [CourseMaterialController::class, 'download']);
     Route::post('/generate-practice-questions', [CourseMaterialController::class, 'generate']);
 });
 
