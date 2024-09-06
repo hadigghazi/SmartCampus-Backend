@@ -42,11 +42,27 @@ class GradeController extends Controller
     public function update(UpdateGrade $request, $id)
     {
         $item = Grade::withTrashed()->findOrFail($id);
+    
         $validatedData = $request->validated();
-        $item->grade = $validatedData['grade'];
-        $item->letter_grade = $this->convertToLetterGrade($validatedData['grade']);
-        $item->gpa = $this->calculateGPA($validatedData['grade']);
-        $item->save(); 
+        $newGrade = $validatedData['grade'];
+    
+        $item->grade = $newGrade;
+        $item->letter_grade = $this->convertToLetterGrade($newGrade);
+        $item->gpa = $this->calculateGPA($newGrade);
+        $item->save();
+    
+        $registration = Registration::find($item->registration_id);
+    
+        if ($registration) {
+            if ($newGrade >= 60) {
+                $registration->status = 'Completed';
+            } else {
+                $registration->status = 'Failed';
+            }
+            $registration->save();
+        } else {
+            return response()->json(['error' => 'Registration not found'], 404);
+        }
     
         return response()->json($item);
     }
@@ -143,11 +159,20 @@ class GradeController extends Controller
         $grade->gpa = $this->calculateGPA($request->grade);
         $grade->save();
     
+        if ($request->grade >= 60) {
+            $registration->status = 'Completed';
+        } else {
+            $registration->status = 'Failed';
+        }
+    
+        $registration->save();
+    
         $responseData = $grade->toArray();
         $responseData['status'] = $registration->status;
     
         return response()->json($responseData, 201);
     }
+    
     
     
     private function convertToLetterGrade($grade) {

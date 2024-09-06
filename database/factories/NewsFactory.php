@@ -15,7 +15,7 @@ class NewsFactory extends Factory
             'title' => $this->faker->sentence,
             'content' => $this->faker->paragraph,
             'published_date' => $this->faker->date(),
-            'author_id' => $this->faker->numberBetween(1, 100),
+            'author_id' => 1,
             'category' => $this->faker->word,
         ];
     }

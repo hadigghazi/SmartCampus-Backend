@@ -313,7 +313,6 @@ Route::middleware(['auth:api', 'role:Instructor'])->group(function () {
 });
 
 Route::middleware(['auth:api', 'role:Admin'])->group(function () {
-    Route::apiResource('grades', GradeController::class)->only(['store', 'update', 'destroy']);
     Route::post('grades/{id}/restore', [GradeController::class, 'restore']);
     Route::delete('grades/{id}/force-delete', [GradeController::class, 'forceDelete']);
 });
