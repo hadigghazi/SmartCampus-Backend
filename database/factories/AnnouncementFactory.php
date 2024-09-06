@@ -15,9 +15,9 @@ class AnnouncementFactory extends Factory
             'title' => $this->faker->sentence(),
             'content' => $this->faker->paragraph(),
             'published_date' => $this->faker->date(),
-            'author_id' => $this->faker->numberBetween(1, 100),
-            'visibility' => $this->faker->word(),
-            'category' => $this->faker->word(),
+            'author_id' => 1,
+            'visibility' => "Students",
+            'category' => "General",
         ];
     }
 }
