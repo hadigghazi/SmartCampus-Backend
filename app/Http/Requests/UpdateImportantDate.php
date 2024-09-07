@@ -9,11 +9,11 @@ class UpdateImportantDate extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'sometimes|string|max:100',
-            'description' => 'sometimes|string',
-            'date' => 'sometimes|date',
-            'end_date' => 'sometimes|date',
-            'type' => 'sometimes|in:Deadline,Event,Holiday,Other',
+            'title' => 'required|string|max:100',
+            'description' => 'nullable|string',
+            'date' => 'required|date',
+            'end_date' => 'nullable|date',
+            'type' => 'required|in:Deadline,Event,Holiday,Other',
         ];
     }
 }
