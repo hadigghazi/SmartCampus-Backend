@@ -178,4 +178,51 @@ public function getCourseDetails($courseInstructorId)
     ]);
 }
 
+public function getInstructorNameByCourseInstructorId($courseInstructorId)
+{
+    $courseInstructor = CourseInstructor::find($courseInstructorId);
+
+    if (!$courseInstructor) {
+        return response()->json(['message' => 'Course Instructor not found.'], 404);
+    }
+
+    $instructor = Instructor::find($courseInstructor->instructor_id);
+
+    if (!$instructor) {
+        return response()->json(['message' => 'Instructor not found.'], 404);
+    }
+
+    $user = $instructor->user;
+
+    if (!$user) {
+        return response()->json(['message' => 'User not found.'], 404);
+    }
+
+    $instructorDetails = "{$instructor->id} - {$user->first_name} {$user->middle_name} {$user->last_name}";
+
+    return response()->json([
+        'instructor_details' => $instructorDetails,
+    ]);
+}
+
+public function getCourseNameByCourseInstructorId($courseInstructorId)
+{
+    $courseInstructor = CourseInstructor::find($courseInstructorId);
+
+    if (!$courseInstructor) {
+        return response()->json(['message' => 'Course Instructor not found.'], 404);
+    }
+
+    $course = Course::find($courseInstructor->course_id);
+
+    if (!$course) {
+        return response()->json(['message' => 'Course not found.'], 404);
+    }
+
+    return response()->json([
+        'course_name' => $course->name,
+    ]);
+}
+
+
 }

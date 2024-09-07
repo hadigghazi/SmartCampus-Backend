@@ -85,26 +85,22 @@ public function getExamsForStudent($studentId)
         return response()->json(['error' => 'No registrations found for the given student in the current semester'], 404);
     }
 
-    $exams = $registrations->map(function ($registration) use ($currentSemester) {
-        if (!$registration->courseInstructor) {
-            return null; 
-        }
+    $courseInstructorIds = $registrations->pluck('courseInstructor.id')->unique();
 
-        $courseInstructorId = $registration->courseInstructor->id;
+    $exams = Exam::with([
+            'room.block.campus',
+            'courseInstructor.instructor.user'
+        ])
+        ->whereIn('course_instructor_id', $courseInstructorIds)
+        ->whereNull('deleted_at')
+        ->orderBy('created_at', 'desc')
+        ->get();
 
-        $exam = Exam::with([
-                'room.block.campus',
-                'courseInstructor.instructor.user'
-            ])
-            ->where('course_instructor_id', $courseInstructorId)
-            ->whereNull('deleted_at')
-            ->orderBy('created_at', 'desc')
-            ->first();
+    if ($exams->isEmpty()) {
+        return response()->json(['error' => 'No exams found for the given student in the current semester'], 404);
+    }
 
-        if (!$exam || $exam->courseInstructor->semester_id !== $currentSemester->id) {
-            return null; 
-        }
-
+    $formattedExams = $exams->map(function ($exam) {
         $room = $exam->room;
         $block = $room ? $room->block : null; 
         $campus = $block ? $block->campus : null; 
@@ -139,13 +135,9 @@ public function getExamsForStudent($studentId)
             'updated_at' => $exam->updated_at,
             'deleted_at' => $exam->deleted_at,
         ];
-    })->filter(); 
+    });
 
-    if ($exams->isEmpty()) {
-        return response()->json(['error' => 'No exams found for the given student in the current semester'], 404);
-    }
-
-    return response()->json($exams->values());
+    return response()->json($formattedExams->values());
 }
 
 
