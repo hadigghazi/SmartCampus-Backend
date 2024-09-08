@@ -257,23 +257,18 @@ Route::middleware(['auth:api', 'role:Admin'])->group(function () {
     Route::delete('course-instructors/{id}/force-delete', [CourseInstructorController::class, 'forceDelete']);
 });
 
-Route::get('dorms/{dormId}/rooms', [DormRoomController::class, 'roomsByDorm']);
-Route::get('campuses/{campusId}/bus-routes', [BusRouteController::class, 'routesByCampus']);
-
-Route::apiResource('dorms', DormController::class)->only(['index', 'show']);
-Route::apiResource('dorm-rooms', DormRoomController::class)->only(['index', 'show']);
-Route::apiResource('bus-routes', BusRouteController::class)->only(['index', 'show']);
-
 Route::middleware(['auth:api', 'role:Admin'])->group(function () {
-    Route::apiResource('dorms', DormController::class)->only(['store', 'update', 'destroy']);
+    Route::apiResource('dorms', DormController::class);
+    Route::get('dorms/{dormId}/rooms', [DormRoomController::class, 'roomsByDorm']);
     Route::post('dorms/{id}/restore', [DormController::class, 'restore']);
     Route::delete('dorms/{id}/force-delete', [DormController::class, 'forceDelete']);
 
-    Route::apiResource('dorm-rooms', DormRoomController::class)->only(['store', 'update', 'destroy']);
+    Route::apiResource('dorm-rooms', DormRoomController::class);
     Route::post('dorm-rooms/{id}/restore', [DormRoomController::class, 'restore']);
     Route::delete('dorm-rooms/{id}/force-delete', [DormRoomController::class, 'forceDelete']);
 
-    Route::apiResource('bus-routes', BusRouteController::class)->only(['store', 'update', 'destroy']);
+    Route::apiResource('bus-routes', BusRouteController::class);
+    Route::get('campuses/{campusId}/bus-routes', [BusRouteController::class, 'routesByCampus']);
     Route::post('bus-routes/{id}/restore', [BusRouteController::class, 'restore']);
     Route::delete('bus-routes/{id}/force-delete', [BusRouteController::class, 'forceDelete']);
 });
