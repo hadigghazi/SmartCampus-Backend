@@ -14,7 +14,6 @@ class BusRegistration extends Model
         'student_id',
         'bus_route_id',
         'registration_date',
-        'status',
     ];
 
     protected $dates = ['deleted_at'];

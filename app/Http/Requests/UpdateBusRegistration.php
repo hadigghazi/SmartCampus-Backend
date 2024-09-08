@@ -12,7 +12,6 @@ class UpdateBusRegistration extends FormRequest
             'student_id' => 'sometimes|exists:students,id',
             'bus_route_id' => 'sometimes|exists:bus_routes,id',
             'registration_date' => 'sometimes|date',
-            'status' => 'sometimes|in:Pending,Confirmed,Canceled',
         ];
     }
 }

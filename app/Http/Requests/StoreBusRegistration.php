@@ -12,7 +12,6 @@ class StoreBusRegistration extends FormRequest
             'student_id' => 'required|exists:students,id',
             'bus_route_id' => 'required|exists:bus_routes,id',
             'registration_date' => 'required|date',
-            'status' => 'required|in:Pending,Confirmed,Canceled',
         ];
     }
 }
