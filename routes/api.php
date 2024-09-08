@@ -268,7 +268,6 @@ Route::middleware(['auth:api', 'role:Admin'])->group(function () {
     Route::delete('dorm-rooms/{id}/force-delete', [DormRoomController::class, 'forceDelete']);
 
     Route::apiResource('bus-routes', BusRouteController::class);
-    Route::get('bus-routes-registration/{id}', [BusRouteController::class, 'getRegistrationsForBusRoute']);
     Route::post('bus-routes/{id}/restore', [BusRouteController::class, 'restore']);
     Route::delete('bus-routes/{id}/force-delete', [BusRouteController::class, 'forceDelete']);
 });
@@ -357,10 +356,9 @@ Route::middleware(['auth:api', 'role:Admin'])->group(function () {
     Route::delete('dorm_registrations/{id}/force-delete', [DormRegistrationController::class, 'forceDelete']);
 });
 
-Route::apiResource('bus_registrations', BusRegistrationController::class)->only(['show', 'index']);
-
 Route::middleware(['auth:api', 'role:Admin'])->group(function () {
-    Route::apiResource('bus_registrations', BusRegistrationController::class)->only(['store', 'update', 'destroy']);
+    Route::apiResource('bus_registrations', BusRegistrationController::class);
+    Route::get('bus_registrations_for_route/{id}', [BusRouteController::class, 'getRegistrationsForBusRoute']);
     Route::post('bus_registrations/{id}/restore', [BusRegistrationController::class, 'restore']);
     Route::delete('bus_registrations/{id}/force-delete', [BusRegistrationController::class, 'forceDelete']);
 });
