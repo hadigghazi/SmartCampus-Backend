@@ -56,4 +56,11 @@ class DormRegistrationController extends Controller
         $item->forceDelete();
         return response()->json(null, 204);
     }
+
+    public function getRegistrationsByDormRoom($dormRoomId)
+    {
+        $registrations = DormRegistration::where('dorm_room_id', $dormRoomId)->get();
+        
+        return response()->json($registrations);
+    }
 }

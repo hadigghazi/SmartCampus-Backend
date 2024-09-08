@@ -350,10 +350,9 @@ Route::middleware(['auth:api', 'role:Admin'])->group(function () {
     Route::delete('important_dates/{id}/force-delete', [ImportantDateController::class, 'forceDelete']);
 });
 
-Route::apiResource('dorm_registrations', DormRegistrationController::class)->only(['show', 'index']);
-
 Route::middleware(['auth:api', 'role:Admin'])->group(function () {
-    Route::apiResource('dorm_registrations', DormRegistrationController::class)->only(['store', 'update', 'destroy']);
+    Route::apiResource('dorm_registrations', DormRegistrationController::class);
+    Route::get('dorm_registrations_for_room/{id}', [DormRegistrationController::class, 'getRegistrationsByDormRoom']);
     Route::post('dorm_registrations/{id}/restore', [DormRegistrationController::class, 'restore']);
     Route::delete('dorm_registrations/{id}/force-delete', [DormRegistrationController::class, 'forceDelete']);
 });
