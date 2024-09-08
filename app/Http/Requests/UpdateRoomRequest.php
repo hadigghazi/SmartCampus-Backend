@@ -14,7 +14,7 @@ class UpdateRoomRequest extends FormRequest
     public function rules()
     {
         return [
-            'number' => 'sometimes|max:20|unique:rooms,number',
+            'number' => 'sometimes|max:20',
             'block_id' => 'sometimes|exists:blocks,id',
             'capacity' => 'sometimes|integer|min:1',
             'description' => 'nullable',
