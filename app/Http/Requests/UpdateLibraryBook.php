@@ -9,14 +9,14 @@ class UpdateLibraryBook extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'sometimes|string|max:100',
-            'author' => 'sometimes|string|max:100',
-            'isbn' => 'sometimes|string|max:20',
-            'copies' => 'sometimes|integer',
-            'publication_year' => 'sometimes|integer',
-            'campus_id' => 'sometimes|exists:campuses,id',
+            'title' => 'required|string|max:100',
+            'author' => 'required|string|max:100',
+            'isbn' => 'required|string|max:20',
+            'copies' => 'required|integer',
+            'publication_year' => 'required|integer',
+            'campus_id' => 'required|exists:campuses,id',
             'description' => 'nullable|string',
-            'pages' => 'sometimes|integer|min:1',
+            'pages' => 'required|integer|min:1',
         ];
     }
 }
