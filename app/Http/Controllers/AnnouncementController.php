@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Announcement;
+use App\Mail\AnnouncementMail;
+use Illuminate\Support\Facades\Mail;
+use App\Models\User;
 use App\Http\Requests\StoreAnnouncement;
 use App\Http\Requests\UpdateAnnouncement;
 
@@ -17,8 +20,34 @@ class AnnouncementController extends Controller
     public function store(StoreAnnouncement $request)
     {
         $item = Announcement::create($request->validated());
+    
+        $visibility = $item->visibility;
+    
+        $users = $this->getUsersBasedOnVisibility($visibility);
+    
+        foreach ($users as $user) {
+            Mail::to($user->email)->send(new AnnouncementMail($item));
+        }
+    
         return response()->json($item, 201);
     }
+    
+    private function getUsersBasedOnVisibility($visibility)
+    {
+        switch ($visibility) {
+            case 'Students':
+                return User::where('role', 'Student')->get();
+            case 'Instructors':
+                return User::where('role', 'Instructor')->get();
+            case 'Admins':
+                return User::where('role', 'Admin')->get();
+            case 'General':
+                return User::all(); 
+            default:
+                return collect(); 
+        }
+    }
+    
 
     public function show($id)
     {
@@ -33,6 +62,13 @@ class AnnouncementController extends Controller
     {
         $item = Announcement::withTrashed()->findOrFail($id);
         $item->update($request->validated());
+        $visibility = $item->visibility;
+    
+        $users = $this->getUsersBasedOnVisibility($visibility);
+    
+        foreach ($users as $user) {
+            Mail::to($user->email)->send(new AnnouncementMail($item));
+        }
         return response()->json($item);
     }
 
