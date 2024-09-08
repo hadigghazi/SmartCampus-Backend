@@ -56,4 +56,11 @@ class BusRegistrationController extends Controller
         $item->forceDelete();
         return response()->json(null, 204);
     }
+
+    public function getRegistrationsForBusRoute($bus_route_id)
+{
+    $registrations = BusRegistration::where('bus_route_id', $bus_route_id)->get();
+    return response()->json($registrations);
+}
+
 }

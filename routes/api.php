@@ -268,7 +268,7 @@ Route::middleware(['auth:api', 'role:Admin'])->group(function () {
     Route::delete('dorm-rooms/{id}/force-delete', [DormRoomController::class, 'forceDelete']);
 
     Route::apiResource('bus-routes', BusRouteController::class);
-    Route::get('campuses/{campusId}/bus-routes', [BusRouteController::class, 'routesByCampus']);
+    Route::get('bus-routes-registration/{id}', [BusRouteController::class, 'getRegistrationsForBusRoute']);
     Route::post('bus-routes/{id}/restore', [BusRouteController::class, 'restore']);
     Route::delete('bus-routes/{id}/force-delete', [BusRouteController::class, 'forceDelete']);
 });
