@@ -18,7 +18,6 @@ class Student extends Model
         'visa_status',
         'native_language',
         'secondary_language',
-        'current_semester_id',
         'additional_info',
         'transportation',
         'dorm_residency',
@@ -29,17 +28,11 @@ class Student extends Model
         'passport_number' => '',
         'visa_status' => '',
         'additional_info' => null,
-        'current_semester_id' => null,
     ];
 
     public function user()
     {
     return $this->belongsTo(User::class, 'user_id');
-    }
-
-    public function semester()
-    {
-        return $this->belongsTo(Semester::class, 'current_semester_id');
     }
 
     public function emergencyContact()

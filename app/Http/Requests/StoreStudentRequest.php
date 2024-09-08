@@ -17,10 +17,7 @@ class StoreStudentRequest extends FormRequest
             'visa_status' => 'nullable|string|max:50',
             'native_language' => 'required|string|max:50',
             'secondary_language' => 'required|string|max:50',
-            'current_semester_id' => 'nullable|exists:semesters,id',
             'additional_info' => 'nullable|string',
-            'transportation' => 'required|boolean',
-            'dorm_residency' => 'required|boolean',
         ];        
     }
 

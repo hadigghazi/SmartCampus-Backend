@@ -22,11 +22,8 @@ class StudentFactory extends Factory
             'visa_status' => $this->faker->word(),
             'native_language' => $this->faker->word(),
             'secondary_language' => $this->faker->word(),
-            'current_semester_id' => Semester::factory(),
             'additional_info' => $this->faker->paragraph(),
             'transportation' => $this->faker->boolean(),
-            'dorm_residency' => $this->faker->boolean(),
-            'emergency_contact_id' => Contact::factory(),
         ];
     }
 }

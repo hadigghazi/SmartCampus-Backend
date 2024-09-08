@@ -16,10 +16,7 @@ class UpdateStudentRequest extends FormRequest
             'visa_status' => 'nullable|string|max:50',
             'native_language' => 'sometimes|string|max:50',
             'secondary_language' => 'sometimes|string|max:50',
-            'current_semester_id' => 'nullable|exists:semesters,id',
             'additional_info' => 'nullable|string',
-            'transportation' => 'sometimes|boolean',
-            'dorm_residency' => 'sometimes|boolean',
         ];        
     }
 
