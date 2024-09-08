@@ -13,7 +13,6 @@ class UpdateDormRegistration extends FormRequest
             'dorm_room_id' => 'sometimes|exists:dorm_rooms,id',
             'start_date' => 'sometimes|date',
             'end_date' => 'sometimes|date',
-            'status' => 'sometimes|in:Pending,Confirmed,Canceled',
         ];
     }
 }

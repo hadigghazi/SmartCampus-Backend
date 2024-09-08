@@ -15,7 +15,6 @@ class DormRegistration extends Model
         'dorm_room_id',
         'start_date',
         'end_date',
-        'status',
     ];
 
     protected $dates = ['deleted_at'];

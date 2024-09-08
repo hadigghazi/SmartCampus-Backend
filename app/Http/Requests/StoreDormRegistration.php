@@ -13,7 +13,6 @@ class StoreDormRegistration extends FormRequest
             'dorm_room_id' => 'required|exists:dorm_rooms,id',
             'start_date' => 'required|date',
             'end_date' => 'nullable|date',
-            'status' => 'required|in:Pending,Confirmed,Canceled',
         ];
     }
 }
