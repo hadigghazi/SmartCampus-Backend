@@ -46,6 +46,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\FinancialAidScholarshipController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OpenAIChatController;
+use App\Http\Controllers\SalaryPaymentController;
 
 
 Route::post('openai-instructor', [AIInstructorInteractionController::class, 'chat']);
@@ -57,16 +58,6 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('refresh', [AuthController::class, 'refresh'])->middleware('auth:api');
     Route::get('me', [AuthController::class, 'me'])->middleware('authenticate');
 });
-
-// Route::group([
-//     'middleware' => 'auth.user',
-//     'prefix' => 'faculties'
-// ], function () {
-//     Route::apiResource('/', FacultyController::class);
-
-//     Route::post('faculties/{id}/restore', [FacultyController::class, 'restore']);
-//     Route::delete('faculties/{id}/force-delete', [FacultyController::class, 'forceDelete']);
-// });
 
 Route::apiResource('faculties', FacultyController::class)->only(['index', 'show']);
 
@@ -395,6 +386,10 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/instructor-courses/{courseInstructorId}/materials', [CourseMaterialController::class, 'index']);
     Route::get('/course-materials/{id}', [CourseMaterialController::class, 'show']);
     Route::post('/generate-practice-questions', [CourseMaterialController::class, 'generate']);
+});
+
+Route::middleware(['auth:api', 'role:Admin'])->group(function () {
+    Route::apiResource('salary-payments', SalaryPaymentController::class);
 });
 
 Route::middleware(['auth:api', 'role:Instructor'])->group(function () {
