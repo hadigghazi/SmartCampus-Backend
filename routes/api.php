@@ -358,7 +358,7 @@ Route::middleware(['auth:api', 'role:Admin'])->group(function () {
 
 Route::middleware(['auth:api', 'role:Admin'])->group(function () {
     Route::apiResource('bus_registrations', BusRegistrationController::class);
-    Route::get('bus_registrations_for_route/{id}', [BusRouteController::class, 'getRegistrationsForBusRoute']);
+    Route::get('bus_registrations_for_route/{id}', [BusRegistrationController::class, 'getRegistrationsForBusRoute']);
     Route::post('bus_registrations/{id}/restore', [BusRegistrationController::class, 'restore']);
     Route::delete('bus_registrations/{id}/force-delete', [BusRegistrationController::class, 'forceDelete']);
 });
