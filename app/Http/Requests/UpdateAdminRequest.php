@@ -17,6 +17,7 @@ class UpdateAdminRequest extends FormRequest
             'user_id' => 'sometimes|exists:users,id',
             'admin_type' => 'sometimes|in:Super Admin,Admin',
             'department_id' => 'sometimes|exists:departments,id',
+            'salary' => 'sometimes|numeric'
         ];
     }
 }

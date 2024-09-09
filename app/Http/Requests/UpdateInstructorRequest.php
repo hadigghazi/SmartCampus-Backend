@@ -15,6 +15,7 @@ class UpdateInstructorRequest extends FormRequest
         return [
             'department_id' => 'required|exists:departments,id',
             'specialization' => 'sometimes|required|string|max:100',
+            'salary' => 'sometimes|numeric'
         ];
     }
 }

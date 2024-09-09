@@ -14,6 +14,7 @@ class Instructor extends Model
         'user_id',
         'department_id',
         'specialization',
+        'salary'
     ];
 
     protected $casts = [

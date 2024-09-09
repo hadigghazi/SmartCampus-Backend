@@ -17,6 +17,7 @@ class StoreAdminRequest extends FormRequest
             'user_id' => 'required|exists:users,id',
             'admin_type' => 'required|in:Super Admin,Admin',
             'department_id' => 'required|exists:departments,id',
+            'salary' => 'required|numeric'
         ];
     }
 }

@@ -17,6 +17,7 @@ class StoreInstructorRequest extends FormRequest
             'user_id' => 'required|exists:users,id',
             'department_id' => 'required|exists:departments,id',
             'specialization' => 'required|string|max:100',
+            'salary' => 'required|numeric'
         ];
     }
 }
