@@ -39,6 +39,8 @@ class UpdateUserRequest extends FormRequest
             'gender' => 'sometimes|in:Male,Female',
             'marital_status' => 'sometimes|in:Single,Married,Divorced,Widowed',
             'profile_picture' => 'sometimes|string|max:255',
+            'address' => 'sometimes|string|max:255', 
+            'emergency_contact_number' => 'sometimes|string|max:20', 
         ];
     }
 }

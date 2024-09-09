@@ -30,6 +30,9 @@ class StoreUserRequest extends FormRequest
             'gender' => 'required|in:Male,Female',
             'marital_status' => 'required|in:Single,Married,Divorced,Widowed',
             'profile_picture' => 'required|string|max:255',
+            'address' => 'required|string|max:255', 
+            'emergency_contact_number' => 'required|string|max:20', 
         ];
+        
     }
 }

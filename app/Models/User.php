@@ -30,6 +30,8 @@ class User extends Authenticatable implements JWTSubject
         'gender',
         'marital_status',
         'profile_picture',
+        'address',
+        'emergency_contact_number'
     ];
 
     protected $guarded = [];

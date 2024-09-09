@@ -19,8 +19,6 @@ class Student extends Model
         'native_language',
         'secondary_language',
         'additional_info',
-        'transportation',
-        'dorm_residency',
         'major_id'
     ];
 
