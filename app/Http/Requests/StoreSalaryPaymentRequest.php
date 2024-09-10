@@ -18,6 +18,7 @@ class StoreSalaryPaymentRequest extends FormRequest
             'payment_date' => 'required|date',
             'recipient_id' => 'required|exists:users,id',
             'recipient_type' => 'required|in:Instructor,Admin',
+            
         ];
     }
 }
