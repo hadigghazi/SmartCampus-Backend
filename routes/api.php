@@ -48,7 +48,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OpenAIChatController;
 use App\Http\Controllers\SalaryPaymentController;
 
-
 Route::post('openai-instructor', [AIInstructorInteractionController::class, 'chat']);
 
 Route::group(['prefix' => 'auth'], function () {
