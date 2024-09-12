@@ -28,6 +28,7 @@ class CourseEvaluationController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'student_id' => 'required|exists:students,id',
             'teaching_number' => 'required|integer',
             'teaching' => 'required|string',
             'coursecontent_number' => 'required|integer',
@@ -47,8 +48,17 @@ class CourseEvaluationController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $evaluation = CourseEvaluation::create($request->all());
-        return response()->json($evaluation, 201);
+        $existingEvaluation = CourseEvaluation::where('student_id', $request->student_id)
+            ->where('course_instructor_id', $request->course_instructor_id)
+            ->first();
+
+        if ($existingEvaluation) {
+            $existingEvaluation->update($request->all());
+            return response()->json($existingEvaluation, 200);
+        } else {
+            $evaluation = CourseEvaluation::create($request->all());
+            return response()->json($evaluation, 201);
+        }
     }
 
     public function update(Request $request, $id)
@@ -80,7 +90,7 @@ class CourseEvaluationController extends Controller
         }
 
         $evaluation->update($request->all());
-        return response()->json($evaluation);
+        return response()->json($evaluation, 200);
     }
 
     public function destroy($id)
@@ -92,14 +102,14 @@ class CourseEvaluationController extends Controller
         }
 
         $evaluation->delete();
-        return response()->json(['message' => 'Evaluation deleted successfully']);
+        return response()->json(['message' => 'Evaluation deleted successfully'], 200);
     }
 
     public function restore($id)
     {
         $courseEvaluation = CourseEvaluation::withTrashed()->findOrFail($id);
         $courseEvaluation->restore();
-        return response()->json($courseEvaluation);
+        return response()->json($courseEvaluation, 200);
     }
 
     public function forceDelete($id)
@@ -108,5 +118,4 @@ class CourseEvaluationController extends Controller
         $courseEvaluation->forceDelete();
         return response()->json(null, 204);
     }
-
 }

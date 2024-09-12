@@ -24,10 +24,16 @@ class CourseEvaluation extends Model
         'extracurricular_number',
         'extracurricular',
         'course_instructor_id',
+        'course_instructor_id',
     ];
 
     public function courseInstructor()
     {
         return $this->belongsTo(CourseInstructor::class);
+    }
+
+    public function student()
+    {
+        return $this->belongsTo(Student::class);
     }
 }
