@@ -47,6 +47,7 @@ use App\Http\Controllers\FinancialAidScholarshipController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OpenAIChatController;
 use App\Http\Controllers\SalaryPaymentController;
+use App\Http\Controllers\CourseEvaluationController;
 
 Route::post('openai-instructor', [AIInstructorInteractionController::class, 'chat']);
 
@@ -493,6 +494,11 @@ Route::middleware(['auth:api', 'role:Admin'])->group(function () {
     Route::delete('financial-aid-scholarships/{id}/force-delete', [FinancialAidScholarshipController::class, 'forceDelete']);
 });
 
-Route::apiResource('course-evaluations', CourseEvaluation::class);
-Route::post('course-evaluations/{id}/restore', [CourseEvaluation::class, 'restore']);
-Route::delete('course-evaluations/{id}/force-delete', [CourseEvaluation::class, 'forceDelete']);
+Route::middleware(['auth:api', 'role:Student'])->group(function () {
+    Route::apiResource('course-evaluations', CourseEvaluationController::class);
+});
+
+Route::middleware(['auth:api', 'role:Admin'])->group(function () {
+    Route::post('course-evaluations/{id}/restore', [CourseEvaluationController::class, 'restore']);
+    Route::delete('course-evaluations/{id}/force-delete', [CourseEvaluationController::class, 'forceDelete']);
+});
