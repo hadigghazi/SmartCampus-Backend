@@ -24,7 +24,7 @@ class CourseEvaluation extends Model
         'extracurricular_number',
         'extracurricular',
         'course_instructor_id',
-        'course_instructor_id',
+        'student_id',
     ];
 
     public function courseInstructor()
