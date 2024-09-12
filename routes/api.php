@@ -492,3 +492,7 @@ Route::middleware(['auth:api', 'role:Admin'])->group(function () {
     Route::post('financial-aid-scholarships/{id}/restore', [FinancialAidScholarshipController::class, 'restore']);
     Route::delete('financial-aid-scholarships/{id}/force-delete', [FinancialAidScholarshipController::class, 'forceDelete']);
 });
+
+Route::apiResource('course-evaluations', CourseEvaluation::class);
+Route::post('course-evaluations/{id}/restore', [CourseEvaluation::class, 'restore']);
+Route::delete('course-evaluations/{id}/force-delete', [CourseEvaluation::class, 'forceDelete']);
