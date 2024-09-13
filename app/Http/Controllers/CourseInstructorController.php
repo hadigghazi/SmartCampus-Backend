@@ -10,6 +10,8 @@ use App\Models\Faculty;
 use App\Models\Department;
 use App\Models\Registration;
 use App\Models\Campus;
+use App\Models\Room;
+use App\Models\Block;
 use App\Models\Semester;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreCourseInstructorRequest;
@@ -178,6 +180,12 @@ public function getCourseDetails($courseInstructorId)
     $major = Major::find($course->major_id);
     $faculty = Faculty::find($course->faculty_id);
 
+    $semester = Semester::find($courseInstructor->semester_id);
+    $campus = Campus::find($courseInstructor->campus_id);
+    $room = Room::find($courseInstructor->room_id);
+
+    $blockName = $room ? Block::find($room->block_id)->name : 'Block not found';
+
     return response()->json([
         'course_code' => $course->code,
         'course_name' => $course->name,
@@ -185,8 +193,15 @@ public function getCourseDetails($courseInstructorId)
         'credits' => $course->credits,
         'major_name' => $major ? $major->name : 'Major not found',
         'faculty_name' => $faculty ? $faculty->name : 'Faculty not found',
+        'semester_name' => $semester ? $semester->name : 'Semester not found',
+        'capacity' => $courseInstructor->capacity,
+        'campus_name' => $campus ? $campus->name : 'Campus not found',
+        'schedule' => $courseInstructor->schedule,
+        'room_number' => $room ? $room->number : 'Room not found',
+        'block_name' => $blockName,
     ]);
 }
+
 
 
 public function getInstructorNameByCourseInstructorId($courseInstructorId)
@@ -262,6 +277,7 @@ public function getInstructorDetails($courseInstructorId)
         'first_name' => $user->first_name,
         'middle_name' => $user->middle_name,
         'last_name' => $user->last_name,
+        'profile_picture' => $user->profile_picture,
         'specialization' => $instructor->specialization,
         'department_name' => $department ? $department->name : 'Department not found',
     ];
