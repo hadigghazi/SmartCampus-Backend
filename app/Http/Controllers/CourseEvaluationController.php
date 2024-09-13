@@ -133,92 +133,111 @@ class CourseEvaluationController extends Controller
     }
 
     public function analyzeCourseInstructor(Request $request)
-{
-    $validator = Validator::make($request->all(), [
-        'course_instructor_id' => 'required|exists:course_instructors,id',
-        'status' => 'required|in:Successful,Unsuccessful'
-    ]);
-
-    if ($validator->fails()) {
-        return response()->json(['errors' => $validator->errors()], 422);
-    }
-
-    $evaluations = CourseEvaluation::where('course_instructor_id', $request->course_instructor_id)->get();
-
-    if ($evaluations->isEmpty()) {
-        return response()->json(['message' => 'No evaluations found for this instructor'], 404);
-    }
-
-    $mappedEvaluations = $evaluations->map(function ($evaluation) {
-        return [
-            'teaching' => $evaluation->teaching,
-            'teaching_quality' => $this->mapEvaluation($evaluation->teaching_number),
-            'course_content' => $evaluation->coursecontent,
-            'course_content_quality' => $this->mapEvaluation($evaluation->coursecontent_number),
-            'examination' => $evaluation->examination,
-            'examination_quality' => $this->mapEvaluation($evaluation->examination_number),
-            'labwork' => $evaluation->labwork,
-            'labwork_quality' => $this->mapEvaluation($evaluation->labwork_number),
-            'library_facilities' => $evaluation->library_facilities,
-            'library_facilities_quality' => $this->mapEvaluation($evaluation->library_facilities_number),
-            'extracurricular' => $evaluation->extracurricular,
-            'extracurricular_quality' => $this->mapEvaluation($evaluation->extracurricular_number),
-        ];
-    });
-
-    $prompt = "Analyze the following evaluations for a course instructor. The course has been marked as {$request->status}. 
-        The evaluation scores are given on a scale where -1 is Bad, 0 is Average, and 1 is Good. 
-        If the course is marked as UnSuccessful, analyze why it failed and suggest improvements. 
-        If it's Successful, highlight the good aspects and suggest areas for improvement.\n\n";
-
-    foreach ($mappedEvaluations as $eval) {
-        $prompt .= "Teaching: {$eval['teaching']} (Quality: {$eval['teaching_quality']})\n";
-        $prompt .= "Course Content: {$eval['course_content']} (Quality: {$eval['course_content_quality']})\n";
-        $prompt .= "Examination: {$eval['examination']} (Quality: {$eval['examination_quality']})\n";
-        $prompt .= "Labwork: {$eval['labwork']} (Quality: {$eval['labwork_quality']})\n";
-        $prompt .= "Library Facilities: {$eval['library_facilities']} (Quality: {$eval['library_facilities_quality']})\n";
-        $prompt .= "Extracurricular: {$eval['extracurricular']} (Quality: {$eval['extracurricular_quality']})\n\n";
-    }
-
-    $response = Http::withHeaders([
-        'Authorization' => 'Bearer ' . env('OPENAI_API_KEY'),
-    ])->post('https://api.openai.com/v1/chat/completions', [
-        'model' => 'gpt-3.5-turbo',
-        'messages' => [
-            ['role' => 'system', 'content' => 'You are an expert educational evaluator.'],
-            ['role' => 'user', 'content' => $prompt],
-        ],
-        'max_tokens' => 2000,
-        'temperature' => 0.7
-    ]);
-
-    if ($response->failed()) {
-        return response()->json([
-            'error' => 'Failed to get analysis from OpenAI API.',
-            'status' => $response->status(),
-            'response' => $response->body()
-        ], $response->status());
-    }
-
-    $analysis = $response->json()['choices'][0]['message']['content'] ?? null;
+    {
+        $validator = Validator::make($request->all(), [
+            'course_instructor_id' => 'required|exists:course_instructors,id',
+            'status' => 'required|in:Successful,Unsuccessful'
+        ]);
     
-    return response()->json([
-        'analysis' => $eval
-    ]);
-}
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+    
+        $evaluations = CourseEvaluation::where('course_instructor_id', $request->course_instructor_id)->get();
+    
+        if ($evaluations->isEmpty()) {
+            return response()->json(['message' => 'No evaluations found for this instructor'], 404);
+        }
+    
+        $mappedEvaluations = $evaluations->map(function ($evaluation) {
+            return [
+                'teaching' => [
+                    'quality' => $this->mapEvaluation($evaluation->teaching_number),
+                    'feedback' => $evaluation->teaching,
+                ],
+                'course_content' => [
+                    'quality' => $this->mapEvaluation($evaluation->coursecontent_number),
+                    'feedback' => $evaluation->coursecontent,
+                ],
+                'examination' => [
+                    'quality' => $this->mapEvaluation($evaluation->examination_number),
+                    'feedback' => $evaluation->examination,
+                ],
+                'labwork' => [
+                    'quality' => $this->mapEvaluation($evaluation->labwork_number),
+                    'feedback' => $evaluation->labwork,
+                ],
+                'library_facilities' => [
+                    'quality' => $this->mapEvaluation($evaluation->library_facilities_number),
+                    'feedback' => $evaluation->library_facilities,
+                ],
+                'extracurricular' => [
+                    'quality' => $this->mapEvaluation($evaluation->extracurricular_number),
+                    'feedback' => $evaluation->extracurricular,
+                ],
+            ];
+        });
+    
+        $prompt = "You are tasked with conducting a professional and in-depth analysis of the following student evaluations for a course, which has been marked as {$request->status}. 
+        The course evaluations include both qualitative feedback and a rating (Good, Average, or Bad) for various aspects: Teaching, Course Content, Examination, Labwork, Library Facilities, and Extracurricular activities.
 
-private function mapEvaluation($number)
-{
-    switch ($number) {
-        case -1:
-            return 'Bad';
-        case 0:
-            return 'Average';
-        case 1:
-            return 'Good';
-        default:
-            return 'Unknown';
+        Your objective is to:
+        1. Provide a thorough, professional evaluation of the course's strengths and weaknesses, not just by listing the feedback, but by identifying patterns, trends, and areas for meaningful improvement.
+        2. Consider the relationship between the qualitative feedback and the ratings (Good, Average, Bad) provided by students. Evaluate whether the text feedback aligns with the ratings given, or if there are inconsistencies that suggest either exaggeration or understatement.
+        3. Analyze differing opinions from students and assess whether these indicate deeper issues in the course structure or individual student biases.
+        4. Offer actionable suggestions for improvement, whether the course was marked as Successful or Unsuccessful, with a focus on addressing root causes rather than surface-level concerns.
+        5. Assess the overall fairness and honesty of the evaluations based on the diversity of opinions, consistency in feedback, and the balance of positive versus negative comments. Determine whether the status of the course (Successful or Unsuccessful) is justified by the student evaluations.
+
+        Please provide a nuanced, thoughtful analysis that looks beyond individual comments, focusing on the collective student feedback, identifying the core issues, and suggesting well-reasoned improvements for future iterations of the course.\n\n";
+
+        foreach ($mappedEvaluations as $index => $eval) {
+            $prompt .= "Evaluation " . ($index + 1) . ":\n";
+            $prompt .= "Teaching: {$eval['teaching']['quality']} (Feedback: {$eval['teaching']['feedback']})\n";
+            $prompt .= "Course Content: {$eval['course_content']['quality']} (Feedback: {$eval['course_content']['feedback']})\n";
+            $prompt .= "Examination: {$eval['examination']['quality']} (Feedback: {$eval['examination']['feedback']})\n";
+            $prompt .= "Labwork: {$eval['labwork']['quality']} (Feedback: {$eval['labwork']['feedback']})\n";
+            $prompt .= "Library Facilities: {$eval['library_facilities']['quality']} (Feedback: {$eval['library_facilities']['feedback']})\n";
+            $prompt .= "Extracurricular: {$eval['extracurricular']['quality']} (Feedback: {$eval['extracurricular']['feedback']})\n\n";
+        }
+    
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('OPENAI_API_KEY'),
+        ])->post('https://api.openai.com/v1/chat/completions', [
+            'model' => 'gpt-3.5-turbo',
+            'messages' => [
+                ['role' => 'system', 'content' => 'You are an expert in analyzing educational evaluations.'],
+                ['role' => 'user', 'content' => $prompt],
+            ],
+            'max_tokens' => 4000,
+            'temperature' => 0.7,
+        ]);
+    
+        if ($response->failed()) {
+            return response()->json([
+                'error' => 'Failed to get analysis from OpenAI API.',
+                'status' => $response->status(),
+                'response' => $response->body(),
+            ], $response->status());
+        }
+    
+        $analysis = $response->json()['choices'][0]['message']['content'] ?? null;
+    
+        return response()->json([
+            'analysis' => $analysis,
+        ]);
     }
-}
-
+    
+    private function mapEvaluation($number)
+    {
+        switch ($number) {
+            case -1:
+                return 'Bad';
+            case 0:
+                return 'Average';
+            case 1:
+                return 'Good';
+            default:
+                return 'Unknown';
+        }
+    }
 }
