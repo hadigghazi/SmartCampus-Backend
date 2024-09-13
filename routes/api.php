@@ -244,6 +244,7 @@ Route::middleware(['auth:api', 'role:Admin'])->group(function () {
     Route::apiResource('course-instructors', CourseInstructorController::class)->only(['store', 'update', 'destroy']);
     Route::get('instructor_name_by_course_instructor/{id}', [CourseInstructorController::class, 'getInstructorNameByCourseInstructorId']);
     Route::get('course_name_by_course_instructor/{id}', [CourseInstructorController::class, 'getCourseNameByCourseInstructorId']);
+    Route::get('instructor_by_course/{id}', [CourseInstructorController::class, 'getInstructorDetails']);
     Route::post('course-instructors/{id}/restore', [CourseInstructorController::class, 'restore']);
     Route::delete('course-instructors/{id}/force-delete', [CourseInstructorController::class, 'forceDelete']);
 });

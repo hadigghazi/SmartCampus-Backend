@@ -7,6 +7,7 @@ use App\Models\Course;
 use App\Models\Instructor;
 use App\Models\Major;
 use App\Models\Faculty;
+use App\Models\Department;
 use App\Models\Registration;
 use App\Models\Campus;
 use App\Models\Semester;
@@ -234,5 +235,38 @@ public function getCourseNameByCourseInstructorId($courseInstructorId)
     ]);
 }
 
+public function getInstructorDetails($courseInstructorId)
+{
+    $courseInstructor = CourseInstructor::find($courseInstructorId);
+
+    if (!$courseInstructor) {
+        return response()->json(['message' => 'Course Instructor not found.'], 404);
+    }
+
+    $instructor = Instructor::find($courseInstructor->instructor_id);
+
+    if (!$instructor) {
+        return response()->json(['message' => 'Instructor not found.'], 404);
+    }
+
+    $user = $instructor->user;
+
+    if (!$user) {
+        return response()->json(['message' => 'User not found.'], 404);
+    }
+
+    $department = Department::find($instructor->department_id);
+
+    $instructorDetails = [
+        'instructor_id' => $instructor->id,
+        'first_name' => $user->first_name,
+        'middle_name' => $user->middle_name,
+        'last_name' => $user->last_name,
+        'specialization' => $instructor->specialization,
+        'department_name' => $department ? $department->name : 'Department not found',
+    ];
+
+    return response()->json($instructorDetails);
+}
 
 }
