@@ -500,6 +500,7 @@ Route::middleware(['auth:api', 'role:Student'])->group(function () {
 });
 
 Route::middleware(['auth:api', 'role:Admin'])->group(function () {
+    Route::get('/course-evaluations/instructor/{courseInstructorId}', [CourseEvaluationController::class, 'getByInstructor']);
     Route::post('course-evaluations/{id}/restore', [CourseEvaluationController::class, 'restore']);
     Route::delete('course-evaluations/{id}/force-delete', [CourseEvaluationController::class, 'forceDelete']);
 });

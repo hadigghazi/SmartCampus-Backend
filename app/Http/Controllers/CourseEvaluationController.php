@@ -118,4 +118,15 @@ class CourseEvaluationController extends Controller
         $courseEvaluation->forceDelete();
         return response()->json(null, 204);
     }
+
+    public function getByInstructor($courseInstructorId)
+    {
+        $evaluations = CourseEvaluation::where('course_instructor_id', $courseInstructorId)->get();
+
+        if ($evaluations->isEmpty()) {
+            return response()->json(['message' => 'No evaluations found for this instructor'], 404);
+        }
+
+        return response()->json($evaluations);
+    }
 }
