@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\CourseInstructor;
 use App\Models\Course;
 use App\Models\Instructor;
+use App\Models\Major;
+use App\Models\Faculty;
 use App\Models\Registration;
 use App\Models\Campus;
 use App\Models\Semester;
@@ -172,11 +174,19 @@ public function getCourseDetails($courseInstructorId)
         return response()->json(['message' => 'Course not found.'], 404);
     }
 
+    $major = Major::find($course->major_id);
+    $faculty = Faculty::find($course->faculty_id);
+
     return response()->json([
         'course_code' => $course->code,
         'course_name' => $course->name,
+        'description' => $course->description,
+        'credits' => $course->credits,
+        'major_name' => $major ? $major->name : 'Major not found',
+        'faculty_name' => $faculty ? $faculty->name : 'Faculty not found',
     ]);
 }
+
 
 public function getInstructorNameByCourseInstructorId($courseInstructorId)
 {
