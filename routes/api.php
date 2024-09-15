@@ -171,14 +171,6 @@ Route::middleware(['auth:api', 'role:Admin'])->group(function () {
 });
 
 
-Route::apiResource('contacts', ContactController::class)->only(['index', 'show']);
-
-Route::middleware(['auth:api', 'role:Admin'])->group(function () {
-    Route::apiResource('contacts', ContactController::class)->only(['store', 'update', 'destroy']);
-    Route::post('contacts/{id}/restore', [ContactController::class, 'restore']);
-    Route::delete('contacts/{id}/force-delete', [ContactController::class, 'forceDelete']);
-});
-
 Route::middleware(['auth:api', 'role:Admin'])->group(function () {
 
 Route::apiResource('admins', AdminController::class);
@@ -199,15 +191,6 @@ Route::middleware(['auth:api', 'role:Admin'])->group(function () {
     Route::apiResource('instructors', InstructorController::class)->only(['store', 'update', 'destroy']);
     Route::post('instructors/{id}/restore', [InstructorController::class, 'restore']);
     Route::delete('instructors/{id}/force-delete', [InstructorController::class, 'forceDelete']);
-});
-
-
-Route::apiResource('addresses', AddressController::class)->only(['index', 'show']);
-
-Route::middleware(['auth:api', 'role:Admin'])->group(function () {
-    Route::apiResource('addresses', AddressController::class)->only(['store', 'update', 'destroy']);
-    Route::post('addresses/{id}/restore', [AddressController::class, 'restore']);
-    Route::delete('addresses/{id}/force-delete', [AddressController::class, 'forceDelete']);
 });
 
 Route::apiResource('faculties-campuses', FacultyCampusController::class)->only(['index', 'show']);
