@@ -5,7 +5,6 @@ namespace Tests\Unit;
 use Tests\TestCase;
 use Mockery;
 use App\Models\Faculty;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
