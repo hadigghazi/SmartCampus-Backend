@@ -1,0 +1,29 @@
+services:
+  app:
+    image: laravel-app
+    container_name: laravel-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+
+  db:
+    image: mysql:5.7
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ""
+      MYSQL_DATABASE: smart_campus_db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: ""
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
