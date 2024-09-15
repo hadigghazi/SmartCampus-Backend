@@ -46,7 +46,7 @@ class FacultyTest extends TestCase
         $faculty = Mockery::mock(Faculty::class);
         $faculty->shouldReceive('findOrFail')->andReturn($faculty);
         
-        $response = $this->getJson('/api/faculties/1');
+        $response = $this->getJson('/api/faculties/10');
         $response->assertStatus(Response::HTTP_OK);
     }
 
@@ -61,7 +61,7 @@ class FacultyTest extends TestCase
         $faculty = Mockery::mock(Faculty::class);
         $faculty->shouldReceive('update')->with($requestData)->andReturn(true);
         
-        $response = $this->putJson('/api/faculties/1', $requestData);
+        $response = $this->putJson('/api/faculties/10', $requestData);
         $response->assertStatus(Response::HTTP_OK);
     }
 
@@ -70,7 +70,27 @@ class FacultyTest extends TestCase
         $faculty = Mockery::mock(Faculty::class);
         $faculty->shouldReceive('delete')->andReturn(true);
         
-        $response = $this->deleteJson('/api/faculties/1');
+        $response = $this->deleteJson('/api/faculties/10');
+        $response->assertStatus(Response::HTTP_NO_CONTENT);
+    }
+
+    public function testRestore()
+    {
+        $faculty = Mockery::mock(Faculty::class);
+        $faculty->shouldReceive('findOrFail')->with(1)->andReturn($faculty);
+        $faculty->shouldReceive('restore')->andReturn(true);
+
+        $response = $this->postJson('/api/faculties/10/restore');
+        $response->assertStatus(Response::HTTP_OK);
+    }
+
+    public function testForceDelete()
+    {
+        $faculty = Mockery::mock(Faculty::class);
+        $faculty->shouldReceive('findOrFail')->with(1)->andReturn($faculty);
+        $faculty->shouldReceive('forceDelete')->andReturn(true);
+
+        $response = $this->deleteJson('/api/faculties/10/force-delete');
         $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 }
